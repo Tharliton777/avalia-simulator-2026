@@ -1,0 +1,64 @@
+/* Layout Base */
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+#telaLista, #telaAvaliacao {
+    flex: 1;
+}
+
+/* Transição Suave */
+.page-transition {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Logo Redonda Assesi */
+.logo-container {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: #fff;
+    border: 2px solid #0d6efd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.logo-container img {
+    max-width: 85%;
+    height: auto;
+}
+
+/* Cards e Estilos dos Selos */
+.card-cliente {
+    transition: all 0.3s ease;
+    border-radius: 12px;
+    border-top: 5px solid #0d6efd;
+}
+
+.card-cliente:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15) !important;
+}
+
+.essencial-item { border-left: 6px solid #dc3545 !important; }
+
+/* Cores Oficiais da Cartilha */
+.selo-diamante { background-color: #b9f2ff; color: #004a5c; border: 1px solid #00acc1; }
+.selo-ouro { background-color: #ffd700; color: #5c4d00; border: 1px solid #fbc02d; }
+.selo-prata { background-color: #e0e0e0; color: #424242; border: 1px solid #bdbdbd; }
+.status-intermediario { background-color: #d4edda; color: #155724; }
+.status-basico { background-color: #fff3cd; color: #856404; }
+.status-inicial { background-color: #f8d7da; color: #721c24; }
+.status-inexistente { background-color: #343a40; color: #fff; }
+
+.d-none { display: none !important; }
