@@ -1,46 +1,56 @@
-<h1 align="center"> IPortiforlioDev </h1>
+# 🏛️ Avalia Simulator 2026
 
-<p align="center">
-Desenvolvimento focado em tecnologias WEB.
-</p>
+![Interface do Simulador]()
 
-<p align="center">
-  <a href="#-tecnologias">Tecnologias</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
-  <a href="#-projeto">Projeto</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
-  <a href="#-layout">Layout</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
-  <a href="#memo-licença">Licença</a>
-</p>
+O **Avalia Simulator** é uma ferramenta interativa desenvolvida para auxiliar municípios e órgãos públicos na simulação dos critérios de transparência estabelecidos pela **Atricon**. O sistema permite cadastrar entidades, realizar checklists detalhados e visualizar o progresso em tempo real, gerando selos de classificação baseados nos resultados.
 
-<p align="center">
-  <img alt="License" src="https://img.shields.io/static/v1?label=license&message=MIT&color=49AA26&labelColor=000000">
-</p>
+## 🚀 Funcionalidades
 
-<br>
+- **Gestão de Entidades:** Cadastre, edite e exclua Prefeituras ou Câmaras de forma dinâmica.
+- **Checklist Completo:** 19 grupos de critérios técnicos (Receitas, Despesas, Licitações, Saúde, Educação, etc.).
+- **Cálculo em Tempo Real:** Barra de progresso e percentual atualizados instantaneamente.
+- **Regra de Ouro:** Lógica integrada que limita o selo máximo (Prata, Ouro ou Diamante) caso itens **Essenciais (*)** possuam pendências.
+- **Modo Escuro (Dark Mode):** Interface moderna com suporte a temas claro e escuro.
+- **Exportação de Dados:** Função para baixar backup em formato JSON.
+- **Relatório de Impressão:** Formatação otimizada para gerar relatórios em PDF ou papel diretamente do navegador.
 
-<p align="center">
-  <img alt="Site cascata de links" src="assets/imagemReadme.png" width="100%">
-</p>
+## 🏆 Critérios de Selos
 
-## 🚀 Tecnologias
+| Percentual | Nível de Transparência |
+| :--- | :--- |
+| **95% a 100%** | 💎 Diamante (Requer todos os Essenciais) |
+| **85% a 94%** | 🥇 Ouro (Requer todos os Essenciais) |
+| **75% a 84%** | 🥈 Prata (Requer todos os Essenciais) |
+| **50% a 74%** | 🔵 Intermediário |
+| **30% a 49%** | ⚪ Básico |
+| **1% a 29%** | 🟡 Inicial |
+| **0%** | ❌ Inexistente |
 
-Esse projeto foi desenvolvido com as seguintes tecnologias:
+> **Nota:** Se houver falha em qualquer item marcado com **(*)**, o selo máximo permitido será **Elevado**, independentemente da nota percentual.
 
-- HTML e CSS
-- JavaScript
-- Git e Github
+## 🛠️ Tecnologias Utilizadas
 
-## 💻 Projeto
+- **HTML5 & CSS3:** Estrutura responsiva e variáveis CSS para temas.
+- **JavaScript (Vanilla):** Lógica de persistência, cálculos e manipulação de arrays.
+- **Bootstrap 5:** Framework de UI para modais e grid system.
+- **Bootstrap Icons:** Biblioteca de ícones vetoriais.
+- **LocalStorage:** Armazenamento local para que os dados não sejam perdidos ao fechar o navegador.
 
-Este projeto é uma **Cascata de Links** personalizada, desenvolvida para servir como um hub centralizado das redes sociais e portfólio.
+## 📋 Como usar
 
-## 🔖 Layout
+1. **Cadastro:** Digite o nome da Prefeitura ou Câmara na tela inicial.
+2. **Avaliação:** Clique em "Avaliar" para abrir o checklist daquela entidade.
+3. **Preenchimento:** Marque as opções **G**ravação, **S**uficiência e **A**tualidade. Um item só é considerado "concluído" com as três opções marcadas.
+4. **Edição:** Use o ícone do lápis ✏️ na tela inicial para renomear uma entidade.
+5. **Backup:** Exporte seus dados periodicamente através do menu lateral.
 
-Você pode visualizar o layout do projeto através [DESSE LINK](https://www.figma.com/file/J1Z33MISC22YZB8wfxiIns/NLW-Copa-Explorer/duplicate). É necessário ter conta no [Figma](https://figma.com) para acessá-lo.
+## 💾 Instalação Local
 
-## :memo: Licença
+```bash
+# Clone o repositório
+git clone [https://github.com/SEU-USUARIO/NOME-DO-REPOSITORIO.git](https://github.com/SEU-USUARIO/NOME-DO-REPOSITORIO.git)
 
-Esse projeto está sob a licença MIT.
+# Acesse a pasta
+cd NOME-DO-REPOSITORIO
 
----
-
-Feito por <a link = "https://www.instagram.com/tharliton_flk/"> Tharliton Duarte </a>
+# Abra o arquivo index.html no navegador
