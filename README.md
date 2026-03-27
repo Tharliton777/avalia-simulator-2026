@@ -1,6 +1,6 @@
 # 🏛️ Avalia Simulator 2026
 
-![Interface do Simulador]()
+![Interface do Simulador] <img alt="Site cascata de links" src=".github/TelaInicioAvalia.png" width="100%">
 
 O **Avalia Simulator** é uma ferramenta interativa desenvolvida para auxiliar municípios e órgãos públicos na simulação dos critérios de transparência estabelecidos pela **Atricon**. O sistema permite cadastrar entidades, realizar checklists detalhados e visualizar o progresso em tempo real, gerando selos de classificação baseados nos resultados.
 
