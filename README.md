@@ -43,7 +43,7 @@ O **Avalia Simulator** é uma ferramenta interativa desenvolvida para auxiliar m
 3. **Preenchimento:** Marque as opções **G**ravação, **S**uficiência e **A**tualidade. Um item só é considerado "concluído" com as três opções marcadas.
 4. **Edição:** Use o ícone do lápis ✏️ na tela inicial para renomear uma entidade.
 5. **Backup:** Exporte seus dados periodicamente através do menu lateral.
-6. **Site:** Acesse o site em <a href:"https://tharliton777.github.io/avalia-simulator-2026/">Avalia Simulator</a>
+6. **Site:** Acesse o site em <a href:"https://tharliton777.github.io/avalia-simulator-2026/">Avalia_Simulator</a>
 
 ## 💾 Instalação Local
 
