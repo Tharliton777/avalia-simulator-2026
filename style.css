@@ -25,12 +25,18 @@ body {
     transition: background-color 0.3s ease, color 0.3s ease; 
     font-family: 'Inter', sans-serif; 
     overflow-x: hidden;
+    padding-top: 40px !important; /* Adicione esta linha para afastar o título do topo */
+}
+
+#telalista header {
+    margin-top: 50px !important;
 }
 
 /* O Main cresce para ocupar o espaço e empurrar o footer */
 main#content {
     flex: 1 0 auto;
 }
+
 
 footer {
     flex-shrink: 0;
