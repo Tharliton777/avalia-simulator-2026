@@ -1,64 +1,99 @@
-/* Layout Base */
-body {
+:root { 
+    --bg-pagina: #f8f9fa; 
+    --bg-card: #ffffff; 
+    --text-principal: #212529; 
+    --border-cor: #dee2e6; 
+}
+
+[data-bs-theme="dark"] { 
+    --bg-pagina: #121212 !important; 
+    --bg-card: #1e1e1e !important; 
+    --text-principal: #ffffff !important; 
+    --border-cor: #333333 !important; 
+}
+
+/* Estrutura para manter o rodapé no fim */
+html, body {
+    height: 100%;
+}
+
+body { 
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
+    background-color: var(--bg-pagina) !important; 
+    color: var(--text-principal) !important; 
+    transition: background-color 0.3s ease, color 0.3s ease; 
+    font-family: 'Inter', sans-serif; 
+    overflow-x: hidden;
 }
 
-#telaLista, #telaAvaliacao {
-    flex: 1;
+/* O Main cresce para ocupar o espaço e empurrar o footer */
+main#content {
+    flex: 1 0 auto;
 }
 
-/* Transição Suave */
-.page-transition {
-    animation: fadeIn 0.5s ease-in-out;
+footer {
+    flex-shrink: 0;
+    border-top: 1px solid var(--border-cor);
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
+/* --- ANIMAÇÕES DE TRANSIÇÃO --- */
+#telalista, #telaAvaliacao {
+    animation: fadeInSlide 0.4s ease-out;
+}
+
+@keyframes fadeInSlide {
+    from { opacity: 0; transform: translateY(15px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* Logo Redonda Assesi */
-.logo-container {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    overflow: hidden;
-    background: #fff;
-    border: 2px solid #0d6efd;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+/* --- SIDEBAR --- */
+#sidebar { 
+    width: 280px; 
+    height: 100vh; 
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    z-index: 2000; 
+    background: var(--bg-card) !important; 
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+    box-shadow: 10px 0 30px rgba(0,0,0,0.1);
 }
 
-.logo-container img {
-    max-width: 85%;
-    height: auto;
+#sidebar.active { transform: translateX(-280px); }
+
+.nav-link { transition: all 0.2s ease; }
+.nav-link:hover {
+    background: rgba(13, 110, 253, 0.1) !important;
+    transform: translateX(5px);
 }
 
-/* Cards e Estilos dos Selos */
-.card-cliente {
-    transition: all 0.3s ease;
-    border-radius: 12px;
-    border-top: 5px solid #0d6efd;
-}
-
-.card-cliente:hover {
+/* --- INTERATIVIDADE --- */
+.btn, .card { transition: all 0.2s ease-in-out !important; }
+.card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.15) !important;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.08) !important;
 }
 
-.essencial-item { border-left: 6px solid #dc3545 !important; }
+/* --- CRITÉRIOS --- */
+.col-validacao { width: 40px; text-align: center; font-weight: bold; display: flex; justify-content: center; align-items: center; }
+.grupo-header { background-color: #2b3035; color: #ffffff !important; padding: 12px 20px; border-radius: 8px 8px 0 0; margin-top: 25px; }
 
-/* Cores Oficiais da Cartilha */
-.selo-diamante { background-color: #b9f2ff; color: #004a5c; border: 1px solid #00acc1; }
-.selo-ouro { background-color: #ffd700; color: #5c4d00; border: 1px solid #fbc02d; }
-.selo-prata { background-color: #e0e0e0; color: #424242; border: 1px solid #bdbdbd; }
-.status-intermediario { background-color: #d4edda; color: #155724; }
-.status-basico { background-color: #fff3cd; color: #856404; }
-.status-inicial { background-color: #f8d7da; color: #721c24; }
-.status-inexistente { background-color: #343a40; color: #fff; }
+/* Selos */
+.badge { font-weight: 700 !important; text-transform: uppercase; }
+.selo-inexistente { background-color: #e9ecef !important; color: #6c757d !important; }
+.selo-inicial { background-color: #ffc107 !important; color: #000 !important; }
+.selo-basico { background-color: #6c757d !important; color: #fff !important; }
+.selo-intermediario { background-color: #17a2b8 !important; color: #fff !important; }
+.selo-elevado { background-color: #cd0000 !important; color: #fff !important; }
+.selo-prata { background-color: #c0c0c0 !important; color: #000 !important; border: 1px solid #888; }
+.selo-ouro { background-color: #ffd700 !important; color: #000 !important; }
+.selo-diamante { background-color: #b9f2ff !important; color: #004a5c !important; }
 
-.d-none { display: none !important; }
+.btn-menu-lateral { position: fixed; left: 15px; top: 20px; z-index: 1000; width: 45px; height: 45px; border-radius: 50%; background: var(--bg-card) !important; border: 1px solid var(--border-cor) !important; color: var(--text-principal) !important; }
+.dark-card-target { background-color: var(--bg-card) !important; color: var(--text-principal) !important; border: 1px solid var(--border-cor) !important; }
+
+[data-bs-theme="dark"] .modal-content { background-color: var(--bg-card) !important; color: var(--text-principal) !important; border: 1px solid var(--border-cor); }
+[data-bs-theme="dark"] .btn-close { filter: invert(1) grayscale(100%) brightness(200%); }
+
+@media print { .no-print { display: none !important; } }

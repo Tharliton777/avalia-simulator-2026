@@ -1,200 +1,364 @@
-const listaCriteriosAtricon = [
-    { id: 1, desc: "Informações Institucionais (Estrutura e Contatos)", essencial: true },
-    { id: 2, desc: "Ferramenta de Pesquisa e Acessibilidade", essencial: true },
-    { id: 3, desc: "Perguntas Frequentes (FAQ)", essencial: false },
-    { id: 4, desc: "Receitas: Previsão e Arrecadação", essencial: true },
-    { id: 5, desc: "Despesas: Empenho, Liquidação e Pagamento", essencial: true },
-    { id: 6, desc: "Transferências Voluntárias e Repasses", essencial: false },
-    { id: 7, desc: "Licitações: Editais, Anexos e Resultados", essencial: true },
-    { id: 8, desc: "Contratos: Íntegra e Aditivos", essencial: true },
-    { id: 9, desc: "Sanções Administrativas Aplicadas", essencial: false },
-    { id: 10, desc: "Folha de Pagamento Nominal e Salários", essencial: true },
-    { id: 11, desc: "Diárias e Passagens (Valor/Motivo/Beneficiário)", essencial: true },
-    { id: 12, desc: "Concursos Públicos e Seleções", essencial: false },
-    { id: 13, desc: "Instrumentos de Planejamento (PPA, LDO e LOA)", essencial: true },
-    { id: 14, desc: "Relatórios Fiscais (RREO e RGF)", essencial: true },
-    { id: 15, desc: "Parecer Prévio das Contas Anuais", essencial: true },
-    { id: 16, desc: "Serviço de Informação ao Cidadão (e-SIC)", essencial: true },
-    { id: 17, desc: "Relatório Estatístico do SIC", essencial: true },
-    { id: 18, desc: "Ouvidoria (Canais de Denúncia/Sugestão)", essencial: true },
-    { id: 19, desc: "Obras Públicas (Relatórios e Medições)", essencial: false },
-    { id: 20, desc: "Saúde e Educação (Escalas/Vagas/Listas)", essencial: false },
-    { id: 21, desc: "LGPD: Encarregado e Políticas de Privacidade", essencial: false },
-    { id: 22, desc: "Dados Abertos (Formatos CSV, XML, XLS)", essencial: false }
+const GRUPOS_CRITERIOS = [
+    {
+        titulo: "1. Informações Institucionais e Acessibilidade",
+        itens: [
+            { id: "1.1", nome: "Estrutura Organizacional e Competências", essencial: true },
+            { id: "1.2", nome: "Ferramenta de Pesquisa e Acessibilidade", essencial: true },
+            { id: "1.3", nome: "Perguntas Frequentes (FAQ)", essencial: false }
+        ]
+    },
+    {
+        titulo: "2. Receitas Públicas",
+        itens: [
+            { id: "2.1", nome: "Receitas Previstas e Arrecadadas", essencial: true },
+            { id: "2.2", nome: "Receitas por Natureza e Fonte", essencial: true }
+        ]
+    },
+    {
+        titulo: "3. Despesas Públicas",
+        itens: [
+            { id: "3.1", nome: "Despesas Empenhadas, Liquidadas e Pagas", essencial: true },
+            { id: "3.2", nome: "Favorecidos (Pessoa Física e Jurídica)", essencial: true }
+        ]
+    },
+    {
+        titulo: "4. Licitações",
+        itens: [
+            { id: "4.1", nome: "Editais e Anexos na íntegra", essencial: true },
+            { id: "4.2", nome: "Resultados e Homologações", essencial: true }
+        ]
+    },
+    {
+        titulo: "5. Contratos",
+        itens: [
+            { id: "5.1", nome: "Íntegra dos Contratos e Aditivos", essencial: true },
+            { id: "5.2", nome: "Acompanhamento da Execução Contratual", essencial: true }
+        ]
+    },
+    {
+        titulo: "6. Convênios e Transferências",
+        itens: [
+            { id: "6.1", nome: "Convênios Recebidos e Cedidos", essencial: false },
+            { id: "6.2", nome: "Transferências Voluntárias", essencial: false }
+        ]
+    },
+    {
+        titulo: "7. Recursos Humanos",
+        itens: [
+            { id: "7.1", nome: "Folha de Pagamento Nominal", essencial: true },
+            { id: "7.2", nome: "Diárias e Passagens", essencial: true }
+        ]
+    },
+    {
+        titulo: "8. Planejamento (PPA, LDO e LOA)",
+        itens: [
+            { id: "8.1", nome: "Leis Orçamentárias (PPA/LDO/LOA)", essencial: true },
+            { id: "8.2", nome: "Audiências Públicas e Relatórios", essencial: true }
+        ]
+    },
+    {
+        titulo: "9. Gestão Fiscal (RREO e RGF)",
+        itens: [
+            { id: "9.1", nome: "Relatórios de Execução Orçamentária", essencial: true },
+            { id: "9.2", nome: "Relatórios de Gestão Fiscal", essencial: true }
+        ]
+    },
+    {
+        titulo: "10. Prestação de Contas",
+        itens: [
+            { id: "10.1", nome: "Relatório de Gestão e Parecer Prévio", essencial: true },
+            { id: "10.2", nome: "Julgamento de Contas", essencial: true }
+        ]
+    },
+    {
+        titulo: "11. Serviço de Informação ao Cidadão (e-SIC)",
+        itens: [
+            { id: "11.1", nome: "Acesso ao Pedido de Informação Online", essencial: true },
+            { id: "11.2", nome: "Relatório Estatístico de Pedidos", essencial: true }
+        ]
+    },
+    {
+        titulo: "12. Ouvidoria",
+        itens: [
+            { id: "12.1", nome: "Canal de Contato e Ouvidoria", essencial: true },
+            { id: "12.2", nome: "Relatórios de Ouvidoria", essencial: false }
+        ]
+    },
+    {
+        titulo: "13. Obras Públicas",
+        itens: [
+            { id: "13.1", nome: "Acompanhamento de Obras", essencial: false }
+        ]
+    },
+    {
+        titulo: "14. Diárias e Passagens",
+        itens: [
+            { id: "14.1", nome: "Publicação de Valores e Destinos", essencial: true }
+        ]
+    },
+    {
+        titulo: "15. Sanções Administrativas",
+        itens: [
+            { id: "15.1", nome: "Relação de Sanções a Empresas", essencial: false }
+        ]
+    },
+    {
+        titulo: "16. Renúncia de Receita",
+        itens: [
+            { id: "16.1", nome: "Benefícios Fiscais Concedidos", essencial: false },
+            { id: "16.4", nome: "Projetos de Incentivo à Cultura", essencial: false }
+        ]
+    },
+    {
+        titulo: "17. Emendas Parlamentares",
+        itens: [
+            { id: "17.1", nome: "Identificação das Emendas Recebidas", essencial: true },
+            { id: "17.2", nome: "Execução das 'Emendas Pix'", essencial: true }
+        ]
+    },
+    {
+        titulo: "18. Saúde",
+        itens: [
+            { id: "18.1", nome: "Plano de Saúde e Relatórios", essencial: true },
+            { id: "18.2", nome: "Horários e Especialidades Médicas", essencial: true },
+            { id: "18.3", nome: "Lista de Espera de Regulação", essencial: true },
+            { id: "18.4", nome: "Relação de Medicamentos (SUS)", essencial: true },
+            { id: "18.5", nome: "Estoque das Farmácias Públicas", essencial: true }
+        ]
+    },
+    {
+        titulo: "19. Educação",
+        itens: [
+            { id: "19.1", nome: "Plano de Educação e Resultados", essencial: true },
+            { id: "19.2", nome: "Lista de Espera em Creches e Priorização", essencial: true }
+        ]
+    }
 ];
 
-let clientesDB = JSON.parse(localStorage.getItem('assesi_clientes_v2026')) || {};
-let clienteAtivoID = null;
+// Variáveis de Estado
+let db = JSON.parse(localStorage.getItem('assesi_atricon_v2026')) || {};
+let entidadeAtiva = null;
+let idParaExcluir = null;
+let idParaEditar = null;
 
-function cadastrarCliente() {
-    const nome = document.getElementById('inputNovoCliente').value.trim();
-    if (!nome) return;
-    if (clientesDB[nome]) return alert("Esta entidade já foi cadastrada.");
+window.onload = () => {
+    atualizarGridPrincipal();
     
-    clientesDB[nome] = { nome: nome, itensMarcados: [], porcentagem: 0, selo: "Inexistente" };
-    document.getElementById('inputNovoCliente').value = '';
-    salvarESincronizar();
+    // Sidebar toggle
+    const btnSidebar = document.getElementById('sidebarCollapse');
+    if(btnSidebar) btnSidebar.onclick = () => document.getElementById('sidebar').classList.toggle('active');
+
+    // Dark Mode
+    const toggleDark = document.getElementById('darkModeToggle');
+    if(toggleDark) {
+        toggleDark.onchange = (e) => {
+            document.documentElement.setAttribute('data-bs-theme', e.target.checked ? 'dark' : 'light');
+        };
+    }
+    
+    // Configuração do botão de exclusão
+    const btnConfirmExcluir = document.getElementById('btnConfirmarExclusao');
+    if(btnConfirmExcluir) {
+        btnConfirmExcluir.onclick = () => {
+            if (idParaExcluir && db[idParaExcluir]) {
+                delete db[idParaExcluir];
+                salvar();
+                atualizarGridPrincipal();
+                const modalExcluir = bootstrap.Modal.getInstance(document.getElementById('modalExcluir'));
+                if(modalExcluir) modalExcluir.hide();
+                idParaExcluir = null;
+            }
+        };
+    }
+};
+
+function cadastrarEntidade() {
+    const input = document.getElementById('inputNovoCliente');
+    if (!input || !input.value.trim()) return;
+    const id = Date.now().toString();
+    db[id] = { nome: input.value.trim(), perc: 0, selo: "INEXISTENTE", marcados: {} };
+    input.value = "";
+    salvar(); 
+    atualizarGridPrincipal();
 }
 
-function renderizarLista() {
-    const grid = document.getElementById('gridClientes');
-    grid.innerHTML = '';
-    Object.keys(clientesDB).forEach(id => {
-        const c = clientesDB[id];
-        const div = document.createElement('div');
-        div.className = 'col-md-4 mb-4';
-        div.innerHTML = `
-            <div class="card h-100 shadow-sm card-cliente">
-                <div class="card-body d-flex flex-column text-center">
-                    <h5 class="fw-bold text-dark mb-3">${c.nome}</h5>
-                    <div class="mb-3">
-                        <span class="badge ${getClasseSelo(c.selo)} p-2 w-100 fs-6">${c.selo}</span>
-                    </div>
-                    <p class="text-muted small">Índice Atual: <strong>${c.porcentagem}%</strong></p>
-                    <div class="mt-auto pt-3">
-                        <button class="btn btn-primary w-100 mb-2" onclick="abrirAvaliacao('${id}')">Avaliar</button>
-                        <button class="btn btn-link btn-sm text-danger" onclick="excluirCliente(event, '${id}')">Excluir</button>
+function atualizarGridPrincipal() {
+    const grid = document.getElementById('gridClientes'); 
+    if(!grid) return;
+    grid.innerHTML = "";
+    
+    for (const id in db) {
+        const ent = db[id];
+        const slug = ent.selo.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+        grid.innerHTML += `
+            <div class="col-md-4">
+                <div class="card shadow-sm border-0 p-3 dark-card-target h-100">
+                    <h5 class="fw-bold mb-2 text-truncate">${ent.nome}</h5>
+                    <div class="badge w-100 mb-3 p-2 selo-${slug}">${ent.selo} (${ent.perc}%)</div>
+                    <div class="d-flex gap-2">
+                        <button onclick="abrirChecklist('${id}')" class="btn btn-primary btn-sm flex-grow-1">Avaliar</button>
+                        <button onclick="editarEntidade('${id}')" class="btn btn-outline-secondary btn-sm" title="Editar"><i class="bi bi-pencil"></i></button>
+                        <button onclick="excluirEntidade('${id}')" class="btn btn-outline-danger btn-sm" title="Excluir"><i class="bi bi-trash"></i></button>
                     </div>
                 </div>
-            </div>
-        `;
-        grid.appendChild(div);
-    });
+            </div>`;
+    }
 }
 
-function abrirAvaliacao(id) {
-    clienteAtivoID = id;
-    document.getElementById('telaLista').classList.add('d-none');
+// Função de Editar Entidade
+function editarEntidade(id) {
+    if (!db[id]) return;
+    idParaEditar = id;
+    document.getElementById('inputEditarNome').value = db[id].nome;
+    
+    // Inicia o Modal do Bootstrap corretamente
+    const modalEl = document.getElementById('modalEditar');
+    const modalInstance = bootstrap.Modal.getOrCreateInstance(modalEl);
+    modalInstance.show();
+}
+
+// Função de Confirmar Edição
+function confirmarEdicao() {
+    const input = document.getElementById('inputEditarNome');
+    const novoNome = input.value.trim();
+    
+    if (idParaEditar && novoNome !== "") {
+        db[idParaEditar].nome = novoNome;
+        salvar();
+        atualizarGridPrincipal();
+        
+        // Se a tela de avaliação estiver aberta para essa entidade, atualiza o nome no topo
+        if (entidadeAtiva === idParaEditar) {
+            const tituloTopo = document.getElementById('nomeEntidadeAtiva');
+            if(tituloTopo) tituloTopo.innerText = novoNome;
+        }
+
+        // Fecha o modal
+        const modalEl = document.getElementById('modalEditar');
+        const modalInstance = bootstrap.Modal.getInstance(modalEl);
+        if(modalInstance) modalInstance.hide();
+        
+        idParaEditar = null;
+    }
+}
+
+function abrirChecklist(id) {
+    if(!db[id]) return;
+    entidadeAtiva = id;
+    document.getElementById('telalista').classList.add('d-none');
     document.getElementById('telaAvaliacao').classList.remove('d-none');
-    document.getElementById('nomeEntidadeTitulo').innerText = clientesDB[id].nome;
-    renderizarChecklist();
-    window.scrollTo(0,0);
+    document.getElementById('nomeEntidadeAtiva').innerText = db[id].nome;
+    renderizarGrupos();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-function voltarParaLista() {
-    clienteAtivoID = null;
-    document.getElementById('telaAvaliacao').classList.add('d-none');
-    document.getElementById('telaLista').classList.remove('d-none');
-    renderizarLista();
-}
+function renderizarGrupos() {
+    const container = document.getElementById('containerGrupos'); 
+    if(!container || !entidadeAtiva) return;
+    container.innerHTML = "";
+    const ent = db[entidadeAtiva];
 
-function renderizarChecklist() {
-    const container = document.getElementById('containerCriterios');
-    container.innerHTML = '';
-    const marcados = clientesDB[clienteAtivoID].itensMarcados;
-
-    listaCriteriosAtricon.forEach(item => {
-        const li = document.createElement('li');
-        li.className = `list-group-item d-flex justify-content-between align-items-center ${item.essencial ? 'essencial-item' : ''}`;
-        const isChecked = marcados.includes(item.id) ? 'checked' : '';
-        li.innerHTML = `
-            <div>
-                <input class="form-check-input me-3" type="checkbox" ${isChecked} onchange="toggleCrit(${item.id})">
-                <span class="${item.essencial ? 'fw-bold' : ''}">${item.desc}</span>
+    GRUPOS_CRITERIOS.forEach(grupo => {
+        let html = `
+            <div class="grupo-header d-flex justify-content-between align-items-center mb-0 mt-4">
+                <span class="fw-bold">${grupo.titulo}</span>
+                <div class="d-flex" style="width: 120px;">
+                    <span class="col-validacao">G</span>
+                    <span class="col-validacao">S</span>
+                    <span class="col-validacao">A</span>
+                </div>
             </div>
-            ${item.essencial ? '<span class="badge bg-danger rounded-pill">*</span>' : ''}
-        `;
-        container.appendChild(li);
+            <ul class="list-group mb-2 shadow-sm">`;
+        
+        grupo.itens.forEach(item => {
+            const st = ent.marcados[item.id] || { g: false, s: false, a: false };
+            html += `
+                <li class="list-group-item d-flex align-items-center py-3">
+                    <div class="flex-grow-1">
+                        <small class="text-muted d-block">#${item.id} ${item.essencial ? '<span class="text-danger fw-bold">*</span>' : ''}</small>
+                        <span class="fw-medium">${item.nome}</span>
+                    </div>
+                    <div class="d-flex" style="width: 120px;">
+                        <div class="col-validacao"><input type="checkbox" class="form-check-input" ${st.g?'checked':''} onchange="toggleCheck('${item.id}', 'g')"></div>
+                        <div class="col-validacao"><input type="checkbox" class="form-check-input" ${st.s?'checked':''} onchange="toggleCheck('${item.id}', 's')"></div>
+                        <div class="col-validacao"><input type="checkbox" class="form-check-input" ${st.a?'checked':''} onchange="toggleCheck('${item.id}', 'a')"></div>
+                    </div>
+                </li>`;
+        });
+        container.innerHTML += html + `</ul>`;
     });
-    calcular();
+    calcularProgresso();
 }
 
-function toggleCrit(id) {
-    let marcados = clientesDB[clienteAtivoID].itensMarcados;
-    marcados.includes(id) ? marcados = marcados.filter(v => v !== id) : marcados.push(id);
-    clientesDB[clienteAtivoID].itensMarcados = marcados;
-    salvarESincronizar();
-    calcular();
+function toggleCheck(id, tipo) {
+    if(!entidadeAtiva) return;
+    const ent = db[entidadeAtiva];
+    if (!ent.marcados[id]) ent.marcados[id] = { g: false, s: false, a: false };
+    ent.marcados[id][tipo] = !ent.marcados[id][tipo];
+    salvar(); 
+    calcularProgresso();
 }
 
-function calcular() {
-    const cliente = clientesDB[clienteAtivoID];
-    const marcados = cliente.itensMarcados;
-    const porcentagem = Math.round((marcados.length / listaCriteriosAtricon.length) * 100);
+function calcularProgresso() {
+    const ent = db[entidadeAtiva];
+    let total = 0, ok = 0, faltaEssencial = false;
+
+    GRUPOS_CRITERIOS.forEach(g => g.itens.forEach(i => {
+        total++;
+        const st = ent.marcados[i.id] || { g: false, s: false, a: false };
+        if (st.g && st.s && st.a) {
+            ok++;
+        } else if (i.essencial) {
+            faltaEssencial = true;
+        }
+    }));
+
+    const perc = Math.round((ok / total) * 100) || 0;
+    let selo = "INEXISTENTE";
     
-    const essenciaisIDs = listaCriteriosAtricon.filter(i => i.essencial).map(i => i.id);
-    const todosEssenciaisOk = essenciaisIDs.every(id => marcados.includes(id));
+    if (perc >= 95) selo = faltaEssencial ? "ELEVADO" : "DIAMANTE";
+    else if (perc >= 85) selo = faltaEssencial ? "ELEVADO" : "OURO";
+    else if (perc >= 75) selo = faltaEssencial ? "ELEVADO" : "PRATA";
+    else if (perc >= 50) selo = "INTERMEDIARIO";
+    else if (perc >= 30) selo = "BASICO";
+    else if (perc > 0) selo = "INICIAL";
 
-    let selo = "";
-    let infoHTML = "";
-
-    // Lógica de Selos 2026
-    if (todosEssenciaisOk) {
-        if (porcentagem >= 95) selo = "Diamante";
-        else if (porcentagem >= 85) selo = "Ouro";
-        else if (porcentagem >= 75) selo = "Prata";
-    }
-
-    if (selo === "") {
-        if (porcentagem >= 50) selo = "Intermediário";
-        else if (porcentagem >= 30) selo = "Básico";
-        else if (porcentagem > 0) selo = "Inicial";
-        else selo = "Inexistente";
-    }
-
-    // Mensagem de Status
-    if (!todosEssenciaisOk && porcentagem >= 75) {
-        infoHTML = "<div class='bg-warning p-2 text-dark mt-2 fw-bold'>Faltam itens essenciais para Selo.</div>";
-    } else if (todosEssenciaisOk && porcentagem >= 75) {
-        infoHTML = "<div class='bg-success text-white p-2 mt-2 fw-bold'>Apto para Selo de Qualidade!</div>";
-    } else {
-        infoHTML = "<div class='text-muted mt-2'>Verificando conformidade...</div>";
-    }
-
-    cliente.porcentagem = porcentagem;
-    cliente.selo = selo;
-
-    document.getElementById('textoPorcentagem').innerText = porcentagem + "%";
-    document.getElementById('barraProgresso').style.width = porcentagem + "%";
+    ent.perc = perc; 
+    ent.selo = selo;
     
-    const badge = document.getElementById('badgeSeloFinal');
-    badge.innerText = selo.toUpperCase();
-    badge.className = "badge p-3 fs-6 " + getClasseSelo(selo);
+    document.getElementById('progressoTexto').innerText = perc + "%";
+    document.getElementById('barraProgresso').style.width = perc + "%";
     
-    document.getElementById('infoEssenciais').innerHTML = infoHTML;
+    const b = document.getElementById('statusSelo');
+    const slug = selo.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+    b.innerText = selo; 
+    b.className = `badge p-3 fs-6 rounded-pill shadow-sm selo-${slug}`;
 }
 
-function getClasseSelo(selo) {
-    const classes = { 
-        'Diamante': 'selo-diamante', 'Ouro': 'selo-ouro', 'Prata': 'selo-prata', 
-        'Intermediário': 'status-intermediario', 'Básico': 'status-basico', 
-        'Inicial': 'status-inicial', 'Inexistente': 'status-inexistente' 
-    };
-    return classes[selo] || 'bg-secondary';
+function voltarParaInicio() { 
+    entidadeAtiva = null; 
+    document.getElementById('telaAvaliacao').classList.add('d-none'); 
+    document.getElementById('telalista').classList.remove('d-none'); 
+    document.getElementById('sidebar').classList.add('active');
+    atualizarGridPrincipal(); 
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-function salvarESincronizar() {
-    localStorage.setItem('assesi_clientes_v2026', JSON.stringify(clientesDB));
+function excluirEntidade(id) {
+    idParaExcluir = id;
+    const modalEl = document.getElementById('modalExcluir');
+    const instance = bootstrap.Modal.getOrCreateInstance(modalEl);
+    instance.show();
 }
 
-function excluirCliente(e, id) {
-    e.stopPropagation();
-    if (confirm(`Excluir permanentemente ${id}?`)) {
-        delete clientesDB[id];
-        salvarESincronizar();
-        renderizarLista();
-    }
+function salvar() { 
+    localStorage.setItem('assesi_atricon_v2026', JSON.stringify(db)); 
 }
 
-function exportarBackup() {
-    const blob = new Blob([JSON.stringify(clientesDB, null, 2)], {type: 'application/json'});
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = `backup_atricon_assesi.json`;
-    a.click();
+function exportarDados() { 
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db)); 
+    const dlAnchor = document.createElement('a'); 
+    dlAnchor.setAttribute("href", dataStr); 
+    dlAnchor.setAttribute("download", "backup_assesi_2026.json"); 
+    dlAnchor.click(); 
 }
-
-function importarBackup(e) {
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-        try {
-            clientesDB = JSON.parse(ev.target.result);
-            salvarESincronizar();
-            renderizarLista();
-            alert("Backup carregado!");
-        } catch(err) { alert("Erro ao importar."); }
-    };
-    reader.readAsText(e.target.files[0]);
-}
-
-renderizarLista();
