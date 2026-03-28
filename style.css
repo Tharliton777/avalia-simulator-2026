@@ -12,48 +12,33 @@
     --border-cor: #333333 !important; 
 }
 
-/* Estrutura para manter o rodapé no fim */
-html, body {
-    height: 100%;
-}
+html, body { height: 100%; margin: 0; padding: 0; }
 
 body { 
-    display: flex;
-    flex-direction: column;
     background-color: var(--bg-pagina) !important; 
     color: var(--text-principal) !important; 
-    transition: background-color 0.3s ease, color 0.3s ease; 
     font-family: 'Inter', sans-serif; 
-    overflow-x: hidden;
-    padding-top: 40px !important; /* Adicione esta linha para afastar o título do topo */
+    transition: background-color 0.3s ease;
 }
 
-#telalista header {
-    margin-top: 50px !important;
+/* SIDEBAR E BOTÃO HAMBURGUER */
+.btn-menu-lateral { 
+    position: fixed; 
+    left: 15px; 
+    top: 20px; 
+    z-index: 1000 !important; 
+    width: 48px; 
+    height: 48px; 
+    border-radius: 50%; 
+    background: var(--bg-card) !important; 
+    border: 1px solid var(--border-cor) !important; 
+    color: var(--text-principal) !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
-/* O Main cresce para ocupar o espaço e empurrar o footer */
-main#content {
-    flex: 1 0 auto;
-}
-
-
-footer {
-    flex-shrink: 0;
-    border-top: 1px solid var(--border-cor);
-}
-
-/* --- ANIMAÇÕES DE TRANSIÇÃO --- */
-#telalista, #telaAvaliacao {
-    animation: fadeInSlide 0.4s ease-out;
-}
-
-@keyframes fadeInSlide {
-    from { opacity: 0; transform: translateY(15px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-/* --- SIDEBAR --- */
 #sidebar { 
     width: 280px; 
     height: 100vh; 
@@ -64,42 +49,68 @@ footer {
     background: var(--bg-card) !important; 
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
     box-shadow: 10px 0 30px rgba(0,0,0,0.1);
+    transform: translateX(0); 
 }
 
-#sidebar.active { transform: translateX(-280px); }
+#sidebar.active { transform: translateX(-280px) !important; }
 
-.nav-link { transition: all 0.2s ease; }
-.nav-link:hover {
-    background: rgba(13, 110, 253, 0.1) !important;
-    transform: translateX(5px);
+/* BOTÃO FLUTUANTE DE AJUDA */
+.btn-floating-help {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    background-color: #3b71fe !important; 
+    color: white !important;
+    border-radius: 50%;
+    border: none;
+    font-size: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1500;
+    box-shadow: 0 6px 16px rgba(59, 113, 254, 0.3);
+    transition: transform 0.2s ease, background-color 0.2s;
 }
 
-/* --- INTERATIVIDADE --- */
-.btn, .card { transition: all 0.2s ease-in-out !important; }
-.card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.08) !important;
+.btn-floating-help:hover {
+    transform: scale(1.1);
+    background-color: #2a56d1 !important;
 }
 
-/* --- CRITÉRIOS --- */
-.col-validacao { width: 40px; text-align: center; font-weight: bold; display: flex; justify-content: center; align-items: center; }
-.grupo-header { background-color: #2b3035; color: #ffffff !important; padding: 12px 20px; border-radius: 8px 8px 0 0; margin-top: 25px; }
+/* BADGE DO OPERADOR NO CARD */
+.badge-operador {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    background-color: #f1f3f5;
+    color: #495057;
+    padding: 4px 10px;
+    border-radius: 6px;
+    display: inline-block;
+}
 
-/* Selos */
-.badge { font-weight: 700 !important; text-transform: uppercase; }
-.selo-inexistente { background-color: #e9ecef !important; color: #6c757d !important; }
-.selo-inicial { background-color: #ffc107 !important; color: #000 !important; }
-.selo-basico { background-color: #6c757d !important; color: #fff !important; }
-.selo-intermediario { background-color: #17a2b8 !important; color: #fff !important; }
-.selo-elevado { background-color: #cd0000 !important; color: #fff !important; }
-.selo-prata { background-color: #c0c0c0 !important; color: #000 !important; border: 1px solid #888; }
-.selo-ouro { background-color: #ffd700 !important; color: #000 !important; }
-.selo-diamante { background-color: #b9f2ff !important; color: #004a5c !important; }
+[data-bs-theme="dark"] .badge-operador {
+    background-color: #2d2d2d;
+    color: #adb5bd;
+}
 
-.btn-menu-lateral { position: fixed; left: 15px; top: 20px; z-index: 1000; width: 45px; height: 45px; border-radius: 50%; background: var(--bg-card) !important; border: 1px solid var(--border-cor) !important; color: var(--text-principal) !important; }
+/* COMPONENTES */
 .dark-card-target { background-color: var(--bg-card) !important; color: var(--text-principal) !important; border: 1px solid var(--border-cor) !important; }
+.nav-link:hover { background: rgba(13, 110, 253, 0.1) !important; transform: translateX(5px); transition: 0.2s; }
+.nav-link.active { background: rgba(13, 110, 253, 0.15); color: #0d6efd !important; font-weight: 600; }
+.grupo-header { background-color: #2b3035; color: #fff !important; padding: 12px; border-radius: 8px 8px 0 0; }
+.col-validacao { width: 40px; text-align: center; }
 
-[data-bs-theme="dark"] .modal-content { background-color: var(--bg-card) !important; color: var(--text-principal) !important; border: 1px solid var(--border-cor); }
-[data-bs-theme="dark"] .btn-close { filter: invert(1) grayscale(100%) brightness(200%); }
+/* SELOS */
+.selo-inexistente { background: #e9ecef; color: #6c757d; }
+.selo-inicial { background: #ffdf7f; color: #000; }
+.selo-basico { background: #6c757d; color: #fff; }
+.selo-intermediario { background: #17a2b8; color: #fff; }
+.selo-elevado { background: #cd0000; color: #fff; }
+.selo-prata { background: #c0c0c0; color: #000; border: 1px solid #888; }
+.selo-ouro { background: #ffd700; color: #000; }
+.selo-diamante { background: #b9f2ff; color: #004a5c; }
 
-@media print { .no-print { display: none !important; } }
+@media print { .no-print { display: none !important; } #sidebar { display: none; } }

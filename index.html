@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="d-flex flex-column min-vh-100">
 
     <button type="button" id="sidebarCollapse" class="btn btn-menu-lateral no-print">
         <i class="bi bi-list"></i>
@@ -16,16 +16,32 @@
 
     <nav id="sidebar" class="active shadow-lg border-end no-print">
         <div class="sidebar-header p-4 border-bottom d-flex justify-content-between align-items-center">
-            <h5 class="mb-0 fw-bold text-primary">Avalia Simulator</h5>
+            <h5 class="mb-0 fw-bold text-primary">Gestão Atricon</h5>
             <button class="btn btn-sm btn-light rounded-circle" onclick="document.getElementById('sidebar').classList.add('active')">
                 <i class="bi bi-x-lg"></i>
             </button>
         </div>
-        
         <ul class="list-unstyled p-2">
-            <li><a href="#" onclick="voltarParaInicio()" class="nav-link p-3 rounded mb-1"><i class="bi bi-house-door me-3"></i><span>Dashboard</span></a></li>
-            <li><a href="#" onclick="exportarDados()" class="nav-link p-3 rounded mb-1"><i class="bi bi-download me-3"></i><span>Exportar Backup</span></a></li>
-            <li><a href="#" onclick="window.print()" class="nav-link p-3 rounded mb-1"><i class="bi bi-printer me-3"></i><span>Imprimir Relatório</span></a></li>
+            <li>
+                <a href="#" onclick="voltarParaInicio()" class="nav-link p-3 rounded mb-1 text-decoration-none">
+                    <i class="bi bi-house-door me-3"></i><span>Dashboard</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" onclick="abrirAjuda()" class="nav-link p-3 rounded mb-1 text-decoration-none">
+                    <i class="bi bi-question-circle me-3"></i><span>Ajuda e Selos</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" onclick="exportarDados()" class="nav-link p-3 rounded mb-1 text-decoration-none">
+                    <i class="bi bi-download me-3"></i><span>Exportar Backup</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" onclick="window.print()" class="nav-link p-3 rounded mb-1 text-decoration-none">
+                    <i class="bi bi-printer me-3"></i><span>Imprimir</span>
+                </a>
+            </li>
             <li class="p-3 border-top mt-2">
                 <div class="form-check form-switch">
                     <input class="form-check-input" type="checkbox" id="darkModeToggle">
@@ -35,16 +51,25 @@
         </ul>
     </nav>
 
-    <main id="content" class="container py-4">
+    <main id="content" class="container py-4 flex-grow-1">
         <div id="telalista">
-            <header class="mb-5 text-center">
+            <header class="mb-5 text-center mt-5">
                 <h2 class="fw-bold">Avalia Simulator 2026</h2>
-                <p class="text-muted">Simulador de Transparência Atricon</p>
+                <p class="text-muted">Simulador de Transparência</p>
             </header>
-            <div class="card shadow-sm border-0 mb-5 p-3 rounded-4 dark-card-target">
-                <div class="input-group">
-                    <input type="text" id="inputNovoCliente" class="form-control border-0 bg-light p-3" placeholder="Digite o nome da Prefeitura ou Câmara...">
-                    <button onclick="cadastrarEntidade()" class="btn btn-primary px-4 fw-bold">Cadastrar Entidade</button>
+
+            <div class="card shadow-sm border-0 mb-5 p-4 rounded-4 dark-card-target">
+                <div class="input-group mb-1">
+                    <input type="text" id="inputNovoCliente" class="form-control border-0 bg-light p-3" placeholder="Pesquisar prefeitura ou câmara...">
+                    <button onclick="cadastrarEntidade()" class="btn btn-primary px-4 fw-bold">Cadastrar Novo</button>
+                </div>
+                
+                <div id="feedbackCadastro" class="text-danger small fw-bold mb-2 ps-2" style="display: none; height: 20px;"></div>
+
+                <div class="d-flex justify-content-center gap-2 no-print mt-2 flex-wrap">
+                    <button onclick="definirFiltro('todos')" class="btn btn-sm btn-secondary px-3 rounded-pill shadow-sm">Todos</button>
+                    <button onclick="definirFiltro('prefeitura')" class="btn btn-sm btn-outline-primary px-3 rounded-pill shadow-sm">Executivo</button>
+                    <button onclick="definirFiltro('camara')" class="btn btn-sm btn-outline-primary px-3 rounded-pill shadow-sm">Legislativo</button>
                 </div>
             </div>
             <div id="gridClientes" class="row g-4"></div>
@@ -53,18 +78,13 @@
         <div id="telaAvaliacao" class="d-none">
             <div class="row g-4">
                 <div class="col-lg-4">
-                    <div class="card shadow border-0 p-4 text-center sticky-top dark-card-target" style="top: 20px; z-index: 10;">
+                    <div class="card shadow border-0 p-4 text-center sticky-top dark-card-target" style="top: 20px;">
                         <h3 id="nomeEntidadeAtiva" class="fw-bold mb-3 text-truncate text-primary">Entidade</h3>
                         <h1 class="display-3 fw-bold mb-0" id="progressoTexto">0%</h1>
                         <div class="progress my-4" style="height: 12px;">
                             <div id="barraProgresso" class="progress-bar progress-bar-striped progress-bar-animated" style="width: 0%"></div>
                         </div>
                         <div id="statusSelo" class="badge p-3 fs-6 rounded-pill mb-4 shadow-sm">INEXISTENTE</div>
-                        
-                        <div class="border-top pt-3 text-start mt-2 no-print">
-                            <h6 class="text-uppercase fw-bold small text-muted mb-2" style="font-size: 0.7rem;">LEGENDA DOS CRITÉRIOS</h6>
-                            <div class="small mb-1"><strong>G:</strong> Gravação | <strong>S:</strong> Suficiência | <strong>A:</strong> Atualidade</div>
-                        </div>
                         <button onclick="voltarParaInicio()" class="btn btn-outline-secondary btn-sm mt-4 no-print w-100">Voltar ao Início</button>
                     </div>
                 </div>
@@ -73,81 +93,66 @@
         </div>
     </main>
 
-    <footer class="py-4 no-print mt-auto">
-        <div class="container text-center">
-            <p class="text-muted small mb-0">© 2026 TD2 - Simulador de Transparência Atricon</p>
+    <footer class="py-3 border-top bg-white no-print dark-card-target mt-auto">
+        <div class="container d-flex justify-content-between align-items-center text-muted small" id="footerStatus">
+            <span>Avalia Simulator 2026</span>
         </div>
     </footer>
 
-    <button type="button" class="btn btn-primary rounded-circle shadow-lg no-print" 
-            style="position: fixed; bottom: 25px; right: 25px; width: 55px; height: 55px; z-index: 3000;" 
-            data-bs-toggle="modal" data-bs-target="#modalAjuda">
-        <i class="bi bi-question-lg fs-4"></i>
-    </button>
-
     <div class="modal fade" id="modalAjuda" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
-                <div class="modal-header border-0">
-                    <h5 class="modal-title fw-bold">Critérios de Classificação</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold">Critérios e Selos</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="table-responsive">
-                        <table class="table table-sm align-middle">
-                            <thead>
-                                <tr class="text-muted small"><th>Percentual</th><th>Nível de Transparência</th></tr>
-                            </thead>
-                            <tbody>
-                                <tr><td>0%</td><td><span class="badge selo-inexistente w-100">Inexistente</span></td></tr>
-                                <tr><td>1% a 29%</td><td><span class="badge selo-inicial w-100">Inicial</span></td></tr>
-                                <tr><td>30% a 49%</td><td><span class="badge selo-basico w-100">Básico</span></td></tr>
-                                <tr><td>50% a 74%</td><td><span class="badge selo-intermediario w-100">Intermediário</span></td></tr>
-                                <tr><td>75% a 84%</td><td><span class="badge selo-prata w-100">Prata</span></td></tr>
-                                <tr><td>85% a 94%</td><td><span class="badge selo-ouro w-100">Ouro</span></td></tr>
-                                <tr><td>95% a 100%*</td><td><span class="badge selo-diamante w-100">Diamante</span></td></tr>
-                            </tbody>
-                        </table>
+                    <p>Marque as três colunas para pontuar:</p>
+                    <div class="row g-2 text-center mb-3">
+                        <div class="col-4 border-end"><strong>C</strong><br><small>Confirmado</small></div>
+                        <div class="col-4 border-end"><strong>S</strong><br><small>Série Histórica</small></div>
+                        <div class="col-4"><strong>A</strong><br><small>Atualidade</small></div>
                     </div>
-                    <div class="bg-light p-3 rounded small mt-2 dark-card-target border">
-                        <strong>Regra de Ouro:</strong> Se houver pendência em qualquer item marcado com <span class="text-danger fw-bold">*</span> (Essencial), o selo máximo permitido será <span class="badge selo-elevado">Elevado</span>.
+                    <hr>
+                    <div class="row g-2">
+                        <div class="col-6"><div class="badge w-100 p-2 selo-diamante">DIAMANTE (95-100%)</div></div>
+                        <div class="col-6"><div class="badge w-100 p-2 selo-ouro">OURO (85-94%)</div></div>
+                        <div class="col-6"><div class="badge w-100 p-2 selo-prata">PRATA (75-84%)</div></div>
+                        <div class="col-6"><div class="badge w-100 p-2 selo-elevado">ELEVADO (Falta Essencial)</div></div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="modal fade" id="modalExcluir" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
-        <div class="modal-dialog modal-sm modal-dialog-centered">
-            <div class="modal-content dark-card-target shadow-lg">
-                <div class="modal-body text-center p-4">
-                    <i class="bi bi-exclamation-triangle text-danger fs-1 mb-3"></i>
-                    <h5 class="fw-bold">Excluir Entidade?</h5>
-                    <p class="text-muted small">Todos os dados desta avaliação serão perdidos permanentemente.</p>
-                    <div class="d-flex gap-2 mt-4">
-                        <button type="button" class="btn btn-light flex-grow-1" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="button" id="btnConfirmarExclusao" class="btn btn-danger flex-grow-1">Excluir</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="modalEditar" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal fade" id="modalEditarEntidade" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content dark-card-target shadow-lg">
-                <div class="modal-header border-0">
-                    <h5 class="modal-title fw-bold">Editar Nome da Entidade</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold">Editar Nome</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body p-4">
-                    <div class="mb-3">
-                        <label for="inputEditarNome" class="form-label small text-muted">Novo nome:</label>
-                        <input type="text" id="inputEditarNome" class="form-control p-3 border-0 bg-light">
-                    </div>
-                    <div class="d-flex gap-2 mt-4">
-                        <button type="button" class="btn btn-light flex-grow-1" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="button" onclick="confirmarEdicao()" class="btn btn-primary flex-grow-1 fw-bold">Salvar Alteração</button>
+                <div class="modal-body">
+                    <input type="text" id="inputEditNome" class="form-control p-3 bg-light border-0" placeholder="Novo nome da entidade...">
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary px-4 fw-bold" onclick="confirmarEdicao()">Salvar Alterações</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalConfirmarExclusao" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-sm modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-body text-center p-4">
+                    <i class="bi bi-exclamation-octagon text-danger display-4 mb-3"></i>
+                    <h5 class="fw-bold">Excluir?</h5>
+                    <p class="text-muted small">Ação irreversível, a avaliação será perdida, você tem certeza disso?</p>
+                    <div class="d-flex gap-2">
+                        <button type="button" class="btn btn-light w-100" data-bs-dismiss="modal">Não</button>
+                        <button type="button" class="btn btn-danger w-100" onclick="executarExclusao()">Sim</button>
                     </div>
                 </div>
             </div>

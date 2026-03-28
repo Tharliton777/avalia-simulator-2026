@@ -135,230 +135,270 @@ const GRUPOS_CRITERIOS = [
     }
 ];
 
-// Variáveis de Estado
-let db = JSON.parse(localStorage.getItem('assesi_atricon_v2026')) || {};
+const DATA_ENTIDADES = [
+    {n:"PREFEITURA MUNICIPAL DE MAURITI", o:"CLEYDIR"}, {n:"PREFEITURA MUNICIPAL DE AMONTADA", o:"CLEYDIR"}, {n:"PREFEITURA MUNICIPAL DE CAMPOS SALES", o:"CLEYDIR"}, {n:"PREFEITURA MUNICIPAL DE SÃO BENEDITO", o:"CLEYDIR"}, {n:"PREFEITURA MUNICIPAL DE REDENÇÃO", o:"CLEYDIR"}, {n:"PREFEITURA MUNICIPAL DE PENTECOSTE", o:"CLEYDIR"}, {n:"PREFEITURA MUNICIPAL DE CRATEÚS", o:"CLEYDIR"}, {n:"PREFEITURA MUNICIPAL DE CASCAVEL", o:"CLEYDIR"}, {n:"PREFEITURA MUNICIPAL DE PEDRA BRANCA", o:"CLEYDIR"}, {n:"PREFEITURA MUNICIPAL DE MILHÃ", o:"CLEYDIR"}, {n:"PREFEITURA MUNICIPAL DE MADALENA", o:"CLEYDIR"}, {n:"PREFEITURA MUNICIPAL DE VIÇOSA DO CEARÁ", o:"CLEYDIR"}, {n:"PREFEITURA MUNICIPAL DE MONSENHOR TABOSA", o:"CLEYDIR"}, {n:"PREFEITURA MUNICIPAL DE SABOEIRO", o:"CLEYDIR"}, {n:"PREFEITURA MUNICIPAL DE MARTINÓPOLE", o:"CLEYDIR"}, {n:"PREFEITURA MUNICIPAL DE JIJOCA DE JERICOACOARA", o:"CLEYDIR"}, {n:"PREFEITURA MUNICIPAL DE HIDROLÂNDIA", o:"CLEYDIR"}, {n:"PREFEITURA MUNICIPAL DE GRANJEIRO", o:"CLEYDIR"}, {n:"PREFEITURA MUNICIPAL DE CARIDADE", o:"CLEYDIR"}, {n:"PREFEITURA MUNICIPAL DE CHORÓ", o:"CLEYDIR"}, {n:"PREFEITURA MUNICIPAL DE CAPISTRANO", o:"CLEYDIR"}, {n:"PREFEITURA MUNICIPAL DE BEBERIBE", o:"CLEYDIR"}, {n:"PREFEITURA MUNICIPAL DE APUIARÉS", o:"CLEYDIR"},
+    {n:"PREFEITURA MUNICIPAL DE IPAUMIRIM", o:"DAVI"}, {n:"PREFEITURA MUNICIPAL DE GUAIÚBA", o:"DAVI"}, {n:"PREFEITURA MUNICIPAL DE GENERAL SAMPAIO", o:"DAVI"}, {n:"PREFEITURA MUNICIPAL DE IPUEIRAS", o:"DAVI"}, {n:"PREFEITURA MUNICIPAL DE PALMÁCIA", o:"DAVI"}, {n:"PREFEITURA MUNICIPAL DE ITATIRA", o:"DAVI"}, {n:"PREFEITURA MUNICIPAL DE IPAPORANGA", o:"DAVI"}, {n:"PREFEITURA MUNICIPAL DE IBIAPINA", o:"DAVI"}, {n:"PREFEITURA MUNICIPAL DE ACARAPE", o:"DAVI"}, {n:"PREFEITURA MUNICIPAL DE IPU", o:"DAVI"}, {n:"PREFEITURA MUNICIPAL DE SÃO GONÇALO DO AMARANTE", o:"DAVI"}, {n:"PREFEITURA MUNICIPAL DE PARACURU", o:"DAVI"}, {n:"PREFEITURA MUNICIPAL DE IBICUITINGA", o:"DAVI"}, {n:"PREFEITURA MUNICIPAL DE AQUIRAZ", o:"DAVI"}, {n:"PREFEITURA MUNICIPAL DE QUIXELÔ", o:"DAVI"}, {n:"PREFEITURA MUNICIPAL DE ICÓ", o:"DAVI"}, {n:"PREFEITURA MUNICIPAL DE CAUCAIA", o:"DAVI"}, {n:"PREFEITURA MUNICIPAL DE SÃO JOÃO DO JAGUARIBE", o:"DAVI"}, {n:"PREFEITURA MUNICIPAL DE QUITERIANÓPOLIS", o:"DAVI"}, {n:"PREFEITURA MUNICIPAL DE PARAIPABA", o:"DAVI"}, {n:"PREFEITURA MUNICIPAL DE MERUOCA", o:"DAVI"}, {n:"PREFEITURA MUNICIPAL DE URUOCA", o:"DAVI"}, {n:"PREFEITURA MUNICIPAL DE PACAJUS", o:"DAVI"}, {n:"PREFEITURA MUNICIPAL DE SALITRE", o:"DAVI"}, {n:"PREFEITURA MUNICIPAL DE SANTANA DO ACARAÚ", o:"DAVI"}, {n:"PREFEITURA MUNICIPAL DE CEDRO", o:"DAVI"},
+    {n:"PREFEITURA MUNICIPAL DE ERERE", o:"FELIPE"}, {n:"PREFEITURA MUNICIPAL DE GUARAMIRANGA", o:"FELIPE"}, {n:"PREFEITURA MUNICIPAL DE BATURITÉ", o:"FELIPE"}, {n:"PREFEITURA MUNICIPAL DE COREAÚ", o:"FELIPE"}, {n:"PREFEITURA MUNICIPAL DE IRACEMA", o:"FELIPE"}, {n:"PREFEITURA MUNICIPAL DE ORÓS", o:"FELIPE"}, {n:"PREFEITURA MUNICIPAL DE IRAUÇUBA", o:"FELIPE"}, {n:"PREFEITURA MUNICIPAL DE ACARAÚ", o:"FELIPE"}, {n:"PREFEITURA MUNICIPAL DE SENADOR POMPEU", o:"FELIPE"}, {n:"PREFEITURA MUNICIPAL DE ITAIÇABA", o:"FELIPE"}, {n:"PREFEITURA MUNICIPAL DE EUSÉBIO", o:"FELIPE"}, {n:"PREFEITURA MUNICIPAL DE UMARI", o:"FELIPE"}, {n:"PREFEITURA MUNICIPAL DE UBAJARA", o:"FELIPE"}, {n:"PREFEITURA MUNICIPAL DE ACOPIARA", o:"FELIPE"}, {n:"PREFEITURA MUNICIPAL DE VARZEA ALEGRE", o:"FELIPE"}, {n:"PREFEITURA MUNICIPAL DE TAUÁ", o:"FELIPE"}, {n:"PREFEITURA MUNICIPAL DE RUSSAS", o:"FELIPE"}, {n:"PREFEITURA MUNICIPAL DE TRAIRI", o:"FELIPE"}, {n:"PREFEITURA MUNICIPAL DE TAMBORIL", o:"FELIPE"}, {n:"PREFEITURA MUNICIPAL DE MOMBAÇA", o:"FELIPE"}, {n:"PREFEITURA MUNICIPAL DE JARDIM", o:"FELIPE"}, {n:"PREFEITURA MUNICIPAL DE DEP. IRAPUAN PINHEIRO", o:"FELIPE"}, {n:"PREFEITURA MUNICIPAL DE URUBURETAMA", o:"FELIPE"}, {n:"PREFEITURA MUNICIPAL DE LAVRAS DA MANGABEIRA", o:"FELIPE"}, {n:"PREFEITURA MUNICIPAL DE FRECHEIRINHA", o:"FELIPE"}, {n:"PREFEITURA MUNICIPAL DE BAIXIO", o:"FELIPE"},
+    {n:"PREFEITURA MUNICIPAL DE CRATO", o:"JOÃO"}, {n:"PREFEITURA MUNICIPAL DE QUIXERAMOBIM", o:"JOÃO"}, {n:"SECRETARIA DE EDUCACAO DE JAGUARETAMA", o:"JOÃO"}, {n:"PREFEITURA MUNICIPAL DE ITAPIUNA", o:"JOÃO"}, {n:"PREFEITURA MUNICIPAL DE MORRINHOS", o:"JOÃO"}, {n:"PREFEITURA MUNICIPAL DE ARACATI", o:"JOÃO"}, {n:"PREFEITURA MUNICIPAL DE VARJOTA", o:"JOÃO"}, {n:"PREFEITURA MUNICIPAL DE OCARA", o:"JOÃO"}, {n:"PREFEITURA MUNICIPAL DE MASSAPÊ", o:"JOÃO"}, {n:"PREFEITURA MUNICIPAL DE LIMOEIRO DO NORTE", o:"JOÃO"}, {n:"PREFEITURA MUNICIPAL DE ALTANEIRA", o:"JOÃO"}, {n:"PREFEITURA MUNICIPAL DE GRAÇA", o:"JOÃO"}, {n:"PREFEITURA MUNICIPAL DE PARAMOTI", o:"JOÃO"}, {n:"PREFEITURA MUNICIPAL DE MORADA NOVA", o:"JOÃO"}, {n:"PREFEITURA MUNICIPAL DE HORIZONTE", o:"JOÃO"}, {n:"PREFEITURA MUNICIPAL DE GRANJA", o:"JOÃO"}, {n:"PREFEITURA MUNICIPAL DE FORQUILHA", o:"JOÃO"}, {n:"PREFEITURA MUNICIPAL DE PINDORETAMA", o:"JOÃO"}, {n:"PREFEITURA MUNICIPAL DE NOVA RUSSAS", o:"JOÃO"}, {n:"PREFEITURA MUNICIPAL DE ITAPAJÉ", o:"JOÃO"}, {n:"PREFEITURA MUNICIPAL DE TURURU", o:"JOÃO"}, {n:"PREFEITURA MUNICIPAL DE SANTA QUITÉRIA", o:"JOÃO"}, {n:"PREFEITURA MUNICIPAL DE MARANGUAPE", o:"JOÃO"}, {n:"PREFEITURA MUNICIPAL DE CANINDÉ", o:"JOÃO"}, {n:"PREFEITURA MUNICIPAL DE AURORA", o:"JOÃO"},
+    {n:"PREFEITURA MUNICIPAL DE ICAPUÍ", o:"KAIKE"}, {n:"PREFEITURA MUNICIPAL DE PEREIRO", o:"KAIKE"}, {n:"PREFEITURA MUNICIPAL DE QUIXERÉ", o:"KAIKE"}, {n:"PREFEITURA MUNICIPAL DE POTENGI", o:"KAIKE"}, {n:"PREFEITURA MUNICIPAL DE CATARINA", o:"KAIKE"}, {n:"PREFEITURA MUNICIPAL DE ARATUBA", o:"KAIKE"}, {n:"PREFEITURA MUNICIPAL DE QUIXADA", o:"KAIKE"}, {n:"PREFEITURA MUNICIPAL DE JAGUARETAMA", o:"KAIKE"}, {n:"PREFEITURA MUNICIPAL DE PORANGA", o:"KAIKE"}, {n:"PREFEITURA MUNICIPAL DE CARNAUBAL", o:"KAIKE"}, {n:"PREFEITURA MUNICIPAL DE ARACOIABA", o:"KAIKE"}, {n:"PREFEITURA MUNICIPAL DE ITAPIPOCA", o:"KAIKE"}, {n:"PREFEITURA MUNICIPAL DE AIUABA", o:"KAIKE"}, {n:"PREFEITURA MUNICIPAL DE TIANGUÁ", o:"KAIKE"}, {n:"PREFEITURA MUNICIPAL DE JUAZEIRO DO NORTE", o:"KAIKE"}, {n:"PREFEITURA MUNICIPAL DE ITAREMA", o:"KAIKE"}, {n:"PREFEITURA MUNICIPAL DE ITAITINGA", o:"KAIKE"}, {n:"PREFEITURA MUNICIPAL DE FORTIM", o:"KAIKE"}, {n:"PREFEITURA MUNICIPAL DE PACOTI", o:"KAIKE"}, {n:"PREFEITURA MUNICIPAL DE MARCO", o:"KAIKE"}, {n:"PREFEITURA MUNICIPAL DE BARBALHA", o:"KAIKE"}, {n:"PREFEITURA MUNICIPAL DE ASSARÉ", o:"KAIKE"}, {n:"PREFEITURA MUNICIPAL DE JAGUARUANA", o:"KAIKE"}, {n:"PREFEITURA MUNICIPAL DE CATUNDA", o:"KAIKE"},
+    {n:"PREFEITURA MUNICIPAL DE BELA CRUZ", o:"KAIRON"}, {n:"PREFEITURA MUNICIPAL DE BOA VIAGEM", o:"KAIRON"}, {n:"PREFEITURA MUNICIPAL DE ALTO SANTO", o:"KAIRON"}, {n:"PREFEITURA MUNICIPAL DE PIQUET CARNEIRO", o:"KAIRON"}, {n:"PREFEITURA MUNICIPAL DE PALHANO", o:"KAIRON"}, {n:"PREFEITURA MUNICIPAL DE INDEPENDENCIA", o:"KAIRON"}, {n:"PREFEITURA MUNICIPAL DE TEJUÇUOCA", o:"KAIRON"}, {n:"PREFEITURA MUNICIPAL DE SANTANA DO CARIRI", o:"KAIRON"}, {n:"PREFEITURA MUNICIPAL DE POTIRETAMA", o:"KAIRON"}, {n:"PREFEITURA MUNICIPAL DE NOVO ORIENTE", o:"KAIRON"}, {n:"PREFEITURA MUNICIPAL DE MIRAÍMA", o:"KAIRON"}, {n:"PREFEITURA MUNICIPAL DE MILAGRES", o:"KAIRON"}, {n:"PREFEITURA MUNICIPAL DE GUARACIABA DO NORTE", o:"KAIRON"}, {n:"PREFEITURA MUNICIPAL DE CARIRIAÇU", o:"KAIRON"}, {n:"PREFEITURA MUNICIPAL DE BARREIRA", o:"KAIRON"}, {n:"PREFEITURA MUNICIPAL DE TABULEIRO DO NORTE", o:"KAIRON"}, {n:"PREFEITURA MUNICIPAL DE SOLONÓPOLE", o:"KAIRON"}, {n:"PREFEITURA MUNICIPAL DE JAGUARIBE", o:"KAIRON"}, {n:"PREFEITURA MUNICIPAL DE CARIRÉ", o:"KAIRON"}, {n:"PREFEITURA MUNICIPAL DE PACATUBA", o:"KAIRON"}, {n:"PREFEITURA MUNICIPAL DE BARRO", o:"KAIRON"}
+];
+
+// --- LOGICA DE BANCO DE DADOS ---
+const DB_KEY = 'assesi_atricon_v3_clean'; 
+let db = JSON.parse(localStorage.getItem(DB_KEY)) || {};
 let entidadeAtiva = null;
+let filtroAtivo = 'todos';
 let idParaExcluir = null;
 let idParaEditar = null;
 
-window.onload = () => {
-    atualizarGridPrincipal();
-    
-    // Sidebar toggle
-    const btnSidebar = document.getElementById('sidebarCollapse');
-    if(btnSidebar) btnSidebar.onclick = () => document.getElementById('sidebar').classList.toggle('active');
+// Função auxiliar para normalizar strings (remover acentos e colocar em lower case)
+function normalizarTexto(texto) {
+    return texto.toString()
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, "");
+}
 
-    // Dark Mode
-    const toggleDark = document.getElementById('darkModeToggle');
-    if(toggleDark) {
-        toggleDark.onchange = (e) => {
-            document.documentElement.setAttribute('data-bs-theme', e.target.checked ? 'dark' : 'light');
-        };
+function salvar() { localStorage.setItem(DB_KEY, JSON.stringify(db)); }
+
+window.onload = () => {
+    if (Object.keys(db).length === 0) {
+        DATA_ENTIDADES.forEach(item => {
+            const id = "ENT_" + item.n.replace(/\s/g, "_");
+            db[id] = { nome: item.n, operador: item.o, perc: 0, selo: "INEXISTENTE", marcados: {} };
+        });
+        salvar();
     }
     
-    // Configuração do botão de exclusão
-    const btnConfirmExcluir = document.getElementById('btnConfirmarExclusao');
-    if(btnConfirmExcluir) {
-        btnConfirmExcluir.onclick = () => {
-            if (idParaExcluir && db[idParaExcluir]) {
-                delete db[idParaExcluir];
-                salvar();
-                atualizarGridPrincipal();
-                const modalExcluir = bootstrap.Modal.getInstance(document.getElementById('modalExcluir'));
-                if(modalExcluir) modalExcluir.hide();
-                idParaExcluir = null;
-            }
-        };
-    }
+    atualizarGridPrincipal();
+    atualizarRodape();
+
+    document.getElementById('sidebarCollapse').onclick = () => {
+        document.getElementById('sidebar').classList.toggle('active');
+    };
+
+    document.getElementById('darkModeToggle').onchange = (e) => {
+        document.documentElement.setAttribute('data-bs-theme', e.target.checked ? 'dark' : 'light');
+    };
+    
+    document.getElementById('inputNovoCliente').addEventListener('input', atualizarGridPrincipal);
 };
 
-function cadastrarEntidade() {
-    const input = document.getElementById('inputNovoCliente');
-    if (!input || !input.value.trim()) return;
-    const id = Date.now().toString();
-    db[id] = { nome: input.value.trim(), perc: 0, selo: "INEXISTENTE", marcados: {} };
-    input.value = "";
-    salvar(); 
-    atualizarGridPrincipal();
+// --- INTERFACE PRINCIPAL ---
+
+function abrirAjuda() {
+    const modal = new bootstrap.Modal(document.getElementById('modalAjuda'));
+    modal.show();
+    document.getElementById('sidebar').classList.add('active');
+}
+
+function definirFiltro(tipo) { 
+    filtroAtivo = tipo; 
+    atualizarGridPrincipal(); 
 }
 
 function atualizarGridPrincipal() {
-    const grid = document.getElementById('gridClientes'); 
-    if(!grid) return;
+    const grid = document.getElementById('gridClientes');
+    const termo = normalizarTexto(document.getElementById('inputNovoCliente').value);
     grid.innerHTML = "";
     
     for (const id in db) {
         const ent = db[id];
-        const slug = ent.selo.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
-        grid.innerHTML += `
-            <div class="col-md-4">
-                <div class="card shadow-sm border-0 p-3 dark-card-target h-100">
-                    <h5 class="fw-bold mb-2 text-truncate">${ent.nome}</h5>
-                    <div class="badge w-100 mb-3 p-2 selo-${slug}">${ent.selo} (${ent.perc}%)</div>
-                    <div class="d-flex gap-2">
-                        <button onclick="abrirChecklist('${id}')" class="btn btn-primary btn-sm flex-grow-1">Avaliar</button>
-                        <button onclick="editarEntidade('${id}')" class="btn btn-outline-secondary btn-sm" title="Editar"><i class="bi bi-pencil"></i></button>
-                        <button onclick="excluirEntidade('${id}')" class="btn btn-outline-danger btn-sm" title="Excluir"><i class="bi bi-trash"></i></button>
+        const nomeParaBusca = normalizarTexto(ent.nome);
+        
+        const passaTexto = nomeParaBusca.includes(termo);
+        const passaPoder = (filtroAtivo === 'todos') || 
+                           (filtroAtivo === 'prefeitura' && ent.nome.includes('PREFEITURA')) || 
+                           (filtroAtivo === 'camara' && ent.nome.includes('CAMARA'));
+
+        if (passaTexto && passaPoder) {
+            const slug = normalizarTexto(ent.selo);
+            grid.innerHTML += `
+                <div class="col-md-4">
+                    <div class="card shadow-sm border-0 p-3 h-100 dark-card-target">
+                        <div class="mb-2 text-end">
+                            <span class="badge-operador">${ent.operador || 'ASSESI'}</span>
+                        </div>
+                        <h6 class="fw-bold mb-3">${ent.nome}</h6>
+                        <div class="badge w-100 mb-3 p-2 selo-${slug}">${ent.selo} (${ent.perc}%)</div>
+                        <div class="d-flex gap-2">
+                            <button onclick="abrirChecklist('${id}')" class="btn btn-primary btn-sm flex-grow-1 fw-bold">Avaliar</button>
+                            <button onclick="prepararEdicao('${id}')" class="btn btn-outline-secondary btn-sm" title="Editar Nome"><i class="bi bi-pencil"></i></button>
+                            <button onclick="confirmarExclusao('${id}')" class="btn btn-outline-danger btn-sm"><i class="bi bi-trash"></i></button>
+                        </div>
                     </div>
-                </div>
-            </div>`;
+                </div>`;
+        }
     }
+    atualizarRodape();
 }
 
-// Função de Editar Entidade
-function editarEntidade(id) {
-    if (!db[id]) return;
+function cadastrarEntidade() {
+    const input = document.getElementById('inputNovoCliente');
+    const nomeOriginal = input.value.trim().toUpperCase();
+    const feedback = document.getElementById('feedbackCadastro');
+    
+    if (!nomeOriginal) return;
+
+    // Normalização para comparação exata (sem acentos e espaços)
+    const novoNomeComp = normalizarTexto(nomeOriginal).replace(/\s/g, "");
+
+    // Verifica se já existe uma entidade similar no banco
+    const jaExiste = Object.values(db).some(ent => {
+        return normalizarTexto(ent.nome).replace(/\s/g, "") === novoNomeComp;
+    });
+
+    if (jaExiste) {
+        // FEEDBACK VISUAL EM VEZ DE ALERT
+        feedback.innerText = "⚠️ Esta entidade já está cadastrada!";
+        feedback.style.display = "block";
+        setTimeout(() => feedback.style.display = "none", 4000);
+        return;
+    }
+
+    // Se não existir, procede com o cadastro
+    const id = "ENT_" + Date.now();
+    db[id] = { nome: nomeOriginal, operador: "AVULSO", perc: 0, selo: "INEXISTENTE", marcados: {} };
+    salvar();
+    input.value = "";
+    feedback.style.display = "none";
+    atualizarGridPrincipal();
+}
+
+// --- EDIÇÃO E EXCLUSÃO ---
+
+function prepararEdicao(id) {
     idParaEditar = id;
-    document.getElementById('inputEditarNome').value = db[id].nome;
-    
-    // Inicia o Modal do Bootstrap corretamente
-    const modalEl = document.getElementById('modalEditar');
-    const modalInstance = bootstrap.Modal.getOrCreateInstance(modalEl);
-    modalInstance.show();
+    document.getElementById('inputEditNome').value = db[id].nome;
+    const modal = new bootstrap.Modal(document.getElementById('modalEditarEntidade'));
+    modal.show();
 }
 
-// Função de Confirmar Edição
 function confirmarEdicao() {
-    const input = document.getElementById('inputEditarNome');
-    const novoNome = input.value.trim();
-    
-    if (idParaEditar && novoNome !== "") {
+    const novoNome = document.getElementById('inputEditNome').value.trim().toUpperCase();
+    if (novoNome && idParaEditar) {
         db[idParaEditar].nome = novoNome;
         salvar();
         atualizarGridPrincipal();
-        
-        // Se a tela de avaliação estiver aberta para essa entidade, atualiza o nome no topo
-        if (entidadeAtiva === idParaEditar) {
-            const tituloTopo = document.getElementById('nomeEntidadeAtiva');
-            if(tituloTopo) tituloTopo.innerText = novoNome;
-        }
-
-        // Fecha o modal
-        const modalEl = document.getElementById('modalEditar');
-        const modalInstance = bootstrap.Modal.getInstance(modalEl);
-        if(modalInstance) modalInstance.hide();
-        
-        idParaEditar = null;
+        const modalInstance = bootstrap.Modal.getInstance(document.getElementById('modalEditarEntidade'));
+        if (modalInstance) modalInstance.hide();
     }
 }
 
+function confirmarExclusao(id) {
+    idParaExcluir = id;
+    new bootstrap.Modal(document.getElementById('modalConfirmarExclusao')).show();
+}
+
+function executarExclusao() {
+    if(idParaExcluir) {
+        delete db[idParaExcluir];
+        salvar();
+        idParaExcluir = null;
+        bootstrap.Modal.getInstance(document.getElementById('modalConfirmarExclusao')).hide();
+        atualizarGridPrincipal();
+    }
+}
+
+// --- SISTEMA DE AVALIAÇÃO ---
+
 function abrirChecklist(id) {
-    if(!db[id]) return;
     entidadeAtiva = id;
     document.getElementById('telalista').classList.add('d-none');
     document.getElementById('telaAvaliacao').classList.remove('d-none');
     document.getElementById('nomeEntidadeAtiva').innerText = db[id].nome;
+    window.scrollTo(0,0);
     renderizarGrupos();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function renderizarGrupos() {
-    const container = document.getElementById('containerGrupos'); 
-    if(!container || !entidadeAtiva) return;
+    const container = document.getElementById('containerGrupos');
     container.innerHTML = "";
     const ent = db[entidadeAtiva];
 
     GRUPOS_CRITERIOS.forEach(grupo => {
-        let html = `
-            <div class="grupo-header d-flex justify-content-between align-items-center mb-0 mt-4">
-                <span class="fw-bold">${grupo.titulo}</span>
-                <div class="d-flex" style="width: 120px;">
-                    <span class="col-validacao">G</span>
-                    <span class="col-validacao">S</span>
-                    <span class="col-validacao">A</span>
-                </div>
-            </div>
-            <ul class="list-group mb-2 shadow-sm">`;
-        
+        let html = `<div class="grupo-header d-flex justify-content-between mt-4"><span>${grupo.titulo}</span><div class="d-flex"><span class="col-validacao">G</span><span class="col-validacao">S</span><span class="col-validacao">A</span></div></div><ul class="list-group mb-3">`;
         grupo.itens.forEach(item => {
             const st = ent.marcados[item.id] || { g: false, s: false, a: false };
-            html += `
-                <li class="list-group-item d-flex align-items-center py-3">
-                    <div class="flex-grow-1">
-                        <small class="text-muted d-block">#${item.id} ${item.essencial ? '<span class="text-danger fw-bold">*</span>' : ''}</small>
-                        <span class="fw-medium">${item.nome}</span>
-                    </div>
-                    <div class="d-flex" style="width: 120px;">
-                        <div class="col-validacao"><input type="checkbox" class="form-check-input" ${st.g?'checked':''} onchange="toggleCheck('${item.id}', 'g')"></div>
-                        <div class="col-validacao"><input type="checkbox" class="form-check-input" ${st.s?'checked':''} onchange="toggleCheck('${item.id}', 's')"></div>
-                        <div class="col-validacao"><input type="checkbox" class="form-check-input" ${st.a?'checked':''} onchange="toggleCheck('${item.id}', 'a')"></div>
-                    </div>
-                </li>`;
+            html += `<li class="list-group-item d-flex align-items-center dark-card-target">
+                <div class="flex-grow-1"><small class="text-muted">${item.id}</small> ${item.essencial?'<b class="text-danger">*</b>':''} <br><b>${item.nome}</b></div>
+                <div class="d-flex">
+                    <input type="checkbox" class="mx-2" ${st.g?'checked':''} onchange="toggleCheck('${item.id}', 'g')">
+                    <input type="checkbox" class="mx-2" ${st.s?'checked':''} onchange="toggleCheck('${item.id}', 's')">
+                    <input type="checkbox" class="mx-2" ${st.a?'checked':''} onchange="toggleCheck('${item.id}', 'a')">
+                </div>
+            </li>`;
         });
-        container.innerHTML += html + `</ul>`;
+        container.innerHTML += html + "</ul>";
     });
     calcularProgresso();
 }
 
 function toggleCheck(id, tipo) {
-    if(!entidadeAtiva) return;
     const ent = db[entidadeAtiva];
     if (!ent.marcados[id]) ent.marcados[id] = { g: false, s: false, a: false };
     ent.marcados[id][tipo] = !ent.marcados[id][tipo];
-    salvar(); 
+    salvar();
     calcularProgresso();
 }
 
 function calcularProgresso() {
     const ent = db[entidadeAtiva];
-    let total = 0, ok = 0, faltaEssencial = false;
+    let totalItems = 0;
+    let atendidos = 0;
+    let faltaEssencial = false;
 
-    GRUPOS_CRITERIOS.forEach(g => g.itens.forEach(i => {
-        total++;
-        const st = ent.marcados[i.id] || { g: false, s: false, a: false };
-        if (st.g && st.s && st.a) {
-            ok++;
-        } else if (i.essencial) {
-            faltaEssencial = true;
-        }
-    }));
+    GRUPOS_CRITERIOS.forEach(g => {
+        g.itens.forEach(i => {
+            totalItems++;
+            const s = ent.marcados[i.id] || {g:false,s:false,a:false};
+            if (s.g && s.s && s.a) {
+                atendidos++;
+            } else if (i.essencial) {
+                faltaEssencial = true;
+            }
+        });
+    });
 
-    const perc = Math.round((ok / total) * 100) || 0;
+    const perc = Math.round((atendidos / totalItems) * 100);
     let selo = "INEXISTENTE";
     
     if (perc >= 95) selo = faltaEssencial ? "ELEVADO" : "DIAMANTE";
     else if (perc >= 85) selo = faltaEssencial ? "ELEVADO" : "OURO";
     else if (perc >= 75) selo = faltaEssencial ? "ELEVADO" : "PRATA";
-    else if (perc >= 50) selo = "INTERMEDIARIO";
-    else if (perc >= 30) selo = "BASICO";
     else if (perc > 0) selo = "INICIAL";
 
     ent.perc = perc; 
     ent.selo = selo;
-    
+
     document.getElementById('progressoTexto').innerText = perc + "%";
     document.getElementById('barraProgresso').style.width = perc + "%";
     
     const b = document.getElementById('statusSelo');
-    const slug = selo.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
-    b.innerText = selo; 
-    b.className = `badge p-3 fs-6 rounded-pill shadow-sm selo-${slug}`;
+    b.innerText = selo;
+    b.className = `badge p-3 fs-6 rounded-pill selo-${normalizarTexto(selo)}`;
 }
 
-function voltarParaInicio() { 
-    entidadeAtiva = null; 
-    document.getElementById('telaAvaliacao').classList.add('d-none'); 
-    document.getElementById('telalista').classList.remove('d-none'); 
-    document.getElementById('sidebar').classList.add('active');
-    atualizarGridPrincipal(); 
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+function atualizarRodape() {
+    const footer = document.getElementById('footerStatus');
+    const total = Object.keys(db).length;
+    const avaliados = Object.values(db).filter(e => e.perc > 0).length;
+    footer.innerHTML = `<span><b>${avaliados}</b> de ${total} entidades</span><span>© 2026 TD2 - Simulador de Transparência Atricon</span>`;
 }
 
-function excluirEntidade(id) {
-    idParaExcluir = id;
-    const modalEl = document.getElementById('modalExcluir');
-    const instance = bootstrap.Modal.getOrCreateInstance(modalEl);
-    instance.show();
+function voltarParaInicio() {
+    document.getElementById('telaAvaliacao').classList.add('d-none');
+    document.getElementById('telalista').classList.remove('d-none');
+    atualizarGridPrincipal();
 }
 
-function salvar() { 
-    localStorage.setItem('assesi_atricon_v2026', JSON.stringify(db)); 
-}
-
-function exportarDados() { 
-    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db)); 
-    const dlAnchor = document.createElement('a'); 
-    dlAnchor.setAttribute("href", dataStr); 
-    dlAnchor.setAttribute("download", "backup_assesi_2026.json"); 
-    dlAnchor.click(); 
+function exportarDados() {
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db));
+    const downloadAnchorNode = document.createElement('a');
+    downloadAnchorNode.setAttribute("href", dataStr);
+    downloadAnchorNode.setAttribute("download", "backup_atricon_2026.json");
+    document.body.appendChild(downloadAnchorNode);
+    downloadAnchorNode.click();
+    downloadAnchorNode.remove();
 }
