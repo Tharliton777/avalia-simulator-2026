@@ -152,7 +152,6 @@ let filtroAtivo = 'todos';
 let idParaExcluir = null;
 let idParaEditar = null;
 
-// Função auxiliar para normalizar strings (remover acentos e colocar em lower case)
 function normalizarTexto(texto) {
     return texto.toString()
         .toLowerCase()
@@ -208,9 +207,14 @@ function atualizarGridPrincipal() {
         const nomeParaBusca = normalizarTexto(ent.nome);
         
         const passaTexto = nomeParaBusca.includes(termo);
+        
+        // --- CORREÇÃO DO FILTRO LEGISLATIVO ---
+        const ehPrefeitura = nomeParaBusca.includes('prefeitura');
+        const ehCamara = nomeParaBusca.includes('camara'); 
+
         const passaPoder = (filtroAtivo === 'todos') || 
-                           (filtroAtivo === 'prefeitura' && ent.nome.includes('PREFEITURA')) || 
-                           (filtroAtivo === 'camara' && ent.nome.includes('CAMARA'));
+                           (filtroAtivo === 'prefeitura' && ehPrefeitura) || 
+                           (filtroAtivo === 'camara' && ehCamara);
 
         if (passaTexto && passaPoder) {
             const slug = normalizarTexto(ent.selo);
@@ -241,23 +245,19 @@ function cadastrarEntidade() {
     
     if (!nomeOriginal) return;
 
-    // Normalização para comparação exata (sem acentos e espaços)
     const novoNomeComp = normalizarTexto(nomeOriginal).replace(/\s/g, "");
 
-    // Verifica se já existe uma entidade similar no banco
     const jaExiste = Object.values(db).some(ent => {
         return normalizarTexto(ent.nome).replace(/\s/g, "") === novoNomeComp;
     });
 
     if (jaExiste) {
-        // FEEDBACK VISUAL EM VEZ DE ALERT
         feedback.innerText = "⚠️ Esta entidade já está cadastrada!";
         feedback.style.display = "block";
         setTimeout(() => feedback.style.display = "none", 4000);
         return;
     }
 
-    // Se não existir, procede com o cadastro
     const id = "ENT_" + Date.now();
     db[id] = { nome: nomeOriginal, operador: "AVULSO", perc: 0, selo: "INEXISTENTE", marcados: {} };
     salvar();
