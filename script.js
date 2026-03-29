@@ -351,7 +351,7 @@ function renderizarGrupos() {
     const ent = db[entidadeAtiva];
 
     GRUPOS_CRITERIOS.forEach(grupo => {
-        let html = `<div class="grupo-header d-flex justify-content-between mt-4"><span>${grupo.titulo}</span><div class="d-flex"><span class="col-validacao">G</span><span class="col-validacao">S</span><span class="col-validacao">A</span></div></div><ul class="list-group mb-3">`;
+        let html = `<div class="grupo-header d-flex justify-content-between mt-4"><span>${grupo.titulo}</span><div class="d-flex"><span class="col-validacao">D</span><span class="col-validacao">A</span><span class="col-validacao">S</span></div></div><ul class="list-group mb-3">`;
         grupo.itens.forEach(item => {
             const st = ent.marcados[item.id] || { g: false, s: false, a: false };
             html += `<li class="list-group-item d-flex align-items-center dark-card-target">
@@ -418,3 +418,28 @@ function exportarDados() {
     downloadAnchorNode.click();
     downloadAnchorNode.remove();
 }
+
+function verificarLogin() {
+    const senhaDigitada = document.getElementById('senhaLogin').value;
+    const erro = document.getElementById('erroLogin');
+    
+    // Defina sua senha aqui (exemplo: assesi2026)
+    if (senhaDigitada === 'assesi2026') {
+        const tela = document.getElementById('telaLogin');
+        tela.classList.add('hide');
+        setTimeout(() => {
+            tela.style.display = 'none';
+        }, 400);
+    } else {
+        erro.style.display = 'block';
+        document.getElementById('senhaLogin').value = '';
+        setTimeout(() => { erro.style.display = 'none'; }, 2000);
+    }
+}
+
+// Permitir apertar "Enter" para logar
+document.addEventListener('keypress', function (e) {
+    if (e.key === 'Enter' && document.getElementById('telaLogin').style.display !== 'none') {
+        verificarLogin();
+    }
+});
