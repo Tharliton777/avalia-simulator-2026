@@ -458,3 +458,32 @@ function logout() {
     // Fecha o sidebar automaticamente ao sair
     document.getElementById('sidebar').classList.remove('active');
 }
+
+
+function importarDados(event) {
+    const arquivo = event.target.files[0];
+    if (!arquivo) return;
+
+    const leitor = new FileReader();
+    leitor.onload = function(e) {
+        try {
+            const dadosImportados = JSON.parse(e.target.result);
+            
+            // Validação simples: verifica se os dados importados são um objeto
+            if (typeof dadosImportados === 'object' && dadosImportados !== null) {
+                if (confirm("Isso substituirá todos os dados atuais desta máquina. Deseja continuar?")) {
+                    db = dadosImportados;
+                    salvar();
+                    atualizarGridPrincipal();
+                    alert("Dados importados com sucesso!");
+                    window.location.reload(); // Recarrega para garantir que tudo seja processado do zero
+                }
+            } else {
+                alert("Erro: O arquivo JSON não possui um formato válido.");
+            }
+        } catch (err) {
+            alert("Erro ao ler o arquivo JSON: " + err.message);
+        }
+    };
+    leitor.readAsText(arquivo);
+}

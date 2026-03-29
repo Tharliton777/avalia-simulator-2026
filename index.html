@@ -50,6 +50,12 @@
                         <i class="bi bi-download me-2"></i> Exportar Backup
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link rounded" onclick="document.getElementById('inputImportar').click()">
+                <i class="bi bi-upload me-2"></i> Importar Backup
+                    </a>
+                <input type="file" id="inputImportar" style="display: none;" accept=".json" onchange="importarDados(event)">
+                </li>
                 <hr class="my-3">
                 <div class="form-check form-switch ms-3">
                     <input class="form-check-input" type="checkbox" id="darkModeToggle">
