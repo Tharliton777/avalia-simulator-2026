@@ -153,10 +153,7 @@ let idParaExcluir = null;
 let idParaEditar = null;
 
 function normalizarTexto(texto) {
-    return texto.toString()
-        .toLowerCase()
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, "");
+    return texto.toString().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
 }
 
 function salvar() { localStorage.setItem(DB_KEY, JSON.stringify(db)); }
@@ -174,7 +171,11 @@ window.onload = () => {
     atualizarRodape();
 
     document.getElementById('sidebarCollapse').onclick = () => {
-        document.getElementById('sidebar').classList.toggle('active');
+        document.getElementById('sidebar').classList.add('active');
+    };
+
+    document.getElementById('btnCloseSidebar').onclick = () => {
+        document.getElementById('sidebar').classList.remove('active');
     };
 
     document.getElementById('darkModeToggle').onchange = (e) => {
@@ -184,12 +185,67 @@ window.onload = () => {
     document.getElementById('inputNovoCliente').addEventListener('input', atualizarGridPrincipal);
 };
 
-// --- INTERFACE PRINCIPAL ---
+// --- LÓGICA DO BOTÃO VOLTAR AO TOPO ---
+const btnScrollTop = document.getElementById('btnScrollTop');
+window.onscroll = function() {
+    if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+        btnScrollTop.classList.add('visible');
+    } else {
+        btnScrollTop.classList.remove('visible');
+    }
+};
+btnScrollTop.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+});
 
+// --- TRANSIÇÕES ACELERADAS (200ms) ---
+function abrirChecklist(id) {
+    entidadeAtiva = id;
+    const lista = document.getElementById('telalista');
+    const avaliacao = document.getElementById('telaAvaliacao');
+
+    // Inicia fade-out
+    lista.classList.remove('show');
+    
+    setTimeout(() => {
+        lista.style.display = 'none'; 
+        avaliacao.style.display = 'block'; 
+        
+        document.getElementById('nomeEntidadeAtiva').innerText = db[id].nome;
+        renderizarGrupos();
+        window.scrollTo(0,0);
+
+        // Inicia fade-in
+        setTimeout(() => {
+            avaliacao.classList.add('show');
+        }, 20); 
+    }, 200); // 200ms
+}
+
+function voltarParaInicio() {
+    const lista = document.getElementById('telalista');
+    const avaliacao = document.getElementById('telaAvaliacao');
+
+    avaliacao.classList.remove('show');
+
+    setTimeout(() => {
+        avaliacao.style.display = 'none';
+        lista.style.display = 'block';
+
+        atualizarGridPrincipal();
+        window.scrollTo(0,0);
+
+        setTimeout(() => {
+            lista.classList.add('show');
+        }, 20);
+    }, 200); // 200ms
+}
+
+// --- FUNÇÕES DE INTERFACE ---
 function abrirAjuda() {
     const modal = new bootstrap.Modal(document.getElementById('modalAjuda'));
     modal.show();
-    document.getElementById('sidebar').classList.add('active');
+    document.getElementById('sidebar').classList.remove('active');
 }
 
 function definirFiltro(tipo) { 
@@ -200,28 +256,28 @@ function definirFiltro(tipo) {
 function atualizarGridPrincipal() {
     const grid = document.getElementById('gridClientes');
     const termo = normalizarTexto(document.getElementById('inputNovoCliente').value);
+    const operadorFiltro = document.getElementById('selectFiltroOperador').value;
+    
     grid.innerHTML = "";
     
     for (const id in db) {
         const ent = db[id];
         const nomeParaBusca = normalizarTexto(ent.nome);
-        
         const passaTexto = nomeParaBusca.includes(termo);
+        const passaOperador = (operadorFiltro === 'todos') || (ent.operador === operadorFiltro);
         
-        // --- CORREÇÃO DO FILTRO LEGISLATIVO ---
         const ehPrefeitura = nomeParaBusca.includes('prefeitura');
         const ehCamara = nomeParaBusca.includes('camara'); 
-
         const passaPoder = (filtroAtivo === 'todos') || 
                            (filtroAtivo === 'prefeitura' && ehPrefeitura) || 
                            (filtroAtivo === 'camara' && ehCamara);
 
-        if (passaTexto && passaPoder) {
+        if (passaTexto && passaPoder && passaOperador) {
             const slug = normalizarTexto(ent.selo);
             grid.innerHTML += `
                 <div class="col-md-4">
                     <div class="card shadow-sm border-0 p-3 h-100 dark-card-target">
-                        <div class="mb-2 text-end">
+                        <div class="mb-2">
                             <span class="badge-operador">${ent.operador || 'ASSESI'}</span>
                         </div>
                         <h6 class="fw-bold mb-3">${ent.nome}</h6>
@@ -242,15 +298,9 @@ function cadastrarEntidade() {
     const input = document.getElementById('inputNovoCliente');
     const nomeOriginal = input.value.trim().toUpperCase();
     const feedback = document.getElementById('feedbackCadastro');
-    
     if (!nomeOriginal) return;
 
-    const novoNomeComp = normalizarTexto(nomeOriginal).replace(/\s/g, "");
-
-    const jaExiste = Object.values(db).some(ent => {
-        return normalizarTexto(ent.nome).replace(/\s/g, "") === novoNomeComp;
-    });
-
+    const jaExiste = Object.values(db).some(ent => normalizarTexto(ent.nome).replace(/\s/g, "") === normalizarTexto(nomeOriginal).replace(/\s/g, ""));
     if (jaExiste) {
         feedback.innerText = "⚠️ Esta entidade já está cadastrada!";
         feedback.style.display = "block";
@@ -262,17 +312,13 @@ function cadastrarEntidade() {
     db[id] = { nome: nomeOriginal, operador: "AVULSO", perc: 0, selo: "INEXISTENTE", marcados: {} };
     salvar();
     input.value = "";
-    feedback.style.display = "none";
     atualizarGridPrincipal();
 }
-
-// --- EDIÇÃO E EXCLUSÃO ---
 
 function prepararEdicao(id) {
     idParaEditar = id;
     document.getElementById('inputEditNome').value = db[id].nome;
-    const modal = new bootstrap.Modal(document.getElementById('modalEditarEntidade'));
-    modal.show();
+    new bootstrap.Modal(document.getElementById('modalEditarEntidade')).show();
 }
 
 function confirmarEdicao() {
@@ -281,8 +327,7 @@ function confirmarEdicao() {
         db[idParaEditar].nome = novoNome;
         salvar();
         atualizarGridPrincipal();
-        const modalInstance = bootstrap.Modal.getInstance(document.getElementById('modalEditarEntidade'));
-        if (modalInstance) modalInstance.hide();
+        bootstrap.Modal.getInstance(document.getElementById('modalEditarEntidade')).hide();
     }
 }
 
@@ -295,21 +340,9 @@ function executarExclusao() {
     if(idParaExcluir) {
         delete db[idParaExcluir];
         salvar();
-        idParaExcluir = null;
         bootstrap.Modal.getInstance(document.getElementById('modalConfirmarExclusao')).hide();
         atualizarGridPrincipal();
     }
-}
-
-// --- SISTEMA DE AVALIAÇÃO ---
-
-function abrirChecklist(id) {
-    entidadeAtiva = id;
-    document.getElementById('telalista').classList.add('d-none');
-    document.getElementById('telaAvaliacao').classList.remove('d-none');
-    document.getElementById('nomeEntidadeAtiva').innerText = db[id].nome;
-    window.scrollTo(0,0);
-    renderizarGrupos();
 }
 
 function renderizarGrupos() {
@@ -345,52 +378,35 @@ function toggleCheck(id, tipo) {
 
 function calcularProgresso() {
     const ent = db[entidadeAtiva];
-    let totalItems = 0;
-    let atendidos = 0;
-    let faltaEssencial = false;
+    let totalItems = 0, atendidos = 0, faltaEssencial = false;
 
     GRUPOS_CRITERIOS.forEach(g => {
         g.itens.forEach(i => {
             totalItems++;
             const s = ent.marcados[i.id] || {g:false,s:false,a:false};
-            if (s.g && s.s && s.a) {
-                atendidos++;
-            } else if (i.essencial) {
-                faltaEssencial = true;
-            }
+            if (s.g && s.s && s.a) atendidos++;
+            else if (i.essencial) faltaEssencial = true;
         });
     });
 
     const perc = Math.round((atendidos / totalItems) * 100);
-    let selo = "INEXISTENTE";
-    
-    if (perc >= 95) selo = faltaEssencial ? "ELEVADO" : "DIAMANTE";
-    else if (perc >= 85) selo = faltaEssencial ? "ELEVADO" : "OURO";
-    else if (perc >= 75) selo = faltaEssencial ? "ELEVADO" : "PRATA";
-    else if (perc > 0) selo = "INICIAL";
+    let selo = perc >= 95 ? (faltaEssencial ? "ELEVADO" : "DIAMANTE") : 
+               perc >= 85 ? (faltaEssencial ? "ELEVADO" : "OURO") : 
+               perc >= 75 ? (faltaEssencial ? "ELEVADO" : "PRATA") : 
+               perc > 0 ? "INICIAL" : "INEXISTENTE";
 
-    ent.perc = perc; 
-    ent.selo = selo;
-
+    ent.perc = perc; ent.selo = selo;
     document.getElementById('progressoTexto').innerText = perc + "%";
     document.getElementById('barraProgresso').style.width = perc + "%";
-    
     const b = document.getElementById('statusSelo');
     b.innerText = selo;
     b.className = `badge p-3 fs-6 rounded-pill selo-${normalizarTexto(selo)}`;
 }
 
 function atualizarRodape() {
-    const footer = document.getElementById('footerStatus');
     const total = Object.keys(db).length;
     const avaliados = Object.values(db).filter(e => e.perc > 0).length;
-    footer.innerHTML = `<span><b>${avaliados}</b> de ${total} entidades</span><span>© 2026 TD2 - Simulador de Transparência Atricon</span>`;
-}
-
-function voltarParaInicio() {
-    document.getElementById('telaAvaliacao').classList.add('d-none');
-    document.getElementById('telalista').classList.remove('d-none');
-    atualizarGridPrincipal();
+    document.getElementById('footerStatus').innerHTML = `<span><b>${avaliados}</b> de ${total} entidades</span><span>© 2026 TD2 - Simulador de Transparência Atricon</span>`;
 }
 
 function exportarDados() {

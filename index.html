@@ -1,165 +1,212 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-br" data-bs-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Avalia Simulator 2026</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <title>Avalia Simulator 2026 - Atricon</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="d-flex flex-column min-vh-100">
+<body>
 
-    <button type="button" id="sidebarCollapse" class="btn btn-menu-lateral no-print">
-        <i class="bi bi-list"></i>
+    <button class="btn-menu-lateral no-print" id="sidebarCollapse">
+        <i class="bi bi-list fs-4"></i>
     </button>
 
-    <nav id="sidebar" class="active shadow-lg border-end no-print">
-        <div class="sidebar-header p-4 border-bottom d-flex justify-content-between align-items-center">
-            <h5 class="mb-0 fw-bold text-primary">Gestão Atricon</h5>
-            <button class="btn btn-sm btn-light rounded-circle" onclick="document.getElementById('sidebar').classList.add('active')">
-                <i class="bi bi-x-lg"></i>
-            </button>
-        </div>
-        <ul class="list-unstyled p-2">
-            <li>
-                <a href="#" onclick="voltarParaInicio()" class="nav-link p-3 rounded mb-1 text-decoration-none">
-                    <i class="bi bi-house-door me-3"></i><span>Dashboard</span>
-                </a>
-            </li>
-            <li>
-                <a href="#" onclick="abrirAjuda()" class="nav-link p-3 rounded mb-1 text-decoration-none">
-                    <i class="bi bi-question-circle me-3"></i><span>Ajuda e Selos</span>
-                </a>
-            </li>
-            <li>
-                <a href="#" onclick="exportarDados()" class="nav-link p-3 rounded mb-1 text-decoration-none">
-                    <i class="bi bi-download me-3"></i><span>Exportar Backup</span>
-                </a>
-            </li>
-            <li>
-                <a href="#" onclick="window.print()" class="nav-link p-3 rounded mb-1 text-decoration-none">
-                    <i class="bi bi-printer me-3"></i><span>Imprimir</span>
-                </a>
-            </li>
-            <li class="p-3 border-top mt-2">
-                <div class="form-check form-switch">
+    <nav id="sidebar" class="no-print">
+        <div class="p-4">
+            <div class="d-flex justify-content-end mb-2">
+                <button class="btn btn-sm btn-light border rounded-circle" id="btnCloseSidebar" title="Fechar Menu">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+
+            <div class="d-flex align-items-center mb-4 mt-0">
+                <i class="bi bi-shield-check fs-3 text-primary me-2"></i>
+                <h5 class="mb-0 fw-bold">Atricon <span class="text-primary text-sm">2026</span></h5>
+            </div>
+            
+            <ul class="nav flex-column gap-2">
+                <li class="nav-item">
+                    <a href="#" class="nav-link active rounded" onclick="voltarParaInicio()">
+                        <i class="bi bi-house-door me-2"></i> Painel Geral
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link rounded" onclick="exportarDados()">
+                        <i class="bi bi-download me-2"></i> Exportar Backup
+                    </a>
+                </li>
+                <hr class="my-3">
+                <div class="form-check form-switch ms-3">
                     <input class="form-check-input" type="checkbox" id="darkModeToggle">
-                    <label class="form-check-label small text-muted" for="darkModeToggle">Modo Escuro</label>
+                    <label class="form-check-label" for="darkModeToggle">Modo Escuro</label>
                 </div>
-            </li>
-        </ul>
+            </ul>
+        </div>
     </nav>
 
-    <main id="content" class="container py-4 flex-grow-1">
-        <div id="telalista">
-            <header class="mb-5 text-center mt-5">
-                <h2 class="fw-bold">Avalia Simulator 2026</h2>
-                <p class="text-muted">Simulador de Transparência</p>
-            </header>
-
-            <div class="card shadow-sm border-0 mb-5 p-4 rounded-4 dark-card-target">
-                <div class="input-group mb-1">
-                    <input type="text" id="inputNovoCliente" class="form-control border-0 bg-light p-3" placeholder="Pesquisar prefeitura ou câmara...">
-                    <button onclick="cadastrarEntidade()" class="btn btn-primary px-4 fw-bold">Cadastrar Novo</button>
-                </div>
-                
-                <div id="feedbackCadastro" class="text-danger small fw-bold mb-2 ps-2" style="display: none; height: 20px;"></div>
-
-                <div class="d-flex justify-content-center gap-2 no-print mt-2 flex-wrap">
-                    <button onclick="definirFiltro('todos')" class="btn btn-sm btn-secondary px-3 rounded-pill shadow-sm">Todos</button>
-                    <button onclick="definirFiltro('prefeitura')" class="btn btn-sm btn-outline-primary px-3 rounded-pill shadow-sm">Executivo</button>
-                    <button onclick="definirFiltro('camara')" class="btn btn-sm btn-outline-primary px-3 rounded-pill shadow-sm">Legislativo</button>
+    <main class="container-fluid py-4 ps-lg-5" style="max-width: 1400px;">
+        
+        <div id="telalista" class="fade-screen show">
+            <div class="row mb-4 mt-4">
+                <div class="col-12 text-center">
+                    <h3 class="fw-bold mb-1">Simulador de Transparência Atricon</h3>
+                    <p class="text-muted small">Gerencie e avalie o nível de transparência das entidades.</p>
                 </div>
             </div>
-            <div id="gridClientes" class="row g-4"></div>
-        </div>
 
-        <div id="telaAvaliacao" class="d-none">
-            <div class="row g-4">
-                <div class="col-lg-4">
-                    <div class="card shadow border-0 p-4 text-center sticky-top dark-card-target" style="top: 20px;">
-                        <h3 id="nomeEntidadeAtiva" class="fw-bold mb-3 text-truncate text-primary">Entidade</h3>
-                        <h1 class="display-3 fw-bold mb-0" id="progressoTexto">0%</h1>
-                        <div class="progress my-4" style="height: 12px;">
-                            <div id="barraProgresso" class="progress-bar progress-bar-striped progress-bar-animated" style="width: 0%"></div>
-                        </div>
-                        <div id="statusSelo" class="badge p-3 fs-6 rounded-pill mb-4 shadow-sm">INEXISTENTE</div>
-                        <button onclick="voltarParaInicio()" class="btn btn-outline-secondary btn-sm mt-4 no-print w-100">Voltar ao Início</button>
+            <div class="row mb-4">
+                <div class="col-12 text-center no-print">
+                    <div class="btn-group shadow-sm">
+                        <button class="btn btn-outline-primary active" onclick="definirFiltro('todos')">Todos</button>
+                        <button class="btn btn-outline-primary" onclick="definirFiltro('prefeitura')">Executivo</button>
+                        <button class="btn btn-outline-primary" onclick="definirFiltro('camara')">Legislativo</button>
                     </div>
                 </div>
-                <div class="col-lg-8" id="containerGrupos"></div>
+            </div>
+
+            <div class="card shadow-sm border-0 p-3 mb-4 dark-card-target">
+                <div class="row g-3">
+                    <div class="col-md-5">
+                        <div class="input-group">
+                            <span class="input-group-text bg-transparent border-end-0"><i class="bi bi-search"></i></span>
+                            <input type="text" id="inputNovoCliente" class="form-control border-start-0" placeholder="Pesquisar por nome ou cadastrar novo...">
+                            <button class="btn btn-primary fw-bold" onclick="cadastrarEntidade()">Cadastrar</button>
+                        </div>
+                        <div id="feedbackCadastro" class="text-danger small mt-1" style="display: none;"></div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="input-group">
+                            <span class="input-group-text bg-transparent border-end-0"><i class="bi bi-person-badge"></i></span>
+                            <select id="selectFiltroOperador" class="form-select border-start-0" onchange="atualizarGridPrincipal()">
+                                <option value="todos">Todos os Operadores</option>
+                                <option value="CLEYDIR">CLEYDIR</option>
+                                <option value="DAVI">DAVI</option>
+                                <option value="FELIPE">FELIPE</option>
+                                <option value="JOÃO">JOÃO</option>
+                                <option value="KAIKE">KAIKE</option>
+                                <option value="KAIRON">KAIRON</option>
+                                <option value="AVULSO">AVULSO</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-4" id="gridClientes"></div>
+        </div>
+
+        <div id="telaAvaliacao" class="fade-screen">
+            <div class="card shadow-sm border-0 p-4 mb-4 dark-card-target">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <button class="btn btn-link p-0 text-decoration-none no-print" onclick="voltarParaInicio()">
+                        <i class="bi bi-arrow-left"></i> Voltar à lista
+                    </button>
+                    <div class="no-print">
+                        <button class="btn btn-outline-secondary btn-sm me-2" onclick="window.print()">
+                            <i class="bi bi-printer"></i> Imprimir Relatório
+                        </button>
+                    </div>
+                </div>
+
+                <div class="row align-items-center">
+                    <div class="col-md-7">
+                        <h2 class="fw-bold" id="nomeEntidadeAtiva">NOME DA ENTIDADE</h2>
+                        <span class="badge-operador mb-3">Avaliação ATRICON 2026</span>
+                    </div>
+                    <div class="col-md-5 text-md-end mt-3 mt-md-0">
+                        <div class="d-inline-block text-center me-4">
+                            <h1 class="fw-bold mb-0" id="progressoTexto">0%</h1>
+                            <small class="text-muted">Progresso Total</small>
+                        </div>
+                        <div id="statusSelo" class="badge p-3 fs-6 rounded-pill selo-inexistente">INEXISTENTE</div>
+                    </div>
+                </div>
+
+                <div class="progress mt-4 no-print" style="height: 10px; border-radius: 5px;">
+                    <div id="barraProgresso" class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <div id="containerGrupos"></div>
+
+            <div class="text-center py-5 no-print">
+                <button class="btn btn-primary btn-lg px-5 shadow" onclick="voltarParaInicio()">Concluir e Salvar Avaliação</button>
             </div>
         </div>
     </main>
 
-    <footer class="py-3 border-top bg-white no-print dark-card-target mt-auto">
-        <div class="container d-flex justify-content-between align-items-center text-muted small" id="footerStatus">
-            <span>Avalia Simulator 2026</span>
-        </div>
+    <footer class="container-fluid py-3 border-top no-print mt-5">
+        <div class="d-flex justify-content-between text-muted small px-lg-5" id="footerStatus"></div>
     </footer>
 
-    <div class="modal fade" id="modalAjuda" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
+    <button class="btn-floating-top no-print" id="btnScrollTop" title="Voltar ao Topo">
+        <i class="bi bi-rocket-takeoff-fill"></i>
+    </button>
+
+    <button class="btn-floating-help no-print" onclick="abrirAjuda()">
+        <i class="bi bi-question-lg"></i>
+    </button>
+
+    <div class="modal fade" id="modalAjuda" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title fw-bold">Critérios e Selos</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h5 class="modal-title fw-bold">Guia de Legenda</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <p>Marque as três colunas para pontuar:</p>
-                    <div class="row g-2 text-center mb-3">
-                        <div class="col-4 border-end"><strong>C</strong><br><small>Confirmado</small></div>
-                        <div class="col-4 border-end"><strong>S</strong><br><small>Série Histórica</small></div>
-                        <div class="col-4"><strong>A</strong><br><small>Atualidade</small></div>
-                    </div>
+                    <p>Para cada critério, valide as três colunas:</p>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><strong>G</strong> - Gravação (Disponibilidade)</li>
+                        <li class="mb-2"><strong>S</strong> - Série histórica (Atualização)</li>
+                        <li class="mb-2"><strong>A</strong> - Acessibilidade (Facilidade)</li>
+                    </ul>
                     <hr>
-                    <div class="row g-2">
-                        <div class="col-6"><div class="badge w-100 p-2 selo-diamante">DIAMANTE (95-100%)</div></div>
-                        <div class="col-6"><div class="badge w-100 p-2 selo-ouro">OURO (85-94%)</div></div>
-                        <div class="col-6"><div class="badge w-100 p-2 selo-prata">PRATA (75-84%)</div></div>
-                        <div class="col-6"><div class="badge w-100 p-2 selo-elevado">ELEVADO (Falta Essencial)</div></div>
+                    <p class="mb-0 small text-muted"><b class="text-danger">*</b> Critérios com asterisco são **Essenciais**.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalConfirmarExclusao" tabindex="-1">
+        <div class="modal-dialog modal-sm modal-dialog-centered">
+            <div class="modal-content shadow">
+                <div class="modal-body text-center p-4">
+                    <i class="bi bi-exclamation-triangle text-danger fs-1"></i>
+                    <h5 class="fw-bold mt-3">Excluir Entidade?</h5>
+                    <div class="d-flex gap-2 justify-content-center">
+                        <button class="btn btn-outline-secondary btn-sm px-3" data-bs-dismiss="modal">Cancelar</button>
+                        <button class="btn btn-danger btn-sm px-3" onclick="executarExclusao()">Confirmar</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="modal fade" id="modalEditarEntidade" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="modalEditarEntidade" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-0 shadow">
+            <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title fw-bold">Editar Nome</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <input type="text" id="inputEditNome" class="form-control p-3 bg-light border-0" placeholder="Novo nome da entidade...">
+                    <input type="text" id="inputEditNome" class="form-control text-uppercase">
                 </div>
-                <div class="modal-footer border-0">
-                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary px-4 fw-bold" onclick="confirmarEdicao()">Salvar Alterações</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="modalConfirmarExclusao" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-sm modal-dialog-centered">
-            <div class="modal-content border-0 shadow">
-                <div class="modal-body text-center p-4">
-                    <i class="bi bi-exclamation-octagon text-danger display-4 mb-3"></i>
-                    <h5 class="fw-bold">Excluir?</h5>
-                    <p class="text-muted small">Ação irreversível, a avaliação será perdida, você tem certeza disso?</p>
-                    <div class="d-flex gap-2">
-                        <button type="button" class="btn btn-light w-100" data-bs-dismiss="modal">Não</button>
-                        <button type="button" class="btn btn-danger w-100" onclick="executarExclusao()">Sim</button>
-                    </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" onclick="confirmarEdicao()">Salvar</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

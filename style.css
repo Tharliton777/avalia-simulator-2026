@@ -21,7 +21,21 @@ body {
     transition: background-color 0.3s ease;
 }
 
-/* SIDEBAR E BOTÃO HAMBURGUER */
+/* --- TRANSIÇÃO ENTRE TELAS (FADE ACELERADO) --- */
+.fade-screen {
+    opacity: 0;
+    visibility: hidden;
+    display: none; 
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+.fade-screen.show {
+    display: block; 
+    opacity: 1;
+    visibility: visible;
+}
+
+/* --- SIDEBAR E BOTÃO HAMBURGUER --- */
 .btn-menu-lateral { 
     position: fixed; 
     left: 15px; 
@@ -37,6 +51,12 @@ body {
     align-items: center;
     justify-content: center;
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    transition: all 0.2s ease;
+}
+
+.btn-menu-lateral:hover {
+    transform: scale(1.05);
+    background-color: #f1f3f5 !important;
 }
 
 #sidebar { 
@@ -49,46 +69,70 @@ body {
     background: var(--bg-card) !important; 
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
     box-shadow: 10px 0 30px rgba(0,0,0,0.1);
-    transform: translateX(0); 
+    transform: translateX(-280px); 
 }
 
-#sidebar.active { transform: translateX(-280px) !important; }
+#sidebar.active { 
+    transform: translateX(0) !important; 
+}
 
-/* BOTÃO FLUTUANTE DE AJUDA */
-.btn-floating-help {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    width: 60px;
-    height: 60px;
-    background-color: #3b71fe !important; 
+#btnCloseSidebar:hover {
+    background-color: #ff4d4d !important;
     color: white !important;
-    border-radius: 50%;
-    border: none;
-    font-size: 28px;
+}
+
+/* --- BOTÕES FLUTUANTES (FOGUETE E AJUDA) PADRONIZADOS --- */
+.btn-floating-top, .btn-floating-help {
+    position: fixed;
+    right: 30px;
+    width: 50px;
+    height: 50px;
+    background-color: var(--bg-card) !important;
+    color: #3b71fe !important;
+    border-radius: 12px;
+    border: 1px solid var(--border-cor);
+    font-size: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 1500;
-    box-shadow: 0 6px 16px rgba(59, 113, 254, 0.3);
-    transition: transform 0.2s ease, background-color 0.2s;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
 
-.btn-floating-help:hover {
-    transform: scale(1.1);
-    background-color: #2a56d1 !important;
+/* Posições individuais */
+.btn-floating-top { bottom: 95px; opacity: 0; visibility: hidden; }
+.btn-floating-help { bottom: 30px; }
+
+/* Estados Visíveis e Hovers */
+.btn-floating-top.visible { opacity: 1; visibility: visible; }
+
+.btn-floating-top:hover, .btn-floating-help:hover {
+    background-color: #3b71fe !important;
+    color: white !important;
+    border-color: #3b71fe;
+    transform: translateY(-3px);
 }
 
-/* BADGE DO OPERADOR NO CARD */
+[data-bs-theme="dark"] .btn-floating-top, 
+[data-bs-theme="dark"] .btn-floating-help {
+    background-color: #2d2d2d !important;
+    border-color: #444;
+}
+
+/* --- CARDS E BADGES --- */
 .badge-operador {
     font-size: 0.75rem;
     font-weight: 700;
     text-transform: uppercase;
     background-color: #f1f3f5;
     color: #495057;
-    padding: 4px 10px;
+    padding: 6px 10px;
     border-radius: 6px;
-    display: inline-block;
+    display: block; 
+    width: 100%;    
+    text-align: center; 
 }
 
 [data-bs-theme="dark"] .badge-operador {
@@ -96,14 +140,34 @@ body {
     color: #adb5bd;
 }
 
-/* COMPONENTES */
-.dark-card-target { background-color: var(--bg-card) !important; color: var(--text-principal) !important; border: 1px solid var(--border-cor) !important; }
-.nav-link:hover { background: rgba(13, 110, 253, 0.1) !important; transform: translateX(5px); transition: 0.2s; }
-.nav-link.active { background: rgba(13, 110, 253, 0.15); color: #0d6efd !important; font-weight: 600; }
-.grupo-header { background-color: #2b3035; color: #fff !important; padding: 12px; border-radius: 8px 8px 0 0; }
+.dark-card-target { 
+    background-color: var(--bg-card) !important; 
+    color: var(--text-principal) !important; 
+    border: 1px solid var(--border-cor) !important; 
+}
+
+.nav-link:hover { 
+    background: rgba(13, 110, 253, 0.1) !important; 
+    transform: translateX(5px); 
+    transition: 0.2s; 
+}
+
+.nav-link.active { 
+    background: rgba(13, 110, 253, 0.15); 
+    color: #0d6efd !important; 
+    font-weight: 600; 
+}
+
+.grupo-header { 
+    background-color: #2b3035; 
+    color: #fff !important; 
+    padding: 12px; 
+    border-radius: 8px 8px 0 0; 
+}
+
 .col-validacao { width: 40px; text-align: center; }
 
-/* SELOS */
+/* --- SELOS --- */
 .selo-inexistente { background: #e9ecef; color: #6c757d; }
 .selo-inicial { background: #ffdf7f; color: #000; }
 .selo-basico { background: #6c757d; color: #fff; }
@@ -113,4 +177,7 @@ body {
 .selo-ouro { background: #ffd700; color: #000; }
 .selo-diamante { background: #b9f2ff; color: #004a5c; }
 
-@media print { .no-print { display: none !important; } #sidebar { display: none; } }
+@media print { 
+    .no-print { display: none !important; } 
+    #sidebar { display: none; } 
+}
