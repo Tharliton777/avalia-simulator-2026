@@ -443,3 +443,18 @@ document.addEventListener('keypress', function (e) {
         verificarLogin();
     }
 });
+
+function logout() {
+    const tela = document.getElementById('telaLogin');
+    const inputSenha = document.getElementById('senhaLogin');
+    
+    // Limpa o campo de senha para a próxima tentativa
+    inputSenha.value = '';
+    
+    // Remove a classe hide e volta o display para block
+    tela.classList.remove('hide');
+    tela.style.display = 'flex';
+    
+    // Fecha o sidebar automaticamente ao sair
+    document.getElementById('sidebar').classList.remove('active');
+}
