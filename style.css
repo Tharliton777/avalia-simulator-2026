@@ -102,8 +102,8 @@ body {
 }
 
 /* Posições individuais */
-.btn-floating-top { bottom: 95px; opacity: 0; visibility: hidden; }
-.btn-floating-help { bottom: 30px; }
+.btn-floating-top { bottom: 135px !important; opacity: 0; visibility: hidden; }
+.btn-floating-help { bottom: 70px !important; }
 
 /* Estados Visíveis e Hovers */
 .btn-floating-top.visible { opacity: 1; visibility: visible; }
@@ -146,6 +146,12 @@ body {
     border: 1px solid var(--border-cor) !important; 
 }
 
+/* Centraliza apenas os títulos na tela de listagem inicial */
+#gridClientes .dark-card-target h6 {
+    text-align: center !important;
+    width: 100%;
+}
+
 .nav-link:hover { 
     background: rgba(13, 110, 253, 0.1) !important; 
     transform: translateX(5px); 
@@ -186,8 +192,11 @@ body {
    NOVAS ADIÇÕES (LOGIN & CORREÇÕES VISUAIS)
    ========================================== */
 
-/* Ajuste específico para a tela de login overlay */
 #telaLogin {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 10vh;
     transition: opacity 0.4s ease, visibility 0.4s ease;
 }
 
@@ -196,23 +205,28 @@ body {
     visibility: hidden;
 }
 
-/* Correção de respiro no rodapé e botões flutuantes */
+/* CORREÇÕES PARA A MODAL E DROPDOWN */
+.modal-dialog {
+    margin-top: 3rem !important; /* Move a modal para o topo */
+}
+
+.modal-body {
+    overflow: visible !important; /* Permite que o dropdown saia da modal */
+}
+
+[data-bs-theme="dark"] .modal-content {
+    background-color: var(--bg-card) !important;
+    color: var(--text-principal) !important;
+    border: 1px solid var(--border-cor);
+}
+
 footer {
-    margin-bottom: 60px !important; /* Cria espaço abaixo para não ser cortado */
+    margin-bottom: 60px !important;
     padding-bottom: 20px !important;
     position: relative;
     z-index: 10;
 }
 
-.btn-floating-help {
-    bottom: 45px !important; /* Sobe o botão de ajuda (descola da quina) */
-}
-
-.btn-floating-top {
-    bottom: 110px !important; /* Sobe o botão do foguete proporcionalmente */
-}
-
-/* Ajuste para telas menores não espremerem o conteúdo do rodapé */
 @media (max-width: 768px) {
     footer {
         margin-bottom: 100px !important;

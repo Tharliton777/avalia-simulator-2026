@@ -1,136 +1,229 @@
 const GRUPOS_CRITERIOS = [
     {
-        titulo: "1. Informações Institucionais e Acessibilidade",
+        titulo: "1. Informações Prioritárias",
+        pesoDimensao: 2,
         itens: [
-            { id: "1.1", nome: "Estrutura Organizacional e Competências", essencial: true },
-            { id: "1.2", nome: "Ferramenta de Pesquisa e Acessibilidade", essencial: true },
-            { id: "1.3", nome: "Perguntas Frequentes (FAQ)", essencial: false }
+            { id: "1.1", nome: "Possui sítio oficial próprio na internet?", classificacao: "essencial", exige: ['g'] },
+            { id: "1.2", nome: "Possui portal da transparência próprio ou compartilhado na internet?", classificacao: "essencial", exige: ['g'] },
+            { id: "1.3", nome: "O acesso ao portal transparência está visível na capa do site?", classificacao: "obrigatoria", exige: ['g'] },
+            { id: "1.4", nome: "O site e o portal de transparência contêm ferramenta de pesquisa de conteúdo que permita o acesso à informação?", classificacao: "obrigatoria", exige: ['g'] }
         ]
     },
     {
-        titulo: "2. Receitas Públicas",
+        titulo: "2. Informações Institucionais",
+        pesoDimensao: 2,
         itens: [
-            { id: "2.1", nome: "Receitas Previstas e Arrecadadas", essencial: true },
-            { id: "2.2", nome: "Receitas por Natureza e Fonte", essencial: true }
+            { id: "2.1", nome: "Divulga a sua estrutura organizacional e a norma que a institui/altera?", classificacao: "obrigatoria", exige: ['g'] },
+            { id: "2.2", nome: "Divulga competências e/ou atribuições?", classificacao: "obrigatoria", exige: ['g'] },
+            { id: "2.3", nome: "Identifica o nome dos atuais responsáveis pela gestão do Poder/Órgão?", classificacao: "obrigatoria", exige: ['g'] },
+            { id: "2.4", nome: "Divulga os endereços e telefones atuais do Poder ou órgão e e-mails institucionais?", classificacao: "obrigatoria", exige: ['g'] },
+            { id: "2.5", nome: "Divulga o horário de atendimento?", classificacao: "obrigatoria", exige: ['g'] },
+            { id: "2.6", nome: "Divulga os atos normativos próprios?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
+            { id: "2.7", nome: "Divulga as perguntas e respostas mais frequentes relacionadas às atividades desenvolvidas?", classificacao: "obrigatoria", exige: ['g'] },
+            { id: "2.8", nome: "Participa em redes sociais e apresenta link de acesso ao seu perfil?", classificacao: "recomendada", exige: ['g'] },
+            { id: "2.9", nome: "Inclui botão do Radar da Transparência Pública no site ou portal?", classificacao: "recomendada", exige: ['g'] }
         ]
     },
     {
-        titulo: "3. Despesas Públicas",
+        titulo: "3. Receitas",
+        pesoDimensao: 4,
         itens: [
-            { id: "3.1", nome: "Despesas Empenhadas, Liquidadas e Pagas", essencial: true },
-            { id: "3.2", nome: "Favorecidos (Pessoa Física e Jurídica)", essencial: true }
+            { id: "3.1", nome: "Divulga as receitas do Poder ou órgão, evidenciando sua previsão e realização?", classificacao: "essencial", exige: ['g', 's', 'a'] },
+            { id: "3.2", nome: "Divulga a classificação orçamentária por natureza da receita?", classificacao: "essencial", exige: ['g', 's', 'a'] },
+            { id: "3.3", nome: "Divulga a lista dos inscritos em dívida ativa?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] }
         ]
     },
     {
-        titulo: "4. Licitações",
+        titulo: "4. Despesas",
+        pesoDimensao: 4,
         itens: [
-            { id: "4.1", nome: "Editais e Anexos na íntegra", essencial: true },
-            { id: "4.2", nome: "Resultados e Homologações", essencial: true }
+            { id: "4.1", nome: "Divulga o total das despesas empenhadas, liquidadas e pagas?", classificacao: "essencial", exige: ['g', 's', 'a'] },
+            { id: "4.2", nome: "Divulga as despesas por classificação orçamentária?", classificacao: "essencial", exige: ['g', 's', 'a'] },
+            { id: "4.3", nome: "Possibilita a consulta de empenhos com detalhes do beneficiário, valor, objeto e licitação originária?", classificacao: "essencial", exige: ['g', 's', 'a'] }
         ]
     },
     {
-        titulo: "5. Contratos",
+        titulo: "5. Convênios e Transferências",
+        pesoDimensao: 1,
         itens: [
-            { id: "5.1", nome: "Íntegra dos Contratos e Aditivos", essencial: true },
-            { id: "5.2", nome: "Acompanhamento da Execução Contratual", essencial: true }
+            { id: "5.1", nome: "Divulga as transferências recebidas (convênios/acordos)?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
+            { id: "5.2", nome: "Divulga as transferências realizadas (convênios/acordos)?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
+            { id: "5.3", nome: "Divulga os acordos firmados que não envolvam transferência de recursos financeiros?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] }
         ]
     },
     {
-        titulo: "6. Convênios e Transferências",
+        titulo: "6. Recursos Humanos",
+        pesoDimensao: 3,
         itens: [
-            { id: "6.1", nome: "Convênios Recebidos e Cedidos", essencial: false },
-            { id: "6.2", nome: "Transferências Voluntárias", essencial: false }
+            { id: "6.1", nome: "Divulga a relação nominal dos servidores/autoridades/membros, seus cargos, lotações e horários?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
+            { id: "6.2", nome: "Divulga a remuneração nominal de cada servidor/autoridade/Membro?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
+            { id: "6.3", nome: "Divulga a tabela com o padrão remuneratório dos cargos e funções?", classificacao: "obrigatoria", exige: ['g', 's'] },
+            { id: "6.4", nome: "Divulga a lista de seus estagiários (nome, datas de contratação e término)?", classificacao: "recomendada", exige: ['g', 's', 'a'] },
+            { id: "6.5", nome: "Publica lista dos terceirizados (nome, função e empresa empregadora)?", classificacao: "recomendada", exige: ['g', 's', 'a'] },
+            { id: "6.6", nome: "Divulga a íntegra dos editais de concursos e seleções públicas?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
+            { id: "6.7", nome: "Divulga informações sobre os demais atos dos concursos?", classificacao: "obrigatoria", exige: ['g', 's'] }
         ]
     },
     {
-        titulo: "7. Recursos Humanos",
+        titulo: "7. Diárias",
+        pesoDimensao: 1,
         itens: [
-            { id: "7.1", nome: "Folha de Pagamento Nominal", essencial: true },
-            { id: "7.2", nome: "Diárias e Passagens", essencial: true }
+            { id: "7.1", nome: "Divulga nome, cargo, valor, período, motivo e destino do afastamento?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
+            { id: "7.2", nome: "Divulga tabela com os valores das diárias?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] }
         ]
     },
     {
-        titulo: "8. Planejamento (PPA, LDO e LOA)",
+        titulo: "8. Licitações",
+        pesoDimensao: 3,
         itens: [
-            { id: "8.1", nome: "Leis Orçamentárias (PPA/LDO/LOA)", essencial: true },
-            { id: "8.2", nome: "Audiências Públicas e Relatórios", essencial: true }
+            { id: "8.1", nome: "Divulga a relação das licitações (número, modalidade, objeto, data, valor e situação)?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
+            { id: "8.2", nome: "Divulga a íntegra dos editais de licitação?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
+            { id: "8.3", nome: "Divulga a íntegra dos demais documentos das fases interna e externa?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
+            { id: "8.4", nome: "Divulga a íntegra dos principais documentos dos processos de dispensa e inexigibilidade?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
+            { id: "8.5", nome: "Divulga a íntegra das Atas de Adesão – SRP?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
+            { id: "8.6", nome: "Divulga o plano de contratações anual?", classificacao: "recomendada", exige: ['g', 's'] },
+            { id: "8.7", nome: "Divulga a relação dos licitantes e/ou contratados sancionados?", classificacao: "recomendada", exige: ['g', 's', 'a'] }
         ]
     },
     {
-        titulo: "9. Gestão Fiscal (RREO e RGF)",
+        titulo: "9. Contratos",
+        pesoDimensao: 3,
         itens: [
-            { id: "9.1", nome: "Relatórios de Execução Orçamentária", essencial: true },
-            { id: "9.2", nome: "Relatórios de Gestão Fiscal", essencial: true }
+            { id: "9.1", nome: "Divulga a relação dos contratos celebrados com resumo e aditivos?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
+            { id: "9.2", nome: "Divulga o inteiro teor dos contratos e aditivos?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
+            { id: "9.3", nome: "Divulga a relação/lista dos fiscais de cada contrato?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
+            { id: "9.4", nome: "Divulga a ordem cronológica de seus pagamentos?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] }
         ]
     },
     {
-        titulo: "10. Prestação de Contas",
+        titulo: "10. Obras",
+        pesoDimensao: 2,
         itens: [
-            { id: "10.1", nome: "Relatório de Gestão e Parecer Prévio", essencial: true },
-            { id: "10.2", nome: "Julgamento de Contas", essencial: true }
+            { id: "10.1", nome: "Divulga informações sobre as obras (objeto, situação, datas, empresa e percentual)?", classificacao: "recomendada", exige: ['g', 's'] },
+            { id: "10.2", nome: "Divulga os quantitativos, preços unitários e totais contratados?", classificacao: "obrigatoria", exige: ['g', 's'] },
+            { id: "10.3", nome: "Divulga os quantitativos executados e preços efetivamente pagos?", classificacao: "obrigatoria", exige: ['g', 's'] },
+            { id: "10.4", nome: "Divulga a relação das obras paralisadas?", classificacao: "obrigatoria", exige: ['g', 's'] }
         ]
     },
     {
-        titulo: "11. Serviço de Informação ao Cidadão (e-SIC)",
+        titulo: "11. Planejamento e Prestação de contas",
+        pesoDimensao: 4,
         itens: [
-            { id: "11.1", nome: "Acesso ao Pedido de Informação Online", essencial: true },
-            { id: "11.2", nome: "Relatório Estatístico de Pedidos", essencial: true }
+            { id: "11.1", nome: "Publica a Prestação de Contas do Ano Anterior (Balanço Geral)?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
+            { id: "11.2", nome: "Divulga o Relatório de Gestão ou Atividades?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
+            { id: "11.3", nome: "Divulga a íntegra da decisão do julgamento das contas pelo TC?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
+            { id: "11.4", nome: "Divulga o resultado do julgamento das Contas do Executivo pelo Legislativo?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
+            { id: "11.5", nome: "Divulga o Relatório de Gestão Fiscal (RGF)?", classificacao: "essencial", exige: ['g', 's', 'a'] },
+            { id: "11.6", nome: "Divulga o Relatório Resumido da Execução Orçamentária (RREO)?", classificacao: "essencial", exige: ['g', 's', 'a'] },
+            { id: "11.7", nome: "Divulga o plano estratégico institucional?", classificacao: "recomendada", exige: ['g'] },
+            { id: "11.8", nome: "Divulga a Lei do Plano Plurianual (PPA) e anexos?", classificacao: "essencial", exige: ['g'] },
+            { id: "11.9", nome: "Divulga a Lei de Diretrizes Orçamentárias (LDO) e anexos?", classificacao: "essencial", exige: ['g'] },
+            { id: "11.10", nome: "Divulga a Lei Orçamentária (LOA) e anexos?", classificacao: "essencial", exige: ['g'] }
         ]
     },
     {
-        titulo: "12. Ouvidoria",
+        titulo: "12. Serviço de Informação ao Cidadão - SIC",
+        pesoDimensao: 2,
         itens: [
-            { id: "12.1", nome: "Canal de Contato e Ouvidoria", essencial: true },
-            { id: "12.2", nome: "Relatórios de Ouvidoria", essencial: false }
+            { id: "12.1", nome: "Existe o SIC no site e indica a unidade/setor responsável?", classificacao: "obrigatoria", exige: ['g'] },
+            { id: "12.2", nome: "Indica endereço, telefone, e-mail e horário do SIC?", classificacao: "obrigatoria", exige: ['g'] },
+            { id: "12.3", nome: "Há possibilidade de envio de pedidos de forma eletrônica (e-SIC)?", classificacao: "obrigatoria", exige: ['g'] },
+            { id: "12.4", nome: "A solicitação por meio de e-SIC é simples?", classificacao: "obrigatoria", exige: ['g'] },
+            { id: "12.5", nome: "Divulga instrumento normativo local que regulamente a LAI?", classificacao: "obrigatoria", exige: ['g'] },
+            { id: "12.6", nome: "Divulga prazos de resposta e autoridades competentes?", classificacao: "recomendada", exige: ['g'] },
+            { id: "12.7", nome: "Divulga relatório anual estatístico?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
+            { id: "12.8", nome: "Divulga lista de documentos classificados em cada grau de sigilo?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
+            { id: "12.9", nome: "Divulga lista das informações desclassificadas nos últimos 12 meses?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] }
         ]
     },
     {
-        titulo: "13. Obras Públicas",
+        titulo: "13. Acessibilidade",
+        pesoDimensao: 1,
         itens: [
-            { id: "13.1", nome: "Acompanhamento de Obras", essencial: false }
+            { id: "13.1", nome: "O site e o portal contêm símbolo de acessibilidade em destaque?", classificacao: "obrigatoria", exige: ['g'] },
+            { id: "13.2", nome: "Contêm exibição do caminho de páginas (breadcrumb)?", classificacao: "obrigatoria", exige: ['g'] },
+            { id: "13.3", nome: "Contêm opção de alto contraste?", classificacao: "obrigatoria", exige: ['g'] },
+            { id: "13.4", nome: "Contêm ferramenta de redimensionamento de texto?", classificacao: "obrigatoria", exige: ['g'] },
+            { id: "13.5", nome: "Contêm mapa do site institucional?", classificacao: "recomendada", exige: ['g'] }
         ]
     },
     {
-        titulo: "14. Diárias e Passagens",
+        titulo: "14. Ouvidorias",
+        pesoDimensao: 1,
         itens: [
-            { id: "14.1", nome: "Publicação de Valores e Destinos", essencial: true }
+            { id: "14.1", nome: "Há informações sobre o atendimento presencial pela Ouvidoria?", classificacao: "obrigatoria", exige: ['g'] },
+            { id: "14.2", nome: "Há canal eletrônico de acesso/interação com a ouvidoria?", classificacao: "obrigatoria", exige: ['g'] },
+            { id: "14.3", nome: "Divulga Carta de Serviços ao Usuário?", classificacao: "obrigatoria", exige: ['g'] }
         ]
     },
     {
-        titulo: "15. Sanções Administrativas",
+        titulo: "15. Lei Geral de Proteção de Dados (LGPD) e Governo Digital",
+        pesoDimensao: 1,
         itens: [
-            { id: "15.1", nome: "Relação de Sanções a Empresas", essencial: false }
+            { id: "15.1", nome: "Identifica o encarregado pelo tratamento de dados pessoais?", classificacao: "obrigatoria", exige: ['g'] },
+            { id: "15.2", nome: "Publica a sua Política de Privacidade e Proteção de Dados?", classificacao: "recomendada", exige: ['g'] },
+            { id: "15.3", nome: "Possibilita o acesso a serviços públicos por meio digital?", classificacao: "obrigatoria", exige: ['g'] },
+            { id: "15.4", nome: "Possibilita o acesso automatizado em dados abertos?", classificacao: "obrigatoria", exige: ['g'] },
+            { id: "15.5", nome: "Regulamenta a Lei do Governo Digital?", classificacao: "recomendada", exige: ['g'] },
+            { id: "15.6", nome: "Realiza e divulga resultados de pesquisas de satisfação?", classificacao: "obrigatoria", exige: ['g'] }
         ]
     },
     {
-        titulo: "16. Renúncia de Receita",
+        titulo: "16. Renúncias de Receitas",
+        pesoDimensao: 1,
         itens: [
-            { id: "16.1", nome: "Benefícios Fiscais Concedidos", essencial: false },
-            { id: "16.4", nome: "Projetos de Incentivo à Cultura", essencial: false }
+            { id: "16.1", nome: "Divulga as desonerações tributárias concedidas?", classificacao: "obrigatoria", exige: ['g'] },
+            { id: "16.2", nome: "Divulga os valores da renúncia fiscal prevista e realizada?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
+            { id: "16.3", nome: "Identifica os beneficiários das desonerações tributárias?", classificacao: "recomendada", exige: ['g', 's', 'a'] },
+            { id: "16.4", nome: "Divulga informações sobre projetos de incentivo à cultura e esportes?", classificacao: "recomendada", exige: ['g', 's', 'a'] }
         ]
     },
     {
         titulo: "17. Emendas Parlamentares",
+        pesoDimensao: 1,
         itens: [
-            { id: "17.1", nome: "Identificação das Emendas Recebidas", essencial: true },
-            { id: "17.2", nome: "Execução das 'Emendas Pix'", essencial: true }
+            { id: "17.1", nome: "Identifica as emendas parlamentares federais recebidas?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
+            { id: "17.2", nome: "Identifica as emendas parlamentares estaduais e municipais?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
+            { id: "17.3", nome: "Demonstra a execução orçamentária oriunda das emendas?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] }
         ]
     },
     {
         titulo: "18. Saúde",
+        pesoDimensao: 1,
         itens: [
-            { id: "18.1", nome: "Plano de Saúde e Relatórios", essencial: true },
-            { id: "18.2", nome: "Horários e Especialidades Médicas", essencial: true },
-            { id: "18.3", nome: "Lista de Espera de Regulação", essencial: true },
-            { id: "18.4", nome: "Relação de Medicamentos (SUS)", essencial: true },
-            { id: "18.5", nome: "Estoque das Farmácias Públicas", essencial: true }
+            { id: "18.1", nome: "Divulga o plano de saúde, a programação anual e o relatório de gestão?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
+            { id: "18.2", nome: "Divulga informações relacionadas aos serviços de saúde?", classificacao: "obrigatoria", exige: ['g', 's'] },
+            { id: "18.3", nome: "Divulga a lista de espera de regulação para acesso às consultas?", classificacao: "recomendada", exige: ['g'] },
+            { id: "18.4", nome: "Divulga lista dos medicamentos do SUS e como obtê-los?", classificacao: "recomendada", exige: ['g', 's'] },
+            { id: "18.5", nome: "Divulga os estoques de medicamentos das farmácias públicas?", classificacao: "obrigatoria", exige: ['g', 's'] },
+            { id: "18.6", nome: "Divulga informações sobre a composição do Conselho de Saúde?", classificacao: "recomendada", exige: ['g'] }
         ]
     },
     {
-        titulo: "19. Educação",
+        titulo: "19. Educação e Assistência Social",
+        pesoDimensao: 1,
         itens: [
-            { id: "19.1", nome: "Plano de Educação e Resultados", essencial: true },
-            { id: "19.2", nome: "Lista de Espera em Creches e Priorização", essencial: true }
+            { id: "19.1", nome: "Divulga o plano de educação e o respectivo relatório de resultados?", classificacao: "recomendada", exige: ['g', 's', 'a'] },
+            { id: "19.2", nome: "Divulga a lista de espera em creches públicas?", classificacao: "obrigatoria", exige: ['g', 's'] },
+            { id: "19.3", nome: "Divulga informações sobre a composição do Conselho do Fundeb?", classificacao: "obrigatoria", exige: ['g'] },
+            { id: "19.4", nome: "Divulga informações sobre a composição do Conselho de Assistência Social?", classificacao: "recomendada", exige: ['g'] }
+        ]
+    },
+    {
+        titulo: "20. Atividades Finalísticas - Poder Legislativo",
+        pesoDimensao: 3,
+        itens: [
+            { id: "20.1", nome: "Divulga a composição da Casa, com a biografia dos parlamentares?", classificacao: "obrigatoria", exige: ['g'] },
+            { id: "20.2", nome: "Divulga as leis e atos infralegais produzidos?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
+            { id: "20.3", nome: "Divulga projetos de leis e as respectivas tramitações?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
+            { id: "20.4", nome: "Divulga a pauta das sessões do Plenário?", classificacao: "obrigatoria", exige: ['g', 's'] },
+            { id: "20.5", nome: "Divulga a pauta das Comissões?", classificacao: "obrigatoria", exige: ['g', 's'] },
+            { id: "20.6", nome: "Divulga as atas das sessões e lista de presença?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
+            { id: "20.7", nome: "Divulga lista sobre as votações nominais?", classificacao: "recomendada", exige: ['g', 's', 'a'] },
+            { id: "20.8", nome: "Divulga o ato que aprecia as Contas do Chefe do Executivo?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
+            { id: "20.9", nome: "Há transmissão de sessões ou outras formas de participação popular?", classificacao: "recomendada", exige: ['g'] },
+            { id: "20.10", nome: "Divulga valores relativos às cotas para exercício da atividade parlamentar?", classificacao: "recomendada", exige: ['g', 's', 'a'] },
+            { id: "20.11", nome: "Divulga dados sobre as atividades legislativas dos parlamentares?", classificacao: "recomendada", exige: ['g', 's', 'a'] }
         ]
     }
 ];
@@ -141,10 +234,9 @@ const DATA_ENTIDADES = [
     {n:"PREFEITURA MUNICIPAL DE ERERE", o:"FELIPE"}, {n:"PREFEITURA MUNICIPAL DE GUARAMIRANGA", o:"FELIPE"}, {n:"PREFEITURA MUNICIPAL DE BATURITÉ", o:"FELIPE"}, {n:"PREFEITURA MUNICIPAL DE COREAÚ", o:"FELIPE"}, {n:"PREFEITURA MUNICIPAL DE IRACEMA", o:"FELIPE"}, {n:"PREFEITURA MUNICIPAL DE ORÓS", o:"FELIPE"}, {n:"PREFEITURA MUNICIPAL DE IRAUÇUBA", o:"FELIPE"}, {n:"PREFEITURA MUNICIPAL DE ACARAÚ", o:"FELIPE"}, {n:"PREFEITURA MUNICIPAL DE SENADOR POMPEU", o:"FELIPE"}, {n:"PREFEITURA MUNICIPAL DE ITAIÇABA", o:"FELIPE"}, {n:"PREFEITURA MUNICIPAL DE EUSÉBIO", o:"FELIPE"}, {n:"PREFEITURA MUNICIPAL DE UMARI", o:"FELIPE"}, {n:"PREFEITURA MUNICIPAL DE UBAJARA", o:"FELIPE"}, {n:"PREFEITURA MUNICIPAL DE ACOPIARA", o:"FELIPE"}, {n:"PREFEITURA MUNICIPAL DE VARZEA ALEGRE", o:"FELIPE"}, {n:"PREFEITURA MUNICIPAL DE TAUÁ", o:"FELIPE"}, {n:"PREFEITURA MUNICIPAL DE RUSSAS", o:"FELIPE"}, {n:"PREFEITURA MUNICIPAL DE TRAIRI", o:"FELIPE"}, {n:"PREFEITURA MUNICIPAL DE TAMBORIL", o:"FELIPE"}, {n:"PREFEITURA MUNICIPAL DE MOMBAÇA", o:"FELIPE"}, {n:"PREFEITURA MUNICIPAL DE JARDIM", o:"FELIPE"}, {n:"PREFEITURA MUNICIPAL DE DEP. IRAPUAN PINHEIRO", o:"FELIPE"}, {n:"PREFEITURA MUNICIPAL DE URUBURETAMA", o:"FELIPE"}, {n:"PREFEITURA MUNICIPAL DE LAVRAS DA MANGABEIRA", o:"FELIPE"}, {n:"PREFEITURA MUNICIPAL DE FRECHEIRINHA", o:"FELIPE"}, {n:"PREFEITURA MUNICIPAL DE BAIXIO", o:"FELIPE"},
     {n:"PREFEITURA MUNICIPAL DE CRATO", o:"JOÃO"}, {n:"PREFEITURA MUNICIPAL DE QUIXERAMOBIM", o:"JOÃO"}, {n:"SECRETARIA DE EDUCACAO DE JAGUARETAMA", o:"JOÃO"}, {n:"PREFEITURA MUNICIPAL DE ITAPIUNA", o:"JOÃO"}, {n:"PREFEITURA MUNICIPAL DE MORRINHOS", o:"JOÃO"}, {n:"PREFEITURA MUNICIPAL DE ARACATI", o:"JOÃO"}, {n:"PREFEITURA MUNICIPAL DE VARJOTA", o:"JOÃO"}, {n:"PREFEITURA MUNICIPAL DE OCARA", o:"JOÃO"}, {n:"PREFEITURA MUNICIPAL DE MASSAPÊ", o:"JOÃO"}, {n:"PREFEITURA MUNICIPAL DE LIMOEIRO DO NORTE", o:"JOÃO"}, {n:"PREFEITURA MUNICIPAL DE ALTANEIRA", o:"JOÃO"}, {n:"PREFEITURA MUNICIPAL DE GRAÇA", o:"JOÃO"}, {n:"PREFEITURA MUNICIPAL DE PARAMOTI", o:"JOÃO"}, {n:"PREFEITURA MUNICIPAL DE MORADA NOVA", o:"JOÃO"}, {n:"PREFEITURA MUNICIPAL DE HORIZONTE", o:"JOÃO"}, {n:"PREFEITURA MUNICIPAL DE GRANJA", o:"JOÃO"}, {n:"PREFEITURA MUNICIPAL DE FORQUILHA", o:"JOÃO"}, {n:"PREFEITURA MUNICIPAL DE PINDORETAMA", o:"JOÃO"}, {n:"PREFEITURA MUNICIPAL DE NOVA RUSSAS", o:"JOÃO"}, {n:"PREFEITURA MUNICIPAL DE ITAPAJÉ", o:"JOÃO"}, {n:"PREFEITURA MUNICIPAL DE TURURU", o:"JOÃO"}, {n:"PREFEITURA MUNICIPAL DE SANTA QUITÉRIA", o:"JOÃO"}, {n:"PREFEITURA MUNICIPAL DE MARANGUAPE", o:"JOÃO"}, {n:"PREFEITURA MUNICIPAL DE CANINDÉ", o:"JOÃO"}, {n:"PREFEITURA MUNICIPAL DE AURORA", o:"JOÃO"},
     {n:"PREFEITURA MUNICIPAL DE ICAPUÍ", o:"KAIKE"}, {n:"PREFEITURA MUNICIPAL DE PEREIRO", o:"KAIKE"}, {n:"PREFEITURA MUNICIPAL DE QUIXERÉ", o:"KAIKE"}, {n:"PREFEITURA MUNICIPAL DE POTENGI", o:"KAIKE"}, {n:"PREFEITURA MUNICIPAL DE CATARINA", o:"KAIKE"}, {n:"PREFEITURA MUNICIPAL DE ARATUBA", o:"KAIKE"}, {n:"PREFEITURA MUNICIPAL DE QUIXADA", o:"KAIKE"}, {n:"PREFEITURA MUNICIPAL DE JAGUARETAMA", o:"KAIKE"}, {n:"PREFEITURA MUNICIPAL DE PORANGA", o:"KAIKE"}, {n:"PREFEITURA MUNICIPAL DE CARNAUBAL", o:"KAIKE"}, {n:"PREFEITURA MUNICIPAL DE ARACOIABA", o:"KAIKE"}, {n:"PREFEITURA MUNICIPAL DE ITAPIPOCA", o:"KAIKE"}, {n:"PREFEITURA MUNICIPAL DE AIUABA", o:"KAIKE"}, {n:"PREFEITURA MUNICIPAL DE TIANGUÁ", o:"KAIKE"}, {n:"PREFEITURA MUNICIPAL DE JUAZEIRO DO NORTE", o:"KAIKE"}, {n:"PREFEITURA MUNICIPAL DE ITAREMA", o:"KAIKE"}, {n:"PREFEITURA MUNICIPAL DE ITAITINGA", o:"KAIKE"}, {n:"PREFEITURA MUNICIPAL DE FORTIM", o:"KAIKE"}, {n:"PREFEITURA MUNICIPAL DE PACOTI", o:"KAIKE"}, {n:"PREFEITURA MUNICIPAL DE MARCO", o:"KAIKE"}, {n:"PREFEITURA MUNICIPAL DE BARBALHA", o:"KAIKE"}, {n:"PREFEITURA MUNICIPAL DE ASSARÉ", o:"KAIKE"}, {n:"PREFEITURA MUNICIPAL DE JAGUARUANA", o:"KAIKE"}, {n:"PREFEITURA MUNICIPAL DE CATUNDA", o:"KAIKE"},
-    {n:"PREFEITURA MUNICIPAL DE BELA CRUZ", o:"KAIRON"}, {n:"PREFEITURA MUNICIPAL DE BOA VIAGEM", o:"KAIRON"}, {n:"PREFEITURA MUNICIPAL DE ALTO SANTO", o:"KAIRON"}, {n:"PREFEITURA MUNICIPAL DE PIQUET CARNEIRO", o:"KAIRON"}, {n:"PREFEITURA MUNICIPAL DE PALHANO", o:"KAIRON"}, {n:"PREFEITURA MUNICIPAL DE INDEPENDENCIA", o:"KAIRON"}, {n:"PREFEITURA MUNICIPAL DE TEJUÇUOCA", o:"KAIRON"}, {n:"PREFEITURA MUNICIPAL DE SANTANA DO CARIRI", o:"KAIRON"}, {n:"PREFEITURA MUNICIPAL DE POTIRETAMA", o:"KAIRON"}, {n:"PREFEITURA MUNICIPAL DE NOVO ORIENTE", o:"KAIRON"}, {n:"PREFEITURA MUNICIPAL DE MIRAÍMA", o:"KAIRON"}, {n:"PREFEITURA MUNICIPAL DE MILAGRES", o:"KAIRON"}, {n:"PREFEITURA MUNICIPAL DE GUARACIABA DO NORTE", o:"KAIRON"}, {n:"PREFEITURA MUNICIPAL DE CARIRIAÇU", o:"KAIRON"}, {n:"PREFEITURA MUNICIPAL DE BARREIRA", o:"KAIRON"}, {n:"PREFEITURA MUNICIPAL DE TABULEIRO DO NORTE", o:"KAIRON"}, {n:"PREFEITURA MUNICIPAL DE SOLONÓPOLE", o:"KAIRON"}, {n:"PREFEITURA MUNICIPAL DE JAGUARIBE", o:"KAIRON"}, {n:"PREFEITURA MUNICIPAL DE CARIRÉ", o:"KAIRON"}, {n:"PREFEITURA MUNICIPAL DE PACATUBA", o:"KAIRON"}, {n:"PREFEITURA MUNICIPAL DE BARRO", o:"KAIRON"}
+    {n:"PREFEITURA MUNICIPAL DE BELA CRUZ", o:"KAIRON"}, {n:"PREFEITURA MUNICIPAL DE BOA VIAGEM", o:"KAIRON"}, {n:"PREFEITURA MUNICIPAL DE ALTO SANTO", o:"KAIRON"}, {n:"PREFEITURA MUNICIPAL DE PIQUET CARNEIRO", o:"KAIRON"}, {n:"PREFEITURA MUNICIPAL DE PALHANO", o:"KAIRON"}, {n:"PREFEITURA MUNICIPAL DE INDEPENDENCIA", o:"KAIRON"}, {n:"PREFEITURA MUNICIPAL DE TEJUÇUOCA", o:"KAIRON"}, {n:"PREFEITURA MUNICIPAL DE SANTANA DO CARIRI", o:"KAIRON"}, {n:"PREFEITURA MUNICIPAL DE POTIRETAMA", o:"KAIRON"}, {n:"PREFEITURA MUNICIPAL DE NOVO ORIENTE", o:"KAIRON"}, {n:"PREFEITURA MUNICIPAL DE MIRAÍMA", o:"KAIRON"}, {n:"PREFEITURA MUNICIPAL DE MILAGRES", o:"KAIRON"}, {n:"PREFEITURA MUNICIPAL DE GUARACIABA DO NORTE", o:"KAIRON"}, {n:"PREFEITURA MUNICIPAL DE CARIRÉ", o:"KAIRON"}, {n:"PREFEITURA MUNICIPAL DE PACATUBA", o:"KAIRON"}, {n:"PREFEITURA MUNICIPAL DE BARRO", o:"KAIRON"}
 ];
 
-// --- LOGICA DE BANCO DE DADOS ---
 const DB_KEY = 'assesi_atricon_v3_clean'; 
 let db = JSON.parse(localStorage.getItem(DB_KEY)) || {};
 let entidadeAtiva = null;
@@ -159,6 +251,18 @@ function normalizarTexto(texto) {
 function salvar() { localStorage.setItem(DB_KEY, JSON.stringify(db)); }
 
 window.onload = () => {
+    // AJUSTE DO BOTÃO DE AJUDA
+    const btnHelp = document.querySelector('.btn-floating-help');
+    if (btnHelp) {
+        btnHelp.style.bottom = '80px'; 
+    }
+    
+    // AJUSTE DO BOTÃO DE TOPO
+    const btnTop = document.getElementById('btnScrollTop');
+    if (btnTop) {
+        btnTop.style.bottom = '145px';
+    }
+
     if (Object.keys(db).length === 0) {
         DATA_ENTIDADES.forEach(item => {
             const id = "ENT_" + item.n.replace(/\s/g, "_");
@@ -185,7 +289,6 @@ window.onload = () => {
     document.getElementById('inputNovoCliente').addEventListener('input', atualizarGridPrincipal);
 };
 
-// --- LÓGICA DO BOTÃO VOLTAR AO TOPO ---
 const btnScrollTop = document.getElementById('btnScrollTop');
 window.onscroll = function() {
     if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
@@ -198,13 +301,11 @@ btnScrollTop.addEventListener('click', () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 });
 
-// --- TRANSIÇÕES ACELERADAS (200ms) ---
 function abrirChecklist(id) {
     entidadeAtiva = id;
     const lista = document.getElementById('telalista');
     const avaliacao = document.getElementById('telaAvaliacao');
 
-    // Inicia fade-out
     lista.classList.remove('show');
     
     setTimeout(() => {
@@ -215,11 +316,10 @@ function abrirChecklist(id) {
         renderizarGrupos();
         window.scrollTo(0,0);
 
-        // Inicia fade-in
         setTimeout(() => {
             avaliacao.classList.add('show');
         }, 20); 
-    }, 200); // 200ms
+    }, 200); 
 }
 
 function voltarParaInicio() {
@@ -238,10 +338,9 @@ function voltarParaInicio() {
         setTimeout(() => {
             lista.classList.add('show');
         }, 20);
-    }, 200); // 200ms
+    }, 200); 
 }
 
-// --- FUNÇÕES DE INTERFACE ---
 function abrirAjuda() {
     const modal = new bootstrap.Modal(document.getElementById('modalAjuda'));
     modal.show();
@@ -266,8 +365,10 @@ function atualizarGridPrincipal() {
         const passaTexto = nomeParaBusca.includes(termo);
         const passaOperador = (operadorFiltro === 'todos') || (ent.operador === operadorFiltro);
         
+        // Lógica de filtragem por poder
         const ehPrefeitura = nomeParaBusca.includes('prefeitura');
         const ehCamara = nomeParaBusca.includes('camara'); 
+        
         const passaPoder = (filtroAtivo === 'todos') || 
                            (filtroAtivo === 'prefeitura' && ehPrefeitura) || 
                            (filtroAtivo === 'camara' && ehCamara);
@@ -294,25 +395,62 @@ function atualizarGridPrincipal() {
     atualizarRodape();
 }
 
-function cadastrarEntidade() {
-    const input = document.getElementById('inputNovoCliente');
-    const nomeOriginal = input.value.trim().toUpperCase();
-    const feedback = document.getElementById('feedbackCadastro');
-    if (!nomeOriginal) return;
+/** * FUNÇÃO DE CADASTRO VIA MODAL 
+ * Agora coleta Nome e Operador da janela flutuante e fecha a modal corretamente
+ */
+function executarCadastroModal() {
+    const nomeInput = document.getElementById('inputModalNome');
+    const operadorSelect = document.getElementById('selectModalOperador');
+    
+    const nomeOriginal = nomeInput.value.trim().toUpperCase();
+    const operadorEscolhido = operadorSelect.value;
 
-    const jaExiste = Object.values(db).some(ent => normalizarTexto(ent.nome).replace(/\s/g, "") === normalizarTexto(nomeOriginal).replace(/\s/g, ""));
+    if (!nomeOriginal) {
+        alert("Por favor, digite o nome da entidade.");
+        return;
+    }
+
+    if (!operadorEscolhido) {
+        alert("Por favor, selecione o operador responsável.");
+        return;
+    }
+
+    const jaExiste = Object.values(db).some(ent => 
+        normalizarTexto(ent.nome).replace(/\s/g, "") === normalizarTexto(nomeOriginal).replace(/\s/g, "")
+    );
+
     if (jaExiste) {
-        feedback.innerText = "⚠️ Esta entidade já está cadastrada!";
-        feedback.style.display = "block";
-        setTimeout(() => feedback.style.display = "none", 4000);
+        alert("⚠️ Esta entidade já está cadastrada!");
         return;
     }
 
     const id = "ENT_" + Date.now();
-    db[id] = { nome: nomeOriginal, operador: "AVULSO", perc: 0, selo: "INEXISTENTE", marcados: {} };
+    db[id] = { 
+        nome: nomeOriginal, 
+        operador: operadorEscolhido, 
+        perc: 0, 
+        selo: "INEXISTENTE", 
+        marcados: {} 
+    };
+
     salvar();
-    input.value = "";
+    
+    // Limpar campos
+    nomeInput.value = "";
+    operadorSelect.selectedIndex = 0;
+    
+    // Fechar a modal corretamente
+    const modalElement = document.getElementById('modalNovoCadastro');
+    const modalInstance = bootstrap.Modal.getInstance(modalElement);
+    modalInstance.hide();
+    
     atualizarGridPrincipal();
+}
+
+/** Mantida apenas para compatibilidade se necessário, mas o fluxo agora é via modal */
+function cadastrarEntidade() {
+    const modal = new bootstrap.Modal(document.getElementById('modalNovoCadastro'));
+    modal.show();
 }
 
 function prepararEdicao(id) {
@@ -349,17 +487,59 @@ function renderizarGrupos() {
     const container = document.getElementById('containerGrupos');
     container.innerHTML = "";
     const ent = db[entidadeAtiva];
+    
+    // Identificação inteligente do tipo de entidade
+    const ehCamara = normalizarTexto(ent.nome).includes('camara');
 
     GRUPOS_CRITERIOS.forEach(grupo => {
-        let html = `<div class="grupo-header d-flex justify-content-between mt-4"><span>${grupo.titulo}</span><div class="d-flex"><span class="col-validacao">D</span><span class="col-validacao">A</span><span class="col-validacao">S</span></div></div><ul class="list-group mb-3">`;
+        const num = parseInt(grupo.titulo);
+
+        // FILTRAGEM DINÂMICA (Pula grupos exclusivos do outro Poder)
+        if (ehCamara && [16, 17, 18, 19].includes(num)) return;
+        if (!ehCamara && num === 20) return;
+
+        let html = `<div class="grupo-header d-flex justify-content-between align-items-center mt-4" style="padding-right: 12px;">
+            <span>
+                ${grupo.titulo}
+            </span>
+            <div class="d-flex align-items-center">
+                <button onclick="marcarTodoOGrupo('${grupo.titulo}')" class="btn btn-sm btn-primary" style="font-size: 0.65rem; padding: 2px 8px;">
+                    Marcar Tudo
+                </button>
+                <button onclick="desmarcarTodoOGrupo('${grupo.titulo}')" class="btn btn-sm btn-secondary ms-2 me-3" style="font-size: 0.65rem; padding: 2px 8px;">
+                    Desmarcar Tudo
+                </button>
+                <div style="width: 40px; text-align: center;" class="fw-bold">D</div>
+                <div style="width: 40px; text-align: center;" class="fw-bold">A</div>
+                <div style="width: 40px; text-align: center;" class="fw-bold">S</div>
+            </div>
+        </div>
+        <ul class="list-group mb-3">`;
+
         grupo.itens.forEach(item => {
             const st = ent.marcados[item.id] || { g: false, s: false, a: false };
-            html += `<li class="list-group-item d-flex align-items-center dark-card-target">
-                <div class="flex-grow-1"><small class="text-muted">${item.id}</small> ${item.essencial?'<b class="text-danger">*</b>':''} <br><b>${item.nome}</b></div>
-                <div class="d-flex">
-                    <input type="checkbox" class="mx-2" ${st.g?'checked':''} onchange="toggleCheck('${item.id}', 'g')">
-                    <input type="checkbox" class="mx-2" ${st.s?'checked':''} onchange="toggleCheck('${item.id}', 's')">
-                    <input type="checkbox" class="mx-2" ${st.a?'checked':''} onchange="toggleCheck('${item.id}', 'a')">
+            const exige = item.exige || ['g', 's', 'a'];
+            
+            const checkD = `<div class="d-flex justify-content-center align-items-center" style="width: 40px;">
+                <input type="checkbox" ${st.g?'checked':''} onchange="toggleCheck('${item.id}', 'g')" style="cursor: pointer; ${exige.includes('g') ? '' : 'visibility: hidden;'}">
+            </div>`;
+            const checkA = `<div class="d-flex justify-content-center align-items-center" style="width: 40px;">
+                <input type="checkbox" ${st.s?'checked':''} onchange="toggleCheck('${item.id}', 's')" style="cursor: pointer; ${exige.includes('s') ? '' : 'visibility: hidden;'}">
+            </div>`;
+            const checkS = `<div class="d-flex justify-content-center align-items-center" style="width: 40px;">
+                <input type="checkbox" ${st.a?'checked':''} onchange="toggleCheck('${item.id}', 'a')" style="cursor: pointer; ${exige.includes('a') ? '' : 'visibility: hidden;'}">
+            </div>`;
+
+            html += `<li class="list-group-item d-flex align-items-center dark-card-target" style="padding-right: 12px;">
+                <div class="flex-grow-1 pe-3">
+                    <small class="text-muted">${item.id}</small> 
+                    ${item.classificacao === 'essencial' ? '<b class="text-danger" title="Critério Essencial">*</b>' : ''} 
+                    <br><b>${item.nome}</b>
+                </div>
+                <div class="d-flex align-items-center">
+                    ${checkD}
+                    ${checkA}
+                    ${checkS}
                 </div>
             </li>`;
         });
@@ -376,31 +556,106 @@ function toggleCheck(id, tipo) {
     calcularProgresso();
 }
 
+// FUNÇÃO INTELIGENTE DE MARCAÇÃO EM MASSA
+function marcarTodoOGrupo(tituloGrupo) {
+    const grupo = GRUPOS_CRITERIOS.find(g => g.titulo === tituloGrupo);
+    if (!grupo) return;
+
+    const ent = db[entidadeAtiva];
+
+    grupo.itens.forEach(item => {
+        if (!ent.marcados[item.id]) {
+            ent.marcados[item.id] = { g: false, s: false, a: false };
+        }
+        const exige = item.exige || ['g', 's', 'a'];
+        if (exige.includes('g')) ent.marcados[item.id].g = true;
+        if (exige.includes('s')) ent.marcados[item.id].s = true;
+        if (exige.includes('a')) ent.marcados[item.id].a = true;
+    });
+
+    salvar();
+    renderizarGrupos(); 
+}
+
+// FUNÇÃO DE LIMPEZA EM MASSA
+function desmarcarTodoOGrupo(tituloGrupo) {
+    const grupo = GRUPOS_CRITERIOS.find(g => g.titulo === tituloGrupo);
+    if (!grupo) return;
+
+    const ent = db[entidadeAtiva];
+
+    grupo.itens.forEach(item => {
+        if (ent.marcados[item.id]) {
+            ent.marcados[item.id] = { g: false, s: false, a: false };
+        }
+    });
+
+    salvar();
+    renderizarGrupos();
+}
+
 function calcularProgresso() {
     const ent = db[entidadeAtiva];
-    let totalItems = 0, atendidos = 0, faltaEssencial = false;
+    let pontosTotais = 0;
+    let pontosObtidos = 0;
+    let faltaEssencial = false;
+
+    // Identificação para o cálculo dinâmico
+    const ehCamara = normalizarTexto(ent.nome).includes('camara');
 
     GRUPOS_CRITERIOS.forEach(g => {
+        const num = parseInt(g.titulo);
+
+        // AJUSTE DINÂMICO DOS PONTOS TOTAIS
+        if (ehCamara && [16, 17, 18, 19].includes(num)) return;
+        if (!ehCamara && num === 20) return;
+
+        let pesoDim = g.pesoDimensao || 1; 
+
         g.itens.forEach(i => {
-            totalItems++;
-            const s = ent.marcados[i.id] || {g:false,s:false,a:false};
-            if (s.g && s.s && s.a) atendidos++;
-            else if (i.essencial) faltaEssencial = true;
+            let pesoCrit = 1; 
+            if (i.classificacao === 'essencial') pesoCrit = 2;
+            else if (i.classificacao === 'obrigatoria') pesoCrit = 1.5;
+
+            let pontosDesteCriterio = pesoDim * pesoCrit;
+            pontosTotais += pontosDesteCriterio;
+
+            const s = ent.marcados[i.id] || {g:false, s:false, a:false};
+            const exige = i.exige || ['g', 's', 'a'];
+
+            let atende = true;
+            if (exige.includes('g') && !s.g) atende = false;
+            if (exige.includes('s') && !s.s) atende = false;
+            if (exige.includes('a') && !s.a) atende = false;
+
+            if (atende) {
+                pontosObtidos += pontosDesteCriterio;
+            } else if (i.classificacao === 'essencial') {
+                faltaEssencial = true; 
+            }
         });
     });
 
-    const perc = Math.round((atendidos / totalItems) * 100);
+    const perc = pontosTotais > 0 ? Math.round((pontosObtidos / pontosTotais) * 100) : 0;
+    
     let selo = perc >= 95 ? (faltaEssencial ? "ELEVADO" : "DIAMANTE") : 
                perc >= 85 ? (faltaEssencial ? "ELEVADO" : "OURO") : 
                perc >= 75 ? (faltaEssencial ? "ELEVADO" : "PRATA") : 
+               perc >= 50 ? "INTERMEDIARIO" :
+               perc >= 30 ? "BASICO" :
                perc > 0 ? "INICIAL" : "INEXISTENTE";
 
-    ent.perc = perc; ent.selo = selo;
+    ent.perc = perc; 
+    ent.selo = selo;
+    
     document.getElementById('progressoTexto').innerText = perc + "%";
     document.getElementById('barraProgresso').style.width = perc + "%";
+    
     const b = document.getElementById('statusSelo');
-    b.innerText = selo;
-    b.className = `badge p-3 fs-6 rounded-pill selo-${normalizarTexto(selo)}`;
+    if (b) {
+        b.innerText = selo;
+        b.className = `badge p-3 fs-6 rounded-pill selo-${normalizarTexto(selo)}`;
+    }
 }
 
 function atualizarRodape() {
@@ -423,7 +678,6 @@ function verificarLogin() {
     const senhaDigitada = document.getElementById('senhaLogin').value;
     const erro = document.getElementById('erroLogin');
     
-    // Defina sua senha aqui (exemplo: assesi2026)
     if (senhaDigitada === 'assesi2026') {
         const tela = document.getElementById('telaLogin');
         tela.classList.add('hide');
@@ -437,7 +691,6 @@ function verificarLogin() {
     }
 }
 
-// Permitir apertar "Enter" para logar
 document.addEventListener('keypress', function (e) {
     if (e.key === 'Enter' && document.getElementById('telaLogin').style.display !== 'none') {
         verificarLogin();
@@ -447,18 +700,11 @@ document.addEventListener('keypress', function (e) {
 function logout() {
     const tela = document.getElementById('telaLogin');
     const inputSenha = document.getElementById('senhaLogin');
-    
-    // Limpa o campo de senha para a próxima tentativa
     inputSenha.value = '';
-    
-    // Remove a classe hide e volta o display para block
     tela.classList.remove('hide');
     tela.style.display = 'flex';
-    
-    // Fecha o sidebar automaticamente ao sair
     document.getElementById('sidebar').classList.remove('active');
 }
-
 
 function importarDados(event) {
     const arquivo = event.target.files[0];
@@ -468,21 +714,17 @@ function importarDados(event) {
     leitor.onload = function(e) {
         try {
             const dadosImportados = JSON.parse(e.target.result);
-            
-            // Validação simples: verifica se os dados importados são um objeto
             if (typeof dadosImportados === 'object' && dadosImportados !== null) {
                 if (confirm("Isso substituirá todos os dados atuais desta máquina. Deseja continuar?")) {
                     db = dadosImportados;
                     salvar();
                     atualizarGridPrincipal();
                     alert("Dados importados com sucesso!");
-                    window.location.reload(); // Recarrega para garantir que tudo seja processado do zero
+                    window.location.reload(); 
                 }
-            } else {
-                alert("Erro: O arquivo JSON não possui um formato válido.");
             }
         } catch (err) {
-            alert("Erro ao ler o arquivo JSON: " + err.message);
+            alert("Erro ao ler o arquivo JSON.");
         }
     };
     leitor.readAsText(arquivo);
