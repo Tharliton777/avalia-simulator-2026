@@ -39,7 +39,10 @@ const GRUPOS_CRITERIOS = [
         itens: [
             { id: "4.1", nome: "Divulga o total das despesas empenhadas, liquidadas e pagas?", classificacao: "essencial", exige: ['g', 's', 'a'] },
             { id: "4.2", nome: "Divulga as despesas por classificação orçamentária?", classificacao: "essencial", exige: ['g', 's', 'a'] },
-            { id: "4.3", nome: "Possibilita a consulta de empenhos com detalhes do beneficiário, valor, objeto e licitação originária?", classificacao: "essencial", exige: ['g', 's', 'a'] }
+            { id: "4.3", nome: "Possibilita a consulta de empenhos com detalhes do beneficiário, valor, objeto e licitação originária?", classificacao: "essencial", exige: ['g', 's', 'a'] },
+            { id: "4.4", nome: "Publica relação das despesas com aquisições de bens efetuadas pela instituição contendo: identificação do bem, preço unitário, quantidade, nome do fornecedor e valor total de cada aquisição?", classificacao: "recomendada", exige: ['g', 's', 'a'] },
+            { id: "4.5", nome: "Publica informações sobre despesas de patrocínio?", classificacao: "recomendada", exige: ['g', 's', 'a'] },
+            { id: "4.6", nome: "Publica informações detalhadas sobre a execução dos contratos de publicidade, com nomes dos fornecedores de serviços especializados e veículos, bem como informações sobre os totais de valores pagos para cada tipo de serviço e meio de divulgação?", classificacao: "recomendada", exige: ['g', 's', 'a'] }
         ]
     },
     {
@@ -82,7 +85,8 @@ const GRUPOS_CRITERIOS = [
             { id: "8.4", nome: "Divulga a íntegra dos principais documentos dos processos de dispensa e inexigibilidade?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
             { id: "8.5", nome: "Divulga a íntegra das Atas de Adesão – SRP?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
             { id: "8.6", nome: "Divulga o plano de contratações anual?", classificacao: "recomendada", exige: ['g', 's'] },
-            { id: "8.7", nome: "Divulga a relação dos licitantes e/ou contratados sancionados?", classificacao: "recomendada", exige: ['g', 's', 'a'] }
+            { id: "8.7", nome: "Divulga a relação dos licitantes e/ou contratados sancionados?", classificacao: "recomendada", exige: ['g', 's', 'a'] },
+            { id: "8.8", nome: "Divulga regulamento interno de licitações e contratos?", classificacao: "obrigatoria", exige: ['g'] }
         ]
     },
     {
@@ -118,7 +122,16 @@ const GRUPOS_CRITERIOS = [
             { id: "11.7", nome: "Divulga o plano estratégico institucional?", classificacao: "recomendada", exige: ['g'] },
             { id: "11.8", nome: "Divulga a Lei do Plano Plurianual (PPA) e anexos?", classificacao: "essencial", exige: ['g'] },
             { id: "11.9", nome: "Divulga a Lei de Diretrizes Orçamentárias (LDO) e anexos?", classificacao: "essencial", exige: ['g'] },
-            { id: "11.10", nome: "Divulga a Lei Orçamentária (LOA) e anexos?", classificacao: "essencial", exige: ['g'] }
+            { id: "11.10", nome: "Divulga a Lei Orçamentária (LOA) e anexos?", classificacao: "essencial", exige: ['g'] },
+            { id: "11.11", nome: "Divulga o Orçamento do Consórcio Público onde conste a estimativa da receita e a fixação da despesa para o exercício atual?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
+            { id: "11.12", nome: "Divulga as demonstrações financeiras trimestrais?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
+            { id: "11.13", nome: "Divulga as demonstrações financeiras (contábeis) acompanhadas dos pareceres do Conselho Fiscal e da auditoria independente?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
+            { id: "11.14", nome: "Pública o Orçamento de Investimentos da instituição que compõe a Lei Orçamentária Anual?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
+            { id: "11.15", nome: "Divulga as demonstrações contábeis auditadas em formato eletrônico editável?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
+            { id: "11.16", nome: "Divulga o relatório anual elaborado pelo Comitê de Auditoria Estatutário com informações sobre as atividades e os resultados e suas conclusões e recomendações?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
+            { id: "11.17", nome: "Divulga as atas das reuniões do Comitê de Auditoria Estatutário?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
+            { id: "11.18", nome: "Divulga as atas das reuniões do Comitê de Elegibilidade Estatutário ou Comitê de Pessoas, Elegibilidade, Sucessão e Remuneração a partir de 2022, na forma de sumário dos fatos ocorridos, inclusive das dissidências e protestos?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
+            { id: "11.19", nome: "Divulga anualmente relatório integrado ou de sustentabilidade?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] }
         ]
     },
     {
@@ -257,7 +270,8 @@ window.onload = () => {
     if (Object.keys(db).length === 0) {
         DATA_ENTIDADES.forEach(item => {
             const id = "ENT_" + item.n.replace(/\s/g, "_");
-            db[id] = { nome: item.n, operador: item.o, perc: 0, selo: "INEXISTENTE", marcados: {} };
+            // INCLUSÃO DOS NOVOS CAMPOS NA INICIALIZAÇÃO
+            db[id] = { nome: item.n, operador: item.o, controlador: "", telefone: "", perc: 0, selo: "INEXISTENTE", marcados: {} };
         });
         salvar();
     }
@@ -352,7 +366,7 @@ function definirFiltro(tipo) {
     atualizarGridPrincipal(); 
 }
 
-// FUNÇÃO ATUALIZADA COM PAGINAÇÃO
+// FUNÇÃO ATUALIZADA COM O WHATSAPP NA LINHA DO CONTROLADOR
 function atualizarGridPrincipal() {
     const grid = document.getElementById('gridClientes');
     const containerBotoes = document.getElementById('containerCarregarMais');
@@ -367,7 +381,7 @@ function atualizarGridPrincipal() {
         const passaTexto = nomeParaBusca.includes(termo);
         const passaOperador = (operadorFiltro === 'todos') || (ent.operador === operadorFiltro);
         const ehPrefeitura = nomeParaBusca.includes('prefeitura');
-        const ehCamara = nomeParaBusca.includes('camara'); 
+        const ehCamara = normalizarTexto(ent.nome).includes('camara'); 
         const passaPoder = (filtroAtivo === 'todos') || 
                            (filtroAtivo === 'prefeitura' && ehPrefeitura) || 
                            (filtroAtivo === 'camara' && ehCamara);
@@ -380,17 +394,28 @@ function atualizarGridPrincipal() {
     itensParaExibir.forEach(id => {
         const ent = db[id];
         const slug = normalizarTexto(ent.selo);
+        
+        // TRATAMENTO PARA O WHATSAPP E EXIBIÇÃO DO CONTROLADOR
+        const foneLimpo = ent.telefone ? ent.telefone.replace(/\D/g, '') : "";
+        const btnWhats = foneLimpo ? `<a href="https://wa.me/55${foneLimpo}" target="_blank" class="text-success ms-2" title="Chamar no WhatsApp" style="font-size: 1.1rem;"><i class="bi bi-whatsapp"></i></a>` : "";
+
         grid.innerHTML += `
             <div class="col-md-4">
                 <div class="card shadow-sm border-0 p-3 h-100 dark-card-target">
                     <div class="mb-2">
                         <span class="badge-operador">${ent.operador || 'ASSESI'}</span>
                     </div>
-                    <h6 class="fw-bold mb-3">${ent.nome}</h6>
+                    <h6 class="fw-bold mb-1">${ent.nome}</h6>
+                    
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="text-muted small" style="font-size: 0.75rem;">Controlador: ${ent.controlador || '---'}</span>
+                        ${btnWhats}
+                    </div>
+
                     <div class="badge w-100 mb-3 p-2 selo-${slug}">${ent.selo} (${ent.perc}%)</div>
                     <div class="d-flex gap-2">
                         <button onclick="abrirChecklist('${id}')" class="btn btn-primary btn-sm flex-grow-1 fw-bold">Avaliar</button>
-                        <button onclick="prepararEdicao('${id}')" class="btn btn-outline-secondary btn-sm" title="Editar Nome"><i class="bi bi-pencil"></i></button>
+                        <button onclick="prepararEdicao('${id}')" class="btn btn-outline-secondary btn-sm" title="Editar Contatos e Nome"><i class="bi bi-pencil"></i></button>
                         <button onclick="confirmarExclusao('${id}')" class="btn btn-outline-danger btn-sm"><i class="bi bi-trash"></i></button>
                     </div>
                 </div>
@@ -409,7 +434,6 @@ function atualizarGridPrincipal() {
     atualizarRodape();
 }
 
-// NOVAS FUNÇÕES DE PAGINAÇÃO
 function carregarMaisCidades() {
     limiteExibicao += 25;
     atualizarGridPrincipal();
@@ -420,19 +444,40 @@ function exibirTodosOsCards() {
     atualizarGridPrincipal();
 }
 
+// FUNÇÃO ATUALIZADA PARA CAPTURAR OS NOVOS CAMPOS NO CADASTRO
 function executarCadastroModal() {
     const nomeInput = document.getElementById('inputModalNome');
     const operadorSelect = document.getElementById('selectModalOperador');
+    const controladorInput = document.getElementById('inputModalControlador');
+    const telefoneInput = document.getElementById('inputModalTelefone');
+    
     const nomeOriginal = nomeInput.value.trim().toUpperCase();
     const operadorEscolhido = operadorSelect.value;
-    if (!nomeOriginal || !operadorEscolhido) { alert("Preencha todos os campos."); return; }
+    const ctrlEscolhido = controladorInput ? controladorInput.value.trim() : "";
+    const foneEscolhido = telefoneInput ? telefoneInput.value.trim() : "";
+    
+    if (!nomeOriginal || !operadorEscolhido) { alert("Preencha os campos obrigatórios (Nome e Operador)."); return; }
+    
     const jaExiste = Object.values(db).some(ent => normalizarTexto(ent.nome).replace(/\s/g, "") === normalizarTexto(nomeOriginal).replace(/\s/g, ""));
     if (jaExiste) { alert("⚠️ Esta entidade já está cadastrada!"); return; }
+    
     const id = "ENT_" + Date.now();
-    db[id] = { nome: nomeOriginal, operador: operadorEscolhido, perc: 0, selo: "INEXISTENTE", marcados: {} };
+    db[id] = { 
+        nome: nomeOriginal, 
+        operador: operadorEscolhido, 
+        controlador: ctrlEscolhido, 
+        telefone: foneEscolhido, 
+        perc: 0, 
+        selo: "INEXISTENTE", 
+        marcados: {} 
+    };
     salvar();
+    
     nomeInput.value = "";
     operadorSelect.selectedIndex = 0;
+    if (controladorInput) controladorInput.value = "";
+    if (telefoneInput) telefoneInput.value = "";
+    
     bootstrap.Modal.getInstance(document.getElementById('modalNovoCadastro')).hide();
     atualizarGridPrincipal();
 }
@@ -441,16 +486,29 @@ function cadastrarEntidade() {
     new bootstrap.Modal(document.getElementById('modalNovoCadastro')).show();
 }
 
+// FUNÇÕES ATUALIZADAS PARA LER E SALVAR DADOS DO MODAL DE EDIÇÃO
 function prepararEdicao(id) {
     idParaEditar = id;
     document.getElementById('inputEditNome').value = db[id].nome;
+    const inputCtrl = document.getElementById('inputEditControlador');
+    const inputFone = document.getElementById('inputEditTelefone');
+    
+    if (inputCtrl) inputCtrl.value = db[id].controlador || "";
+    if (inputFone) inputFone.value = db[id].telefone || "";
+    
     new bootstrap.Modal(document.getElementById('modalEditarEntidade')).show();
 }
 
 function confirmarEdicao() {
     const novoNome = document.getElementById('inputEditNome').value.trim().toUpperCase();
+    const inputCtrl = document.getElementById('inputEditControlador');
+    const inputFone = document.getElementById('inputEditTelefone');
+    
     if (novoNome && idParaEditar) {
         db[idParaEditar].nome = novoNome;
+        if (inputCtrl) db[idParaEditar].controlador = inputCtrl.value.trim();
+        if (inputFone) db[idParaEditar].telefone = inputFone.value.trim();
+        
         salvar();
         atualizarGridPrincipal();
         bootstrap.Modal.getInstance(document.getElementById('modalEditarEntidade')).hide();

@@ -73,7 +73,7 @@
         <div id="telalista" class="fade-screen show">
             <div class="row mb-4 mt-4">
                 <div class="col-12 text-center">
-                    <h3 class="fw-bold mb-1">Simulador de Transparência Atricon</h3>
+                    <h3 class="fw-bold mb-1">Simulador de Avaliação Atricon</h3>
                     <p class="text-muted small">Gerencie e avalie o nível de transparência das entidades.</p>
                 </div>
             </div>
@@ -199,6 +199,14 @@
                             <option value="KAIRON">KAIRON</option>
                         </select>
                     </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Controlador Interno</label>
+                        <input type="text" id="inputModalControlador" class="form-control" placeholder="Ex: João da Silva">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">WhatsApp/Telefone (apenas números)</label>
+                        <input type="text" id="inputModalTelefone" class="form-control" placeholder="Ex: 88999998888">
+                    </div>
                 </div>
                 <div class="modal-footer border-top-0">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
@@ -249,15 +257,26 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title fw-bold">Editar Nome</h5>
+                    <h5 class="modal-title fw-bold">Editar Cadastro</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <input type="text" id="inputEditNome" class="form-control text-uppercase">
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Nome da Entidade</label>
+                        <input type="text" id="inputEditNome" class="form-control text-uppercase">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Controlador Interno</label>
+                        <input type="text" id="inputEditControlador" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">WhatsApp/Telefone</label>
+                        <input type="text" id="inputEditTelefone" class="form-control">
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary" onclick="confirmarEdicao()">Salvar</button>
+                    <button type="button" class="btn btn-primary" onclick="confirmarEdicao()">Salvar Alterações</button>
                 </div>
             </div>
         </div>
