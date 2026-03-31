@@ -472,7 +472,7 @@ function atualizarGridPrincipal() {
                     </div>
                     <h6 class="fw-bold mb-1">${ent.nome}</h6>
                     
-                    <div class="d-flex justify-content-between align-items-center mb-3 px-3">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
                         <span class="text-muted small" style="font-size: 0.75rem;">Controlador: ${ent.controlador || '---'}</span>
                         ${btnWhats}
                     </div>
