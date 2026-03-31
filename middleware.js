@@ -1,25 +1,16 @@
 export const config = {
-  matcher: '/', // Protege a página principal do seu sistema
+  matcher: '/', // Protege apenas o seu painel principal (index.html)
 };
 
 export default function middleware(req) {
-  const basicAuth = req.headers.get('authorization');
+  // Verifica se o usuário tem o crachá digital no navegador dele
+  const authCookie = req.cookies.get('auth_token');
 
-  if (basicAuth) {
-    const authValue = basicAuth.split(' ')[1];
-    const [user, pwd] = atob(authValue).split(':');
-
-    // Aqui estão o seu usuário e a sua senha seguros no servidor
-    if (user === 'admin' && pwd === 'TeamGreen26') {
-      return new Response(null, { status: 200, headers: { 'x-middleware-next': '1' } });
-    }
+  // Se não tiver o crachá, redireciona a pessoa para a nossa porta de vidro (login.html)
+  if (!authCookie || authCookie.value !== 'logado') {
+    return Response.redirect(new URL('/login.html', req.url));
   }
 
-  // Se não tiver senha ou se a pessoa errar, aciona o bloqueio nativo do navegador
-  return new Response('Acesso Negado. Sistema Restrito.', {
-    status: 401,
-    headers: {
-      'WWW-Authenticate': 'Basic realm="Simulador Atricon 2026"',
-    },
-  });
+  // Se tiver o crachá, a catraca libera a entrada para o sistema
+  return new Response(null, { status: 200, headers: { 'x-middleware-next': '1' } });
 }

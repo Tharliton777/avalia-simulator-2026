@@ -651,7 +651,10 @@ function exportarDados() {
 }
 
 function logout() {
-    window.location.reload();
+    // Rasga o crachá digital (apagando o cookie)
+    document.cookie = "auth_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    // Manda a pessoa de volta para a tela de login
+    window.location.href = '/login.html';
 }
 
 function importarDados(event) {
