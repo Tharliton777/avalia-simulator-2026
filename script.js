@@ -1,3 +1,21 @@
+// Importações do Firebase direto da nuvem do Google
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+// A sua chave secreta do cofre
+const firebaseConfig = {
+  apiKey: "AIzaSyAPMG3dWe_qpyUXU-FHAbLfuaquSzuRqAc",
+  authDomain: "simulador-atricon-2026.firebaseapp.com",
+  projectId: "simulador-atricon-2026",
+  storageBucket: "simulador-atricon-2026.firebasestorage.app",
+  messagingSenderId: "27956024483",
+  appId: "1:27956024483:web:54a3deb5946501ff04db16"
+};
+
+// Conectando o sistema
+const app = initializeApp(firebaseConfig);
+const firestore = getFirestore(app);
+
 const GRUPOS_CRITERIOS = [
     {
         titulo: "1. Informações Prioritárias",
@@ -246,34 +264,59 @@ const DATA_ENTIDADES = [{"n": "PREFEITURA MUNICIPAL DE MAURITI", "o": "CLEYDIR"}
 ];
 
 const DB_KEY = 'assesi_atricon_v3_clean'; 
-let db = JSON.parse(localStorage.getItem(DB_KEY)) || {};
+let db = {}; // O banco de dados agora começa vazio e será preenchido pela nuvem!
 let entidadeAtiva = null;
 let filtroAtivo = 'todos';
 let idParaExcluir = null;
 let idParaEditar = null;
 
-// VARIÁVEL DE LIMITE DE EXIBIÇÃO
 let limiteExibicao = 25; 
 
 function normalizarTexto(texto) {
     return texto.toString().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
 }
 
-function salvar() { localStorage.setItem(DB_KEY, JSON.stringify(db)); }
+// === NOVA FUNÇÃO DE SALVAMENTO NA NUVEM ===
+async function salvar() { 
+    // Mantemos um backup local caso a internet caia
+    localStorage.setItem(DB_KEY, JSON.stringify(db)); 
+    
+    try {
+        // Manda o objeto inteiro para o Firebase
+        await setDoc(doc(firestore, "sistema", "bancoGeral"), db);
+    } catch (e) {
+        console.error("Erro ao salvar no Firebase: ", e);
+    }
+}
 
-window.onload = () => {
+window.onload = async () => {
     const btnHelp = document.querySelector('.btn-floating-help');
     if (btnHelp) btnHelp.style.bottom = '80px'; 
     const btnTop = document.getElementById('btnScrollTop');
     if (btnTop) btnTop.style.bottom = '145px';
 
-    if (Object.keys(db).length === 0) {
-        DATA_ENTIDADES.forEach(item => {
-            const id = "ENT_" + item.n.replace(/\s/g, "_");
-            // INCLUSÃO DOS NOVOS CAMPOS NA INICIALIZAÇÃO
-            db[id] = { nome: item.n, operador: item.o, controlador: "", telefone: "", perc: 0, selo: "INEXISTENTE", marcados: {} };
-        });
-        salvar();
+    // Mostra um aviso visual enquanto carrega os dados
+    const grid = document.getElementById('gridClientes');
+    if(grid) grid.innerHTML = '<div class="col-12 text-center mt-5"><div class="spinner-border text-primary" role="status"></div><p class="mt-2 fw-bold text-muted">Sincronizando com a Nuvem...</p></div>';
+
+    try {
+        // === BUSCA OS DADOS NO FIREBASE ===
+        const docRef = doc(firestore, "sistema", "bancoGeral");
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+            db = docSnap.data(); // Baixa os dados da nuvem para a memória
+        } else {
+            // Se o Firebase estiver vazio (primeiro acesso), ele cria o modelo base
+            DATA_ENTIDADES.forEach(item => {
+                const id = "ENT_" + item.n.replace(/\s/g, "_");
+                db[id] = { nome: item.n, operador: item.o, controlador: "", telefone: "", perc: 0, selo: "INEXISTENTE", marcados: {} };
+            });
+            await salvar(); // E já salva essa base na nuvem!
+        }
+    } catch (erro) {
+        console.error("Não foi possível conectar ao Firebase. Usando backup local.", erro);
+        db = JSON.parse(localStorage.getItem(DB_KEY)) || {};
     }
     
     const btnTodos = document.getElementById('btn-todos');
@@ -305,7 +348,7 @@ window.onload = () => {
     };
     
     document.getElementById('inputNovoCliente').addEventListener('input', () => {
-        limiteExibicao = 25; // Reseta o limite ao digitar uma busca
+        limiteExibicao = 25; 
         atualizarGridPrincipal();
     });
 };
@@ -350,6 +393,32 @@ function voltarParaInicio() {
     }, 200); 
 }
 
+// Como mudamos o "type" do script no HTML, funções de clique não ficam mais soltas (globais).
+// Precisamos expor elas para o objeto global window:
+window.voltarParaInicio = voltarParaInicio;
+window.abrirChecklist = abrirChecklist;
+window.definirFiltro = definirFiltro;
+window.atualizarGridPrincipal = atualizarGridPrincipal;
+window.carregarMaisCidades = carregarMaisCidades;
+window.exibirTodosOsCards = exibirTodosOsCards;
+window.executarCadastroModal = executarCadastroModal;
+window.cadastrarEntidade = cadastrarEntidade;
+window.prepararEdicao = prepararEdicao;
+window.confirmarEdicao = confirmarEdicao;
+window.confirmarExclusao = confirmarExclusao;
+window.executarExclusao = executarExclusao;
+window.marcarTodoOGrupo = marcarTodoOGrupo;
+window.desmarcarTodoOGrupo = desmarcarTodoOGrupo;
+window.toggleCheck = toggleCheck;
+window.exportarDados = exportarDados;
+window.importarDados = importarDados;
+window.abrirAjuda = abrirAjuda;
+
+window.logout = function() {
+    document.cookie = "auth_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    window.location.href = '/login.html';
+};
+
 function abrirAjuda() {
     new bootstrap.Modal(document.getElementById('modalAjuda')).show();
     document.getElementById('sidebar').classList.remove('active');
@@ -357,7 +426,7 @@ function abrirAjuda() {
 
 function definirFiltro(tipo) { 
     filtroAtivo = tipo; 
-    limiteExibicao = 25; // RESETA O LIMITE AO TROCAR FILTRO
+    limiteExibicao = 25; 
     const botoes = document.querySelectorAll('.btn-filtro-poder');
     botoes.forEach(btn => btn.classList.remove('active'));
     if (tipo === 'todos') document.getElementById('btn-todos').classList.add('active');
@@ -366,7 +435,6 @@ function definirFiltro(tipo) {
     atualizarGridPrincipal(); 
 }
 
-// FUNÇÃO ATUALIZADA COM O WHATSAPP NA LINHA DO CONTROLADOR
 function atualizarGridPrincipal() {
     const grid = document.getElementById('gridClientes');
     const containerBotoes = document.getElementById('containerCarregarMais');
@@ -374,7 +442,6 @@ function atualizarGridPrincipal() {
     const operadorFiltro = document.getElementById('selectFiltroOperador').value;
     grid.innerHTML = "";
     
-    // Filtra primeiro
     const itensFiltrados = Object.keys(db).filter(id => {
         const ent = db[id];
         const nomeParaBusca = normalizarTexto(ent.nome);
@@ -388,14 +455,12 @@ function atualizarGridPrincipal() {
         return passaTexto && passaOperador && passaPoder;
     });
 
-    // Pega a fatia baseada no limite
     const itensParaExibir = itensFiltrados.slice(0, limiteExibicao);
 
     itensParaExibir.forEach(id => {
         const ent = db[id];
         const slug = normalizarTexto(ent.selo);
         
-        // TRATAMENTO PARA O WHATSAPP E EXIBIÇÃO DO CONTROLADOR
         const foneLimpo = ent.telefone ? ent.telefone.replace(/\D/g, '') : "";
         const btnWhats = foneLimpo ? `<a href="https://wa.me/55${foneLimpo}" target="_blank" class="text-success ms-2" title="Chamar no WhatsApp" style="font-size: 1.1rem;"><i class="bi bi-whatsapp"></i></a>` : "";
 
@@ -422,7 +487,6 @@ function atualizarGridPrincipal() {
             </div>`;
     });
 
-    // Gerencia visibilidade dos botões de carregar mais
     if (containerBotoes) {
         if (itensFiltrados.length <= limiteExibicao) {
             containerBotoes.style.display = 'none';
@@ -444,7 +508,6 @@ function exibirTodosOsCards() {
     atualizarGridPrincipal();
 }
 
-// FUNÇÃO ATUALIZADA PARA CAPTURAR OS NOVOS CAMPOS NO CADASTRO
 function executarCadastroModal() {
     const nomeInput = document.getElementById('inputModalNome');
     const operadorSelect = document.getElementById('selectModalOperador');
@@ -486,7 +549,6 @@ function cadastrarEntidade() {
     new bootstrap.Modal(document.getElementById('modalNovoCadastro')).show();
 }
 
-// FUNÇÕES ATUALIZADAS PARA LER E SALVAR DADOS DO MODAL DE EDIÇÃO
 function prepararEdicao(id) {
     idParaEditar = id;
     document.getElementById('inputEditNome').value = db[id].nome;
@@ -650,24 +712,20 @@ function exportarDados() {
     downloadAnchorNode.remove();
 }
 
-function logout() {
-    // Rasga o crachá digital (apagando o cookie)
-    document.cookie = "auth_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    // Manda a pessoa de volta para a tela de login
-    window.location.href = '/login.html';
-}
-
 function importarDados(event) {
     const arquivo = event.target.files[0];
     if (!arquivo) return;
     const leitor = new FileReader();
-    leitor.onload = function(e) {
+    leitor.onload = async function(e) {
         try {
             const dadosImportados = JSON.parse(e.target.result);
             if (typeof dadosImportados === 'object' && dadosImportados !== null) {
-                if (confirm("Isso substituirá todos os dados atuais desta máquina. Deseja continuar?")) {
-                    db = dadosImportados; salvar(); atualizarGridPrincipal();
-                    alert("Dados importados com sucesso!"); window.location.reload(); 
+                if (confirm("Isso substituirá todos os dados na NUVEM. Deseja continuar?")) {
+                    db = dadosImportados; 
+                    await salvar(); // Salva direto no Firebase
+                    atualizarGridPrincipal();
+                    alert("Dados importados com sucesso para a nuvem!"); 
+                    window.location.reload(); 
                 }
             }
         } catch (err) { alert("Erro ao ler o arquivo JSON."); }
