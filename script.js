@@ -29,7 +29,7 @@ const GRUPOS_CRITERIOS = [
         pesoDimensao: 4,
         itens: [
             { id: "3.1", nome: "Divulga as receitas do Poder ou órgão, evidenciando sua previsão e realização?", classificacao: "essencial", exige: ['g', 's', 'a'] },
-            { id: "3.2", nome: "Divulga a classificação orçamentária por natureza da receita?", classificacao: "essencial", exige: ['g', 's', 'a'] },
+            { id: "3.2", nome: "Divulga a classification orçamentária por natureza da receita?", classificacao: "essencial", exige: ['g', 's', 'a'] },
             { id: "3.3", nome: "Divulga a lista dos inscritos em dívida ativa?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] }
         ]
     },
@@ -64,7 +64,7 @@ const GRUPOS_CRITERIOS = [
             { id: "6.4", nome: "Divulga a lista de seus estagiários (nome, datas de contratação e término)?", classificacao: "recomendada", exige: ['g', 's', 'a'] },
             { id: "6.5", nome: "Publica lista dos terceirizados (nome, função e empresa empregadora)?", classificacao: "recomendada", exige: ['g', 's', 'a'] },
             { id: "6.6", nome: "Divulga a íntegra dos editais de concursos e seleções públicas?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
-            { id: "6.7", nome: "Divulga informações sobre os demais atos dos concursos?", classificacao: "obrigatoria", exige: ['g', 's'] }
+            { id: "6.7", nome: "Divulga informações sobre os demais atos dos concursos públicos e processos seletivos do Poder ou órgão, contendo no mínimo a lista de aprovados com as classificações e as nomeações?", classificacao: "obrigatoria", exige: ['g', 's'] }
         ]
     },
     {
@@ -197,7 +197,7 @@ const GRUPOS_CRITERIOS = [
         itens: [
             { id: "17.1", nome: "Identifica as emendas parlamentares federais recebidas?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
             { id: "17.2", nome: "Identifica as emendas parlamentares estaduais e municipais?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
-            { id: "17.3", nome: "Demonstra a execução orçamentária oriunda das emendas?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] }
+            { id: "17.3", nome: "Demonstra a execução orçamentária e financeira oriunda das emendas parlamentares recebidas e próprias?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] }
         ]
     },
     {
@@ -209,7 +209,7 @@ const GRUPOS_CRITERIOS = [
             { id: "18.3", nome: "Divulga a lista de espera de regulação para acesso às consultas?", classificacao: "recomendada", exige: ['g'] },
             { id: "18.4", nome: "Divulga lista dos medicamentos do SUS e como obtê-los?", classificacao: "recomendada", exige: ['g', 's'] },
             { id: "18.5", nome: "Divulga os estoques de medicamentos das farmácias públicas?", classificacao: "obrigatoria", exige: ['g', 's'] },
-            { id: "18.6", nome: "Divulga informações sobre a composição do Conselho de Saúde?", classificacao: "recomendada", exige: ['g'] }
+            { id: "18.6", nome: "Divulga informações atualizadas sobre a composição e o funcionamento do Conselho de Saúde?", classificacao: "recomendada", exige: ['g'] }
         ]
     },
     {
@@ -218,8 +218,8 @@ const GRUPOS_CRITERIOS = [
         itens: [
             { id: "19.1", nome: "Divulga o plano de educação e o respectivo relatório de resultados?", classificacao: "recomendada", exige: ['g', 's', 'a'] },
             { id: "19.2", nome: "Divulga a lista de espera em creches públicas?", classificacao: "obrigatoria", exige: ['g', 's'] },
-            { id: "19.3", nome: "Divulga informações sobre a composição do Conselho do Fundeb?", classificacao: "obrigatoria", exige: ['g'] },
-            { id: "19.4", nome: "Divulga informações sobre a composição do Conselho de Assistência Social?", classificacao: "recomendada", exige: ['g'] }
+            { id: "19.3", nome: "Divulga informações atualizadas sobre a composição e o funcionamento do Conselho do Fundeb?", classificacao: "obrigatoria", exige: ['g'] },
+            { id: "19.4", nome: "Divulga informações atualizadas sobre a composição e o funcionamento do Conselho de Assistência Social?", classificacao: "recomendada", exige: ['g'] }
         ]
     },
     {
@@ -650,29 +650,8 @@ function exportarDados() {
     downloadAnchorNode.remove();
 }
 
-function verificarLogin() {
-    const senhaDigitada = document.getElementById('senhaLogin').value;
-    if (senhaDigitada === 'assesi2026') {
-        document.getElementById('telaLogin').classList.add('hide');
-        setTimeout(() => { document.getElementById('telaLogin').style.display = 'none'; }, 400);
-    } else {
-        const erro = document.getElementById('erroLogin');
-        if(erro) erro.style.display = 'block';
-        document.getElementById('senhaLogin').value = '';
-        setTimeout(() => { if(erro) erro.style.display = 'none'; }, 2000);
-    }
-}
-
-document.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter' && document.getElementById('telaLogin').style.display !== 'none') verificarLogin();
-});
-
 function logout() {
-    const tela = document.getElementById('telaLogin');
-    document.getElementById('senhaLogin').value = '';
-    tela.classList.remove('hide');
-    tela.style.display = 'flex';
-    document.getElementById('sidebar').classList.remove('active');
+    window.location.reload();
 }
 
 function importarDados(event) {

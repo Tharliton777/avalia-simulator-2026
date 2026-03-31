@@ -189,21 +189,8 @@ body {
 }
 
 /* ==========================================
-   NOVAS ADIÇÕES (LOGIN & CORREÇÕES VISUAIS)
+   CORREÇÕES VISUAIS E RODAPÉ
    ========================================== */
-
-#telaLogin {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding-bottom: 10vh;
-    transition: opacity 0.4s ease, visibility 0.4s ease;
-}
-
-#telaLogin.hide {
-    opacity: 0;
-    visibility: hidden;
-}
 
 /* CORREÇÕES PARA A MODAL E DROPDOWN */
 .modal-dialog {
