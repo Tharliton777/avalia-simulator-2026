@@ -4,12 +4,12 @@ import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/fireb
 
 // A sua chave secreta do cofre
 const firebaseConfig = {
-  apiKey: "AIzaSyAPMG3dWe_qpyUXU-FHAbLfuaquSzuRqAc",
-  authDomain: "simulador-atricon-2026.firebaseapp.com",
-  projectId: "simulador-atricon-2026",
-  storageBucket: "simulador-atricon-2026.firebasestorage.app",
-  messagingSenderId: "27956024483",
-  appId: "1:27956024483:web:54a3deb5946501ff04db16"
+    apiKey: "AIzaSyAPMG3dWe_qpyUXU-FHAbLfuaquSzuRqAc",
+    authDomain: "simulador-atricon-2026.firebaseapp.com",
+    projectId: "simulador-atricon-2026",
+    storageBucket: "simulador-atricon-2026.firebasestorage.app",
+    messagingSenderId: "27956024483",
+    appId: "1:27956024483:web:54a3deb5946501ff04db16"
 };
 
 // Conectando o sistema
@@ -346,17 +346,45 @@ window.onload = async () => {
     });
 };
 
+/* --- LÓGICA DE ROLAGEM INTELIGENTE (FOGUETE E METEORO) --- */
 const btnScrollTop = document.getElementById('btnScrollTop');
+const btnScrollBottom = document.getElementById('btnScrollBottom');
+
 window.onscroll = function() {
-    if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+    const scrolled = document.documentElement.scrollTop || document.body.scrollTop;
+    const windowHeight = document.documentElement.clientHeight;
+    const documentHeight = document.documentElement.scrollHeight;
+
+    // Lógica do Foguete (Mostra se desceu mais de 300px)
+    if (scrolled > 300) {
         btnScrollTop.classList.add('visible');
     } else {
         btnScrollTop.classList.remove('visible');
     }
+
+    // Lógica do Meteoro (Descer)
+    const distanceToBottom = documentHeight - (scrolled + windowHeight);
+    const notAtBottom = distanceToBottom > 150; // Esconde se estiver chegando no fundo
+    const isLista = document.getElementById('telalista').classList.contains('show');
+
+    // Regra: Mostra se NÃO estiver no fundo E (estiver na lista com 75+ itens OU estiver na avaliação)
+    if (notAtBottom && ((isLista && limiteExibicao >= 75) || !isLista)) {
+        btnScrollBottom.classList.add('visible');
+    } else {
+        btnScrollBottom.classList.remove('visible');
+    }
 };
+
+// Eventos de clique para rolar
 btnScrollTop.addEventListener('click', () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 });
+
+if (btnScrollBottom) {
+    btnScrollBottom.addEventListener('click', () => {
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    });
+}
 
 function abrirChecklist(id) {
     entidadeAtiva = id;
@@ -364,11 +392,13 @@ function abrirChecklist(id) {
     const avaliacao = document.getElementById('telaAvaliacao');
     lista.classList.remove('show');
     
-    // Mostra a ajuda e adiciona a classe que "empurra" o foguete
+    // Mostra a ajuda e adiciona a classe que "empurra" o foguete e o meteoro para cima
     const btnHelp = document.querySelector('.btn-floating-help');
     if (btnHelp) btnHelp.style.display = 'flex'; 
     const btnTop = document.getElementById('btnScrollTop');
     if (btnTop) btnTop.classList.add('empurrado'); 
+    const btnBottom = document.getElementById('btnScrollBottom');
+    if (btnBottom) btnBottom.classList.add('empurrado'); 
 
     setTimeout(() => {
         lista.style.display = 'none'; 
@@ -385,11 +415,13 @@ function voltarParaInicio() {
     const avaliacao = document.getElementById('telaAvaliacao');
     avaliacao.classList.remove('show');
     
-    // Esconde a ajuda e tira a classe que empurrava o foguete
+    // Esconde a ajuda e tira a classe que empurrava o foguete e o meteoro
     const btnHelp = document.querySelector('.btn-floating-help');
     if (btnHelp) btnHelp.style.display = 'none'; 
     const btnTop = document.getElementById('btnScrollTop');
     if (btnTop) btnTop.classList.remove('empurrado');
+    const btnBottom = document.getElementById('btnScrollBottom');
+    if (btnBottom) btnBottom.classList.remove('empurrado'); 
 
     setTimeout(() => {
         avaliacao.style.display = 'none';
@@ -501,6 +533,8 @@ function atualizarGridPrincipal() {
         }
     }
 
+    // Como mudamos o limite, forçamos o scroll a ser reavaliado caso os botões precisem sumir/aparecer
+    window.dispatchEvent(new Event('scroll'));
     atualizarRodape();
 }
 
