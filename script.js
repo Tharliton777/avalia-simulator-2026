@@ -121,7 +121,7 @@ const GRUPOS_CRITERIOS = [
         titulo: "10. Obras",
         pesoDimensao: 2,
         itens: [
-            { id: "10.1", nome: "Divulga informações sobre as obras (objeto, situação, datas, empresa e percentual)?", classificacao: "recomendada", exige: ['g', 's'] },
+            { id: "10.1", nome: "Divulga informações sobre as obras (objeto, situation, datas, empresa e percentual)?", classificacao: "recomendada", exige: ['g', 's'] },
             { id: "10.2", nome: "Divulga os quantitativos, preços unitários e totais contratados?", classificacao: "obrigatoria", exige: ['g', 's'] },
             { id: "10.3", nome: "Divulga os quantitativos executados e preços efetivamente pagos?", classificacao: "obrigatoria", exige: ['g', 's'] },
             { id: "10.4", nome: "Divulga a relação das obras paralisadas?", classificacao: "obrigatoria", exige: ['g', 's'] }
@@ -354,6 +354,7 @@ window.onscroll = function() {
     const scrolled = document.documentElement.scrollTop || document.body.scrollTop;
     const windowHeight = document.documentElement.clientHeight;
     const documentHeight = document.documentElement.scrollHeight;
+    const screenWidth = window.innerWidth;
 
     // Lógica do Foguete (Mostra se desceu mais de 300px)
     if (scrolled > 300) {
@@ -364,11 +365,13 @@ window.onscroll = function() {
 
     // Lógica do Meteoro (Descer)
     const distanceToBottom = documentHeight - (scrolled + windowHeight);
-    const notAtBottom = distanceToBottom > 150; // Esconde se estiver chegando no fundo
+    const notAtBottom = distanceToBottom > 150; 
     const isLista = document.getElementById('telalista').classList.contains('show');
 
-    // Regra: Mostra se NÃO estiver no fundo E (estiver na lista com 75+ itens OU estiver na avaliação)
-    if (notAtBottom && ((isLista && limiteExibicao >= 75) || !isLista)) {
+    // REGRA DINÂMICA: 50 se for mobile (<= 768px), 75 se for desktop/tablet
+    const limiteMinimo = screenWidth <= 768 ? 50 : 75;
+
+    if (notAtBottom && ((isLista && limiteExibicao >= limiteMinimo) || !isLista)) {
         btnScrollBottom.classList.add('visible');
     } else {
         btnScrollBottom.classList.remove('visible');
@@ -392,7 +395,7 @@ function abrirChecklist(id) {
     const avaliacao = document.getElementById('telaAvaliacao');
     lista.classList.remove('show');
     
-    // Mostra a ajuda e adiciona a classe que "empurra" o foguete e o meteoro para cima
+    // Mostra a ajuda e adiciona a classe que "empurra" os botões para cima
     const btnHelp = document.querySelector('.btn-floating-help');
     if (btnHelp) btnHelp.style.display = 'flex'; 
     const btnTop = document.getElementById('btnScrollTop');
@@ -415,7 +418,7 @@ function voltarParaInicio() {
     const avaliacao = document.getElementById('telaAvaliacao');
     avaliacao.classList.remove('show');
     
-    // Esconde a ajuda e tira a classe que empurrava o foguete e o meteoro
+    // Esconde a ajuda e tira a classe que empurrava os botões
     const btnHelp = document.querySelector('.btn-floating-help');
     if (btnHelp) btnHelp.style.display = 'none'; 
     const btnTop = document.getElementById('btnScrollTop');
@@ -478,7 +481,6 @@ function atualizarGridPrincipal() {
     const containerBotoes = document.getElementById('containerCarregarMais');
     const termo = normalizarTexto(document.getElementById('inputNovoCliente').value);
     
-    // Coleta os valores de todos os filtros
     const operadorFiltro = document.getElementById('selectFiltroOperador').value;
     const seloFiltro = document.getElementById('selectFiltroSelo') ? document.getElementById('selectFiltroSelo').value : 'todos';
     const controladorFiltro = document.getElementById('selectFiltroControlador') ? document.getElementById('selectFiltroControlador').value : 'todos';
@@ -489,16 +491,10 @@ function atualizarGridPrincipal() {
         const ent = db[id];
         const nomeParaBusca = normalizarTexto(ent.nome);
         
-        // 1. Filtro de Texto
         const passaTexto = nomeParaBusca.includes(termo);
-        
-        // 2. Filtro de Operador
         const passaOperador = (operadorFiltro === 'todos') || (ent.operador === operadorFiltro);
-        
-        // 3. Filtro de Selo
         const passaSelo = (seloFiltro === 'todos') || (ent.selo === seloFiltro);
         
-        // 4. Filtro de Controlador (Com/Sem)
         let passaControlador = true;
         if (controladorFiltro === 'com') {
             passaControlador = (ent.controlador && ent.controlador.trim() !== "");
@@ -506,7 +502,6 @@ function atualizarGridPrincipal() {
             passaControlador = (!ent.controlador || ent.controlador.trim() === "");
         }
         
-        // 5. Filtro de Poder (Prefeitura/Câmara/Todos)
         const ehPrefeitura = nomeParaBusca.includes('prefeitura');
         const ehCamara = normalizarTexto(ent.nome).includes('camara'); 
         const passaPoder = (filtroAtivo === 'todos') || 
@@ -556,7 +551,6 @@ function atualizarGridPrincipal() {
         }
     }
 
-    // Como mudamos o limite/filtros, forçamos o scroll a ser reavaliado
     window.dispatchEvent(new Event('scroll'));
     atualizarRodape();
 }

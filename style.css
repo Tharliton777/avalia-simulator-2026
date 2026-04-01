@@ -81,7 +81,7 @@ body {
     color: white !important;
 }
 
-/* --- BOTÕES FLUTUANTES (FOGUETE, METEORO E AJUDA) PADRONIZADOS --- */
+/* --- BOTÕES FLUTUANTES (FOGUETE E AJUDA) PADRONIZADOS --- */
 .btn-floating-top, .btn-floating-help, .btn-floating-bottom {
     position: fixed;
     right: 30px;
@@ -102,7 +102,7 @@ body {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Posição Base da Ajuda (Mais perto do rodapé) */
+/* Posição Base da Ajuda */
 .btn-floating-help { 
     bottom: 60px; 
 }
@@ -114,7 +114,7 @@ body {
     visibility: hidden; 
 }
 
-/* Posição Base do Meteoro (Desce) - Fica acima do foguete na tela inicial */
+/* Posição Base do Meteoro (Desce) */
 .btn-floating-bottom { 
     bottom: 120px; 
     opacity: 0; 
@@ -123,10 +123,10 @@ body {
 
 /* Classes dinâmicas quando a Ajuda aparece na tela de Avaliação */
 .btn-floating-top.empurrado {
-    bottom: 120px; /* Sobe para abrir espaço pra ajuda */
+    bottom: 120px; 
 }
 .btn-floating-bottom.empurrado {
-    bottom: 180px; /* Sobe mais ainda para abrir espaço pro foguete e ajuda */
+    bottom: 180px; 
 }
 
 /* Estados Visíveis */
@@ -135,7 +135,7 @@ body {
     visibility: visible; 
 }
 
-/* Hovers Específicos: Foguete/Ajuda vão pra cima, Meteoro vai pra baixo */
+/* Hovers Específicos */
 .btn-floating-top:hover, .btn-floating-help:hover {
     background-color: #3b71fe !important;
     color: white !important;
@@ -147,7 +147,7 @@ body {
     background-color: #3b71fe !important;
     color: white !important;
     border-color: #3b71fe;
-    transform: translateY(3px); /* Efeito de queda do meteoro */
+    transform: translateY(3px); 
 }
 
 [data-bs-theme="dark"] .btn-floating-top, 
@@ -225,16 +225,15 @@ body {
 }
 
 /* ==========================================
-   CORREÇÕES VISUAIS E RODAPÉ
+   CORREÇÕES VISUAIS, RESPONSIVIDADE E RODAPÉ
    ========================================== */
 
-/* CORREÇÕES PARA A MODAL E DROPDOWN */
 .modal-dialog {
-    margin-top: 3rem !important; /* Move a modal para o topo */
+    margin-top: 3rem !important; 
 }
 
 .modal-body {
-    overflow: visible !important; /* Permite que o dropdown saia da modal */
+    overflow: visible !important; 
 }
 
 [data-bs-theme="dark"] .modal-content {
@@ -243,16 +242,37 @@ body {
     border: 1px solid var(--border-cor);
 }
 
+/* Espaço extra no rodapé para os botões flutuantes não cobrirem o texto */
 footer {
-    margin-bottom: 60px !important;
-    padding-bottom: 20px !important;
+    padding-bottom: 90px !important;
+    margin-bottom: 0 !important;
     position: relative;
     z-index: 10;
 }
 
+/* --- AJUSTES ESPECÍFICOS PARA CELULAR --- */
 @media (max-width: 768px) {
+    /* Desce o conteúdo principal para não bater no botão do menu */
+    main {
+        padding-top: 65px !important;
+    }
+    
+    /* Ajusta tamanho e posição do menu no mobile */
+    .btn-menu-lateral {
+        top: 15px;
+        left: 15px;
+        width: 42px;
+        height: 42px;
+    }
+    
+    /* Aumenta o respiro do rodapé e centraliza o texto no mobile */
     footer {
-        margin-bottom: 100px !important;
+        padding-bottom: 120px !important;
         text-align: center;
+    }
+    
+    #footerStatus {
+        flex-direction: column;
+        gap: 8px;
     }
 }
