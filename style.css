@@ -98,12 +98,26 @@ body {
     z-index: 1500;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     cursor: pointer;
-    transition: all 0.3s ease;
+    /* Transição suave para o movimento de subir/descer e visibilidade */
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Posições individuais */
-.btn-floating-top { bottom: 135px !important; opacity: 0; visibility: hidden; }
-.btn-floating-help { bottom: 70px !important; }
+/* Posição Base do Foguete (colado lá embaixo) */
+.btn-floating-top { 
+    bottom: 20px; 
+    opacity: 0; 
+    visibility: hidden; 
+}
+
+/* Classe dinâmica que o JS vai adicionar para "empurrar" o foguete pra cima */
+.btn-floating-top.empurrado {
+    bottom: 80px; 
+}
+
+/* Posição Base da Ajuda */
+.btn-floating-help { 
+    bottom: 20px; 
+}
 
 /* Estados Visíveis e Hovers */
 .btn-floating-top.visible { opacity: 1; visibility: visible; }

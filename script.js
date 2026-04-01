@@ -264,7 +264,7 @@ const DATA_ENTIDADES = [{"n": "PREFEITURA MUNICIPAL DE MAURITI", "o": "CLEYDIR"}
 ];
 
 const DB_KEY = 'assesi_atricon_v3_clean'; 
-let db = {}; // O banco de dados agora começa vazio e será preenchido pela nuvem!
+let db = {}; 
 let entidadeAtiva = null;
 let filtroAtivo = 'todos';
 let idParaExcluir = null;
@@ -276,13 +276,10 @@ function normalizarTexto(texto) {
     return texto.toString().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
 }
 
-// === NOVA FUNÇÃO DE SALVAMENTO NA NUVEM ===
+// === SALVAMENTO NA NUVEM ===
 async function salvar() { 
-    // Mantemos um backup local caso a internet caia
     localStorage.setItem(DB_KEY, JSON.stringify(db)); 
-    
     try {
-        // Manda o objeto inteiro para o Firebase
         await setDoc(doc(firestore, "sistema", "bancoGeral"), db);
     } catch (e) {
         console.error("Erro ao salvar no Firebase: ", e);
@@ -290,30 +287,25 @@ async function salvar() {
 }
 
 window.onload = async () => {
-    // Esconde a ajuda e desce o foguete
+    // Esconde a ajuda na tela inicial
     const btnHelp = document.querySelector('.btn-floating-help');
     if (btnHelp) btnHelp.style.display = 'none'; 
-    const btnTop = document.getElementById('btnScrollTop');
-    if (btnTop) btnTop.style.bottom = '15px'; 
 
-    // Mostra um aviso visual enquanto carrega os dados
     const grid = document.getElementById('gridClientes');
     if(grid) grid.innerHTML = '<div class="col-12 text-center mt-5"><div class="spinner-border text-primary" role="status"></div><p class="mt-2 fw-bold text-muted">Sincronizando com a Nuvem...</p></div>';
 
     try {
-        // === BUSCA OS DADOS NO FIREBASE ===
         const docRef = doc(firestore, "sistema", "bancoGeral");
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
-            db = docSnap.data(); // Baixa os dados da nuvem para a memória
+            db = docSnap.data(); 
         } else {
-            // Se o Firebase estiver vazio (primeiro acesso), ele cria o modelo base
             DATA_ENTIDADES.forEach(item => {
                 const id = "ENT_" + item.n.replace(/\s/g, "_");
                 db[id] = { nome: item.n, operador: item.o, controlador: "", telefone: "", perc: 0, selo: "INEXISTENTE", marcados: {} };
             });
-            await salvar(); // E já salva essa base na nuvem!
+            await salvar(); 
         }
     } catch (erro) {
         console.error("Não foi possível conectar ao Firebase. Usando backup local.", erro);
@@ -372,11 +364,11 @@ function abrirChecklist(id) {
     const avaliacao = document.getElementById('telaAvaliacao');
     lista.classList.remove('show');
     
-    // Mostra a ajuda e sobe o foguete
+    // Mostra a ajuda e adiciona a classe que "empurra" o foguete
     const btnHelp = document.querySelector('.btn-floating-help');
     if (btnHelp) btnHelp.style.display = 'flex'; 
     const btnTop = document.getElementById('btnScrollTop');
-    if (btnTop) btnTop.style.bottom = '90px'; 
+    if (btnTop) btnTop.classList.add('empurrado'); 
 
     setTimeout(() => {
         lista.style.display = 'none'; 
@@ -393,11 +385,11 @@ function voltarParaInicio() {
     const avaliacao = document.getElementById('telaAvaliacao');
     avaliacao.classList.remove('show');
     
-    // Esconde a ajuda e desce o foguete
+    // Esconde a ajuda e tira a classe que empurrava o foguete
     const btnHelp = document.querySelector('.btn-floating-help');
     if (btnHelp) btnHelp.style.display = 'none'; 
     const btnTop = document.getElementById('btnScrollTop');
-    if (btnTop) btnTop.style.bottom = '15px';
+    if (btnTop) btnTop.classList.remove('empurrado');
 
     setTimeout(() => {
         avaliacao.style.display = 'none';
@@ -408,8 +400,7 @@ function voltarParaInicio() {
     }, 200); 
 }
 
-// Como mudamos o "type" do script no HTML, funções de clique não ficam mais soltas (globais).
-// Precisamos expor elas para o objeto global window:
+// Expõe as funções para o HTML
 window.voltarParaInicio = voltarParaInicio;
 window.abrirChecklist = abrirChecklist;
 window.definirFiltro = definirFiltro;
@@ -487,7 +478,7 @@ function atualizarGridPrincipal() {
                     </div>
                     <h6 class="fw-bold mb-1">${ent.nome}</h6>
                     
-                    <div class="d-flex justify-content-between align-items-center mb-3 px-2">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
                         <span class="text-muted small" style="font-size: 0.75rem;">Controlador: ${ent.controlador || '---'}</span>
                         ${btnWhats}
                     </div>
@@ -617,10 +608,8 @@ function renderizarGrupos() {
         if (ehCamara && [16, 17, 18, 19].includes(num)) return;
         if (!ehCamara && num === 20) return;
         
-        // Criamos um ID único para o efeito de abrir/fechar (Sanfona)
         const collapseId = `collapse_grupo_${index}`;
 
-        // Transformamos o título em um botão clicável com um ícone de setinha
         let html = `<div class="grupo-header d-flex justify-content-between align-items-center mt-4" style="padding-right: 12px;">
             <span style="cursor: pointer; user-select: none;" data-bs-toggle="collapse" data-bs-target="#${collapseId}" title="Clique para minimizar/maximizar" class="text-white fw-bold">
                 <i class="bi bi-caret-down-fill me-1 opacity-75"></i> ${grupo.titulo}
@@ -648,7 +637,6 @@ function renderizarGrupos() {
                 <div class="d-flex align-items-center">${checkD}${checkA}${checkS}</div></li>`;
         });
         
-        // Fecha a lista e a div de recolher
         container.innerHTML += html + "</ul></div>";
     });
     calcularProgresso();
@@ -750,7 +738,7 @@ function importarDados(event) {
             if (typeof dadosImportados === 'object' && dadosImportados !== null) {
                 if (confirm("Isso substituirá todos os dados na NUVEM. Deseja continuar?")) {
                     db = dadosImportados; 
-                    await salvar(); // Salva direto no Firebase
+                    await salvar(); 
                     atualizarGridPrincipal();
                     alert("Dados importados com sucesso para a nuvem!"); 
                     window.location.reload(); 
