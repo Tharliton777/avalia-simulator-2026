@@ -104,19 +104,19 @@ body {
 
 /* Posição Base do Foguete (colado lá embaixo) */
 .btn-floating-top { 
-    bottom: 55px; 
+    bottom: 58px; 
     opacity: 0; 
     visibility: hidden; 
 }
 
 /* Classe dinâmica que o JS vai adicionar para "empurrar" o foguete pra cima */
 .btn-floating-top.empurrado {
-    bottom: 80px; 
+    bottom: 100px; 
 }
 
 /* Posição Base da Ajuda */
 .btn-floating-help { 
-    bottom: 20px; 
+    bottom: 40px; 
 }
 
 /* Estados Visíveis e Hovers */
