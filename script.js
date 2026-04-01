@@ -290,10 +290,11 @@ async function salvar() {
 }
 
 window.onload = async () => {
+    // === ATUALIZADO: Esconde a ajuda e desce o foguete ===
     const btnHelp = document.querySelector('.btn-floating-help');
-    if (btnHelp) btnHelp.style.bottom = '80px'; 
+    if (btnHelp) btnHelp.style.display = 'none'; 
     const btnTop = document.getElementById('btnScrollTop');
-    if (btnTop) btnTop.style.bottom = '145px';
+    if (btnTop) btnTop.style.bottom = '30px'; 
 
     // Mostra um aviso visual enquanto carrega os dados
     const grid = document.getElementById('gridClientes');
@@ -370,6 +371,13 @@ function abrirChecklist(id) {
     const lista = document.getElementById('telalista');
     const avaliacao = document.getElementById('telaAvaliacao');
     lista.classList.remove('show');
+    
+    // === ATUALIZADO: Mostra a ajuda e sobe o foguete ===
+    const btnHelp = document.querySelector('.btn-floating-help');
+    if (btnHelp) btnHelp.style.display = 'flex'; 
+    const btnTop = document.getElementById('btnScrollTop');
+    if (btnTop) btnTop.style.bottom = '90px'; 
+
     setTimeout(() => {
         lista.style.display = 'none'; 
         avaliacao.style.display = 'block'; 
@@ -384,6 +392,13 @@ function voltarParaInicio() {
     const lista = document.getElementById('telalista');
     const avaliacao = document.getElementById('telaAvaliacao');
     avaliacao.classList.remove('show');
+    
+    // === ATUALIZADO: Esconde a ajuda e desce o foguete ===
+    const btnHelp = document.querySelector('.btn-floating-help');
+    if (btnHelp) btnHelp.style.display = 'none'; 
+    const btnTop = document.getElementById('btnScrollTop');
+    if (btnTop) btnTop.style.bottom = '30px';
+
     setTimeout(() => {
         avaliacao.style.display = 'none';
         lista.style.display = 'block';
@@ -472,7 +487,7 @@ function atualizarGridPrincipal() {
                     </div>
                     <h6 class="fw-bold mb-1">${ent.nome}</h6>
                     
-                    <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="d-flex justify-content-between align-items-center mb-3 px-2">
                         <span class="text-muted small" style="font-size: 0.75rem;">Controlador: ${ent.controlador || '---'}</span>
                         ${btnWhats}
                     </div>
