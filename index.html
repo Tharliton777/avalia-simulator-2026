@@ -79,26 +79,52 @@
 
             <div class="card shadow-sm border-0 p-3 mb-4 dark-card-target">
                 <div class="row g-3">
-                    <div class="col-md-5">
+                    <div class="col-lg-3 col-md-6">
                         <div class="input-group">
                             <span class="input-group-text bg-transparent border-end-0"><i class="bi bi-search"></i></span>
-                            <input type="text" id="inputNovoCliente" class="form-control border-start-0" placeholder="Pesquisar entidade...">
-                            <button class="btn btn-primary fw-bold" data-bs-toggle="modal" data-bs-target="#modalNovoCadastro">
-                                <i class="bi bi-plus-lg"></i> Novo Cadastro
+                            <input type="text" id="inputNovoCliente" class="form-control border-start-0" placeholder="Pesquisar...">
+                            <button class="btn btn-primary fw-bold" data-bs-toggle="modal" data-bs-target="#modalNovoCadastro" title="Novo Cadastro">
+                                <i class="bi bi-plus-lg"></i> Novo
                             </button>
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-lg-3 col-md-6">
                         <div class="input-group">
                             <span class="input-group-text bg-transparent border-end-0"><i class="bi bi-person-badge"></i></span>
                             <select id="selectFiltroOperador" class="form-select border-start-0" onchange="atualizarGridPrincipal()">
-                                <option value="todos">Todos os Operadores</option>
+                                <option value="todos">Todos Operadores</option>
                                 <option value="CLEYDIR">CLEYDIR</option>
                                 <option value="DAVI">DAVI</option>
                                 <option value="FELIPE">FELIPE</option>
                                 <option value="JOÃO">JOÃO</option>
                                 <option value="KAIKE">KAIKE</option>
                                 <option value="KAIRON">KAIRON</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="input-group">
+                            <span class="input-group-text bg-transparent border-end-0"><i class="bi bi-award"></i></span>
+                            <select id="selectFiltroSelo" class="form-select border-start-0" onchange="atualizarGridPrincipal()">
+                                <option value="todos">Todos Selos</option>
+                                <option value="DIAMANTE">Diamante</option>
+                                <option value="OURO">Ouro</option>
+                                <option value="PRATA">Prata</option>
+                                <option value="ELEVADO">Elevado</option>
+                                <option value="INTERMEDIARIO">Intermediário</option>
+                                <option value="BASICO">Básico</option>
+                                <option value="INICIAL">Inicial</option>
+                                <option value="INEXISTENTE">Inexistente</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="input-group">
+                            <span class="input-group-text bg-transparent border-end-0"><i class="bi bi-person-check"></i></span>
+                            <select id="selectFiltroControlador" class="form-select border-start-0" onchange="atualizarGridPrincipal()">
+                                <option value="todos">Controladores: Todos</option>
+                                <option value="com">Com Controlador</option>
+                                <option value="sem">Sem Controlador</option>
                             </select>
                         </div>
                     </div>
@@ -170,6 +196,7 @@
     
     <button class="btn-floating-bottom no-print" id="btnScrollBottom" title="Ir para o Final">
         <i class="bi bi-chevron-double-down"></i>
+    </button>
 
     <button class="btn-floating-help no-print" onclick="abrirAjuda()">
         <i class="bi bi-question-lg"></i>

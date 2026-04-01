@@ -60,7 +60,7 @@ const GRUPOS_CRITERIOS = [
             { id: "4.3", nome: "Possibilita a consulta de empenhos com detalhes do beneficiário, valor, objeto e licitação originária?", classificacao: "essencial", exige: ['g', 's', 'a'] },
             { id: "4.4", nome: "Publica relação das despesas com aquisições de bens efetuadas pela instituição contendo: identificação do bem, preço unitário, quantidade, nome do fornecedor e valor total de cada aquisição?", classificacao: "recomendada", exige: ['g', 's', 'a'] },
             { id: "4.5", nome: "Publica informações sobre despesas de patrocínio?", classificacao: "recomendada", exige: ['g', 's', 'a'] },
-            { id: "4.6", nome: "Publica informações detalhadas sobre a execução dos contratos de publicidade, com nomes dos fornecedores de serviços especializados e veículos, bem como informações sobre os totais de valores pagos para cada tipo de serviço e meio de divulgação?", classificacao: "recomendada", exige: ['g', 's', 'a'] }
+            { id: "4.6", nome: "Publica informações detalhadas sobre a execution dos contratos de publicidade, com nomes dos fornecedores de serviços especializados e veículos, bem como informações sobre os totais de valores pagos para cada tipo de serviço e meio de divulgação?", classificacao: "recomendada", exige: ['g', 's', 'a'] }
         ]
     },
     {
@@ -477,20 +477,43 @@ function atualizarGridPrincipal() {
     const grid = document.getElementById('gridClientes');
     const containerBotoes = document.getElementById('containerCarregarMais');
     const termo = normalizarTexto(document.getElementById('inputNovoCliente').value);
+    
+    // Coleta os valores de todos os filtros
     const operadorFiltro = document.getElementById('selectFiltroOperador').value;
+    const seloFiltro = document.getElementById('selectFiltroSelo') ? document.getElementById('selectFiltroSelo').value : 'todos';
+    const controladorFiltro = document.getElementById('selectFiltroControlador') ? document.getElementById('selectFiltroControlador').value : 'todos';
+    
     grid.innerHTML = "";
     
     const itensFiltrados = Object.keys(db).filter(id => {
         const ent = db[id];
         const nomeParaBusca = normalizarTexto(ent.nome);
+        
+        // 1. Filtro de Texto
         const passaTexto = nomeParaBusca.includes(termo);
+        
+        // 2. Filtro de Operador
         const passaOperador = (operadorFiltro === 'todos') || (ent.operador === operadorFiltro);
+        
+        // 3. Filtro de Selo
+        const passaSelo = (seloFiltro === 'todos') || (ent.selo === seloFiltro);
+        
+        // 4. Filtro de Controlador (Com/Sem)
+        let passaControlador = true;
+        if (controladorFiltro === 'com') {
+            passaControlador = (ent.controlador && ent.controlador.trim() !== "");
+        } else if (controladorFiltro === 'sem') {
+            passaControlador = (!ent.controlador || ent.controlador.trim() === "");
+        }
+        
+        // 5. Filtro de Poder (Prefeitura/Câmara/Todos)
         const ehPrefeitura = nomeParaBusca.includes('prefeitura');
         const ehCamara = normalizarTexto(ent.nome).includes('camara'); 
         const passaPoder = (filtroAtivo === 'todos') || 
                            (filtroAtivo === 'prefeitura' && ehPrefeitura) || 
                            (filtroAtivo === 'camara' && ehCamara);
-        return passaTexto && passaOperador && passaPoder;
+                           
+        return passaTexto && passaOperador && passaSelo && passaControlador && passaPoder;
     });
 
     const itensParaExibir = itensFiltrados.slice(0, limiteExibicao);
@@ -533,7 +556,7 @@ function atualizarGridPrincipal() {
         }
     }
 
-    // Como mudamos o limite, forçamos o scroll a ser reavaliado caso os botões precisem sumir/aparecer
+    // Como mudamos o limite/filtros, forçamos o scroll a ser reavaliado
     window.dispatchEvent(new Event('scroll'));
     atualizarRodape();
 }
