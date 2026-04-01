@@ -290,11 +290,11 @@ async function salvar() {
 }
 
 window.onload = async () => {
-    // === ATUALIZADO: Esconde a ajuda e desce o foguete ===
+    // Esconde a ajuda e desce o foguete
     const btnHelp = document.querySelector('.btn-floating-help');
     if (btnHelp) btnHelp.style.display = 'none'; 
     const btnTop = document.getElementById('btnScrollTop');
-    if (btnTop) btnTop.style.bottom = '30px'; 
+    if (btnTop) btnTop.style.bottom = '15px'; 
 
     // Mostra um aviso visual enquanto carrega os dados
     const grid = document.getElementById('gridClientes');
@@ -372,7 +372,7 @@ function abrirChecklist(id) {
     const avaliacao = document.getElementById('telaAvaliacao');
     lista.classList.remove('show');
     
-    // === ATUALIZADO: Mostra a ajuda e sobe o foguete ===
+    // Mostra a ajuda e sobe o foguete
     const btnHelp = document.querySelector('.btn-floating-help');
     if (btnHelp) btnHelp.style.display = 'flex'; 
     const btnTop = document.getElementById('btnScrollTop');
@@ -393,11 +393,11 @@ function voltarParaInicio() {
     const avaliacao = document.getElementById('telaAvaliacao');
     avaliacao.classList.remove('show');
     
-    // === ATUALIZADO: Esconde a ajuda e desce o foguete ===
+    // Esconde a ajuda e desce o foguete
     const btnHelp = document.querySelector('.btn-floating-help');
     if (btnHelp) btnHelp.style.display = 'none'; 
     const btnTop = document.getElementById('btnScrollTop');
-    if (btnTop) btnTop.style.bottom = '30px';
+    if (btnTop) btnTop.style.bottom = '15px';
 
     setTimeout(() => {
         avaliacao.style.display = 'none';
@@ -611,12 +611,20 @@ function renderizarGrupos() {
     container.innerHTML = "";
     const ent = db[entidadeAtiva];
     const ehCamara = normalizarTexto(ent.nome).includes('camara');
-    GRUPOS_CRITERIOS.forEach(grupo => {
+    
+    GRUPOS_CRITERIOS.forEach((grupo, index) => {
         const num = parseInt(grupo.titulo);
         if (ehCamara && [16, 17, 18, 19].includes(num)) return;
         if (!ehCamara && num === 20) return;
+        
+        // Criamos um ID único para o efeito de abrir/fechar (Sanfona)
+        const collapseId = `collapse_grupo_${index}`;
+
+        // Transformamos o título em um botão clicável com um ícone de setinha
         let html = `<div class="grupo-header d-flex justify-content-between align-items-center mt-4" style="padding-right: 12px;">
-            <span>${grupo.titulo}</span>
+            <span style="cursor: pointer; user-select: none;" data-bs-toggle="collapse" data-bs-target="#${collapseId}" title="Clique para minimizar/maximizar" class="text-white fw-bold">
+                <i class="bi bi-caret-down-fill me-1 opacity-75"></i> ${grupo.titulo}
+            </span>
             <div class="d-flex align-items-center">
                 <button onclick="marcarTodoOGrupo('${grupo.titulo}')" class="btn btn-sm btn-primary" style="font-size: 0.65rem; padding: 2px 8px;">Marcar Tudo</button>
                 <button onclick="desmarcarTodoOGrupo('${grupo.titulo}')" class="btn btn-sm btn-secondary ms-2 me-3" style="font-size: 0.65rem; padding: 2px 8px;">Desmarcar Tudo</button>
@@ -625,7 +633,10 @@ function renderizarGrupos() {
                 <div style="width: 40px; text-align: center;" class="fw-bold">S</div>
             </div>
         </div>
-        <ul class="list-group mb-3">`;
+        
+        <div class="collapse show" id="${collapseId}">
+            <ul class="list-group mb-3">`;
+
         grupo.itens.forEach(item => {
             const st = ent.marcados[item.id] || { g: false, s: false, a: false };
             const exige = item.exige || ['g', 's', 'a'];
@@ -636,7 +647,9 @@ function renderizarGrupos() {
                 <div class="flex-grow-1 pe-3"><small class="text-muted">${item.id}</small> ${item.classificacao === 'essencial' ? '<b class="text-danger" title="Critério Essencial">*</b>' : ''} <br><b>${item.nome}</b></div>
                 <div class="d-flex align-items-center">${checkD}${checkA}${checkS}</div></li>`;
         });
-        container.innerHTML += html + "</ul>";
+        
+        // Fecha a lista e a div de recolher
+        container.innerHTML += html + "</ul></div>";
     });
     calcularProgresso();
 }
