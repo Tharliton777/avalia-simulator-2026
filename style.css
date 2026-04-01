@@ -104,7 +104,7 @@ body {
 
 /* Posição Base do Foguete (colado lá embaixo) */
 .btn-floating-top { 
-    bottom: 30px; 
+    bottom: 55px; 
     opacity: 0; 
     visibility: hidden; 
 }
