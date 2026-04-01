@@ -81,7 +81,7 @@ body {
     color: white !important;
 }
 
-/* --- BOTÕES FLUTUANTES (FOGUETE E AJUDA) PADRONIZADOS --- */
+/* --- BOTÕES FLUTUANTES (FOGUETE E METEORO) PADRONIZADOS --- */
 .btn-floating-top, .btn-floating-help, .btn-floating-bottom {
     position: fixed;
     right: 30px;
@@ -206,16 +206,11 @@ body {
 }
 
 /* ==========================================
-   CORREÇÕES VISUAIS, RESPONSIVIDADE E RODAPÉ
+   CORREÇÕES VISUAIS E RODAPÉ
    ========================================== */
 
-.modal-dialog {
-    margin-top: 3rem !important; 
-}
-
-.modal-body {
-    overflow: visible !important; 
-}
+.modal-dialog { margin-top: 3rem !important; }
+.modal-body { overflow: visible !important; }
 
 [data-bs-theme="dark"] .modal-content {
     background-color: var(--bg-card) !important;
@@ -230,46 +225,47 @@ footer {
     z-index: 10;
 }
 
-/* --- AJUSTES DE PRECISÃO PARA CELULARES (Até 768px) --- */
+/* --- AJUSTES CIRÚRGICOS PARA CELULAR (Até 768px) --- */
 @media (max-width: 768px) {
     
-    /* 1. Joga todo o conteúdo do site mais para baixo para fugir do Menu Hamburguer */
-    main {
-        padding-top: 85px !important; 
+    /* 1. Força o conteúdo principal a descer, fugindo do menu */
+    #telalista, #telaAvaliacao {
+        padding-top: 50px !important; 
     }
     
-    /* Ajuste do botão hamburguer para ficar proporcional */
+    /* Ajusta o botão do menu para ficar harmonioso */
     .btn-menu-lateral {
         top: 15px;
         left: 15px;
-        width: 44px;
-        height: 44px;
+        width: 42px;
+        height: 42px;
     }
     
-    /* 2. Cria um rodapé gigante e empurra o texto dele pra cima, fugindo dos botões flutuantes */
+    /* 2. Rodapé mais contido, mas garantindo que você consiga rolar até o fim */
     footer {
-        padding-bottom: calc(120px + env(safe-area-inset-bottom)) !important;
+        padding-bottom: calc(30px + env(safe-area-inset-bottom)) !important;
         text-align: center;
     }
     
     #footerStatus {
         flex-direction: column;
-        gap: 12px;
-        margin-bottom: 30px; /* Isso afasta o texto do fundo da tela de forma segura */
+        gap: 8px;
     }
 
-    /* 3. Sobe todos os botões flutuantes para não brigarem com a barra do navegador (Safari) */
+    /* 3. Posicionamento exato dos botões ACIMA da linha do rodapé */
     .btn-floating-top, .btn-floating-help { 
-        bottom: calc(85px + env(safe-area-inset-bottom)) !important; 
+        /* Com esse valor, ao rolar até o fundo, ele estaciona ~4px acima da linha cinza */
+        bottom: calc(108px + env(safe-area-inset-bottom)) !important; 
     }
     .btn-floating-bottom { 
-        bottom: calc(145px + env(safe-area-inset-bottom)) !important; 
+        bottom: calc(168px + env(safe-area-inset-bottom)) !important; 
     }
     
+    /* Quando são "empurrados" na tela de avaliação */
     .btn-floating-top.empurrado { 
-        bottom: calc(145px + env(safe-area-inset-bottom)) !important; 
+        bottom: calc(168px + env(safe-area-inset-bottom)) !important; 
     }
     .btn-floating-bottom.empurrado { 
-        bottom: calc(205px + env(safe-area-inset-bottom)) !important; 
+        bottom: calc(228px + env(safe-area-inset-bottom)) !important; 
     }
 }
