@@ -159,7 +159,7 @@ const GRUPOS_CRITERIOS = [
             { id: "12.1", nome: "Existe o SIC no site e indica a unidade/setor responsável?", classificacao: "obrigatoria", exige: ['g'] },
             { id: "12.2", nome: "Indica endereço, telefone, e-mail e horário do SIC?", classificacao: "obrigatoria", exige: ['g'] },
             { id: "12.3", nome: "Há possibilidade de envio de pedidos de forma eletrônica (e-SIC)?", classificacao: "obrigatoria", exige: ['g'] },
-            { id: "12.4", nome: "A solicitação por meio de e-SIC é simples?", classificacao: "obrigatoria", exige: ['g'] },
+            { id: "12.4", nome: "A solicitação por meio de e-SIC é simple?", classificacao: "obrigatoria", exige: ['g'] },
             { id: "12.5", nome: "Divulga instrumento normativo local que regulamente a LAI?", classificacao: "obrigatoria", exige: ['g'] },
             { id: "12.6", nome: "Divulga prazos de resposta e autoridades competentes?", classificacao: "recomendada", exige: ['g'] },
             { id: "12.7", nome: "Divulga relatório anual estatístico?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
@@ -346,7 +346,7 @@ window.onload = async () => {
     });
 };
 
-/* --- LÓGICA DE ROLAGEM INTELIGENTE (FOGUETE E METEORO) --- */
+/* --- LÓGICA DE ROLAGEM INTELIGENTE --- */
 const btnScrollTop = document.getElementById('btnScrollTop');
 const btnScrollBottom = document.getElementById('btnScrollBottom');
 
@@ -356,19 +356,16 @@ window.onscroll = function() {
     const documentHeight = document.documentElement.scrollHeight;
     const screenWidth = window.innerWidth;
 
-    // Lógica do Foguete (Mostra se desceu mais de 300px)
     if (scrolled > 300) {
         btnScrollTop.classList.add('visible');
     } else {
         btnScrollTop.classList.remove('visible');
     }
 
-    // Lógica do Meteoro (Descer)
     const distanceToBottom = documentHeight - (scrolled + windowHeight);
     const notAtBottom = distanceToBottom > 150; 
     const isLista = document.getElementById('telalista').classList.contains('show');
 
-    // REGRA DINÂMICA: 50 se for mobile (<= 768px), 75 se for desktop/tablet
     const limiteMinimo = screenWidth <= 768 ? 50 : 75;
 
     if (notAtBottom && ((isLista && limiteExibicao >= limiteMinimo) || !isLista)) {
@@ -378,7 +375,6 @@ window.onscroll = function() {
     }
 };
 
-// Eventos de clique para rolar
 btnScrollTop.addEventListener('click', () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 });
@@ -395,7 +391,6 @@ function abrirChecklist(id) {
     const avaliacao = document.getElementById('telaAvaliacao');
     lista.classList.remove('show');
     
-    // Mostra a ajuda e adiciona a classe que "empurra" os botões para cima
     const btnHelp = document.querySelector('.btn-floating-help');
     if (btnHelp) btnHelp.style.display = 'flex'; 
     const btnTop = document.getElementById('btnScrollTop');
@@ -418,7 +413,6 @@ function voltarParaInicio() {
     const avaliacao = document.getElementById('telaAvaliacao');
     avaliacao.classList.remove('show');
     
-    // Esconde a ajuda e tira a classe que empurrava os botões
     const btnHelp = document.querySelector('.btn-floating-help');
     if (btnHelp) btnHelp.style.display = 'none'; 
     const btnTop = document.getElementById('btnScrollTop');
@@ -648,6 +642,7 @@ function executarExclusao() {
     }
 }
 
+/* --- REESTRUTURAÇÃO DO HTML DOS GRUPOS PARA RESPONSIVIDADE TOTAL --- */
 function renderizarGrupos() {
     const container = document.getElementById('containerGrupos');
     container.innerHTML = "";
@@ -661,16 +656,21 @@ function renderizarGrupos() {
         
         const collapseId = `collapse_grupo_${index}`;
 
-        let html = `<div class="grupo-header d-flex justify-content-between align-items-center mt-4" style="padding-right: 12px;">
-            <span style="cursor: pointer; user-select: none;" data-bs-toggle="collapse" data-bs-target="#${collapseId}" title="Clique para minimizar/maximizar" class="text-white fw-bold">
+        // Usa flex-column no mobile e flex-md-row no computador
+        let html = `<div class="grupo-header d-flex flex-column flex-md-row justify-content-between align-items-md-center mt-4" style="padding: 12px 16px;">
+            <span style="cursor: pointer; user-select: none;" data-bs-toggle="collapse" data-bs-target="#${collapseId}" title="Clique para minimizar/maximizar" class="text-white fw-bold mb-3 mb-md-0">
                 <i class="bi bi-caret-down-fill me-1 opacity-75"></i> ${grupo.titulo}
             </span>
-            <div class="d-flex align-items-center">
-                <button onclick="marcarTodoOGrupo('${grupo.titulo}')" class="btn btn-sm btn-primary" style="font-size: 0.65rem; padding: 2px 8px;">Marcar Tudo</button>
-                <button onclick="desmarcarTodoOGrupo('${grupo.titulo}')" class="btn btn-sm btn-secondary ms-2 me-3" style="font-size: 0.65rem; padding: 2px 8px;">Desmarcar Tudo</button>
-                <div style="width: 40px; text-align: center;" class="fw-bold">D</div>
-                <div style="width: 40px; text-align: center;" class="fw-bold">A</div>
-                <div style="width: 40px; text-align: center;" class="fw-bold">S</div>
+            <div class="d-flex justify-content-between align-items-center w-100" style="max-width: 400px;">
+                <div class="d-flex gap-2">
+                    <button onclick="marcarTodoOGrupo('${grupo.titulo}')" class="btn btn-sm btn-primary px-2 py-1 shadow-sm" style="font-size: 0.75rem;">Marcar Tudo</button>
+                    <button onclick="desmarcarTodoOGrupo('${grupo.titulo}')" class="btn btn-sm btn-secondary px-2 py-1 shadow-sm" style="font-size: 0.75rem;">Desmarcar</button>
+                </div>
+                <div class="d-flex" style="width: 120px; flex-shrink: 0;">
+                    <div style="width: 40px; text-align: center;" class="fw-bold text-white">D</div>
+                    <div style="width: 40px; text-align: center;" class="fw-bold text-white">A</div>
+                    <div style="width: 40px; text-align: center;" class="fw-bold text-white">S</div>
+                </div>
             </div>
         </div>
         
@@ -680,12 +680,19 @@ function renderizarGrupos() {
         grupo.itens.forEach(item => {
             const st = ent.marcados[item.id] || { g: false, s: false, a: false };
             const exige = item.exige || ['g', 's', 'a'];
-            const checkD = `<div class="d-flex justify-content-center align-items-center" style="width: 40px;"><input type="checkbox" ${st.g?'checked':''} onchange="toggleCheck('${item.id}', 'g')" style="cursor: pointer; ${exige.includes('g') ? '' : 'visibility: hidden;'}"></div>`;
-            const checkA = `<div class="d-flex justify-content-center align-items-center" style="width: 40px;"><input type="checkbox" ${st.s?'checked':''} onchange="toggleCheck('${item.id}', 's')" style="cursor: pointer; ${exige.includes('s') ? '' : 'visibility: hidden;'}"></div>`;
-            const checkS = `<div class="d-flex justify-content-center align-items-center" style="width: 40px;"><input type="checkbox" ${st.a?'checked':''} onchange="toggleCheck('${item.id}', 'a')" style="cursor: pointer; ${exige.includes('a') ? '' : 'visibility: hidden;'}"></div>`;
-            html += `<li class="list-group-item d-flex align-items-center dark-card-target" style="padding-right: 12px;">
-                <div class="flex-grow-1 pe-3"><small class="text-muted">${item.id}</small> ${item.classificacao === 'essencial' ? '<b class="text-danger" title="Critério Essencial">*</b>' : ''} <br><b>${item.nome}</b></div>
-                <div class="d-flex align-items-center">${checkD}${checkA}${checkS}</div></li>`;
+            
+            const checkD = `<div class="d-flex justify-content-center align-items-center" style="width: 40px;"><input type="checkbox" ${st.g?'checked':''} onchange="toggleCheck('${item.id}', 'g')" class="form-check-input m-0 border-secondary" style="cursor: pointer; width: 1.2rem; height: 1.2rem; ${exige.includes('g') ? '' : 'visibility: hidden;'}"></div>`;
+            const checkA = `<div class="d-flex justify-content-center align-items-center" style="width: 40px;"><input type="checkbox" ${st.s?'checked':''} onchange="toggleCheck('${item.id}', 's')" class="form-check-input m-0 border-secondary" style="cursor: pointer; width: 1.2rem; height: 1.2rem; ${exige.includes('s') ? '' : 'visibility: hidden;'}"></div>`;
+            const checkS = `<div class="d-flex justify-content-center align-items-center" style="width: 40px;"><input type="checkbox" ${st.a?'checked':''} onchange="toggleCheck('${item.id}', 'a')" class="form-check-input m-0 border-secondary" style="cursor: pointer; width: 1.2rem; height: 1.2rem; ${exige.includes('a') ? '' : 'visibility: hidden;'}"></div>`;
+            
+            // Mantém na mesma linha mas evita espremer usando flex-shrink-0 na div das caixinhas
+            html += `<li class="list-group-item d-flex align-items-center dark-card-target" style="padding: 12px 16px;">
+                <div class="flex-grow-1 pe-3" style="font-size: 0.9rem;">
+                    <small class="text-muted fw-bold">${item.id}</small> ${item.classificacao === 'essencial' ? '<b class="text-danger" title="Critério Essencial">*</b>' : ''} 
+                    <br><span class="d-block mt-1">${item.nome}</span>
+                </div>
+                <div class="d-flex" style="width: 120px; flex-shrink: 0;">${checkD}${checkA}${checkS}</div>
+            </li>`;
         });
         
         container.innerHTML += html + "</ul></div>";
