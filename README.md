@@ -6,6 +6,7 @@
 ![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=flat&logo=firebase&logoColor=black)
 ![Bootstrap](https://img.shields.io/badge/Bootstrap_5-563D7C?style=flat&logo=bootstrap&logoColor=white)
 
+
 Um sistema web robusto e responsivo desenvolvido para simular, gerenciar e calcular o nível de transparência pública de Prefeituras e Câmaras Municipais, com base nos critérios rigorosos do Programa Nacional de Transparência Pública (PNTP) da Atricon.
 
 ## ✨ Principais Funcionalidades
