@@ -1,64 +1,37 @@
-# 🏛️ Avalia Simulator 2026
+# 🏛️ Simulador de Avaliação Atricon 2026
 
-![Interface do Simulador](.github/TelaInicioAvalia.png)
+![Status](https://img.shields.io/badge/Status-Ativo-success)
+![React](https://img.shields.io/badge/React-20232A?style=flat&logo=react&logoColor=61DAFB)
+![Vite](https://img.shields.io/badge/Vite-B73BFE?style=flat&logo=vite&logoColor=FFD62E)
+![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=flat&logo=firebase&logoColor=black)
+![Bootstrap](https://img.shields.io/badge/Bootstrap_5-563D7C?style=flat&logo=bootstrap&logoColor=white)
 
-O **Avalia Simulator** é uma ferramenta interativa de alta performance desenvolvida para auxiliar municípios e órgãos públicos na simulação dos critérios de transparência estabelecidos pela **Atricon**. O sistema permite gerenciar uma base ampla de entidades, realizar checklists técnicos detalhados e visualizar o progresso em tempo real.
+Um sistema web robusto e responsivo desenvolvido para simular, gerenciar e calcular o nível de transparência pública de Prefeituras e Câmaras Municipais, com base nos critérios rigorosos do Programa Nacional de Transparência Pública (PNTP) da Atricon.
 
-## 🚀 Novidades da Versão Atual
-- **Carga Massiva de Dados:** Já inclui mais de 200 entidades cadastradas (Prefeituras e Câmaras Municipais).
-- **Filtros Dinâmicos por Poder:** Separação visual rápida entre Poder Executivo e Legislativo com botões de estado ativo.
-- **Sistema de Paginação (Lazy Loading):** Exibição inteligente de cards (25 por vez) para garantir fluidez na navegação e performance do sistema.
-- **Fechamento Inteligente:** Menu lateral retrátil com fechamento por clique externo para melhor usabilidade em dispositivos móveis.
+## ✨ Principais Funcionalidades
 
-## ✨ Funcionalidades Principais
-
-- **Gestão de Entidades:** Cadastre, edite e exclua Prefeituras ou Câmaras de forma dinâmica.
-- **Checklist Inteligente:** 20 grupos de critérios técnicos. O sistema identifica automaticamente se a entidade é Câmara ou Prefeitura e ajusta os grupos exibidos (ex: Obras e Saúde para Executivo, Atividades Finalísticas para Legislativo).
-- **Cálculo de Precisão:** Barra de progresso e percentual atualizados instantaneamente conforme os critérios são marcados.
-- **Regra de Ouro (Criterios Essenciais):** Lógica integrada que limita o selo máximo (Prata, Ouro ou Diamante) caso itens **Essenciais (*)** possuam pendências.
-- **Persistência de Dados:** Uso de `LocalStorage` para manter as avaliações salvas no navegador.
-- **Gestão de Backup:** Função para exportar e importar arquivos JSON, permitindo transferir dados entre computadores com facilidade.
-- **Modo Escuro (Dark Mode):** Interface moderna com suporte total a temas claro e escuro.
-
-## 🏆 Critérios de Selos
-
-| Percentual | Nível de Transparência |
-| :--- | :--- |
-| **95% a 100%** | 💎 Diamante (Requer todos os Essenciais) |
-| **85% a 94%** | 🥇 Ouro (Requer todos os Essenciais) |
-| **75% a 84%** | 🥈 Prata (Requer todos os Essenciais) |
-| **50% a 74%** | 🔵 Intermediário |
-| **30% a 49%** | ⚪ Básico |
-| **1% a 29%** | 🟡 Inicial |
-| **0%** | ❌ Inexistente |
-
-> **Nota:** Se houver falha em qualquer item marcado com **(*)**, o selo máximo permitido será **Elevado**, independentemente da nota percentual alcançada.
+* **🔒 Autenticação Segura:** Acesso restrito protegido pelo cofre do Google Firebase Authentication (E-mail e Senha).
+* **📊 Cálculo Automático de Selos:** O sistema calcula a porcentagem de transparência em tempo real e atribui os selos oficiais (Diamante, Ouro, Prata, Elevado, Intermediário, Básico, Inicial ou Inexistente) com base em critérios *Essenciais, Obrigatórios e Recomendados*.
+* **📱 Mobile First:** Interface 100% responsiva. Menus laterais dinâmicos (Sidebar) e botões flutuantes adaptados para uso em campo (smartphones e tablets).
+* **💾 Gestão Avançada de Dados (Backup & Relatórios):**
+    * **JSON:** Importação e Exportação do banco de dados completo (Backup de segurança com histórico de avaliações).
+    * **CSV:** Importação em lote e Exportação de relatórios gerenciais compatíveis com Excel.
+* **⚙️ CRUD Completo:** Cadastro, edição, listagem e exclusão de entidades, associando operadores e controladores responsáveis.
 
 ## 🛠️ Tecnologias Utilizadas
 
-- **HTML5 & CSS3:** Estrutura responsiva e variáveis nativas para temas dinâmicos.
-- **JavaScript (Vanilla):** Lógica de negócio pura, sem dependências externas pesadas, garantindo rapidez.
-- **Bootstrap 5:** Framework de UI para modais, grid system e componentes modernos.
-- **Bootstrap Icons:** Biblioteca de ícones vetoriais.
+A arquitetura do projeto foi totalmente refatorada para garantir máxima performance e componentização:
 
-## 📋 Como usar
+* **Front-end:** React.js construído com Vite (Substituindo a antiga arquitetura Vanilla JS).
+* **Estilização:** Bootstrap 5 + CSS Customizado (`index.css`).
+* **Back-end / Segurança:** Firebase Authentication.
+* **Persistência de Dados Local:** `localStorage` (Mantém o progresso do usuário no navegador).
+* **Deploy Contínuo:** Vercel.
 
-1. **Acesso:** Utilize a senha padrão `assesi2026` para entrar no sistema.
-2. **Filtros:** Use os botões de topo para filtrar entre "Executivo" ou "Legislativo" e localize sua entidade através da barra de busca.
-3. **Avaliação:** Clique em "Avaliar" e preencha as opções **D** (Disponibilidade), **A** (Atualidade) e **S** (Série Histórica).
-4. **Backup:** Exporte seus dados regularmente pelo menu lateral para garantir a segurança das informações.
-5. **Relatórios:** Dentro de uma avaliação, clique em "Imprimir Relatório" para gerar um documento formatado.
+## 🚀 Como rodar o projeto localmente
 
-## 🔗 Link do Projeto
-Acesse o simulador online: [https://tharliton777.github.io/avalia-simulator-2026/](https://tharliton777.github.io/avalia-simulator-2026/)
+Siga os passos abaixo para rodar o ambiente de desenvolvimento na sua máquina:
 
-## 💾 Instalação Local
-
-```bash
-# Clone o repositório
-git clone [https://github.com/tharliton777/avalia-simulator-2026.git](https://github.com/tharliton777/avalia-simulator-2026.git)
-
-# Acesse a pasta
-cd avalia-simulator-2026
-
-# Abra o arquivo index.html no seu navegador favorito
+1. **Clone o repositório:**
+   ```bash
+   git clone [https://github.com/SEU_USUARIO/simulador-atricon.git](https://github.com/Tharliton777/simulador-atricon.git)

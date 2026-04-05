@@ -81,10 +81,11 @@ body {
     color: white !important;
 }
 
-/* --- BOTÕES FLUTUANTES (FOGUETE E METEORO) PADRONIZADOS --- */
+/* --- BOTÕES FLUTUANTES (FOGUETE, AJUDA E METEORO) PADRONIZADOS --- */
 .btn-floating-top, .btn-floating-help, .btn-floating-bottom {
     position: fixed;
-    right: 30px;
+    /* AJUSTE 1: Colado na direita (8px em vez de 15px) */
+    right: 8px; 
     width: 50px;
     height: 50px;
     background-color: var(--bg-card) !important;
@@ -101,18 +102,14 @@ body {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Posição Base da Ajuda */
-.btn-floating-help { bottom: 60px; }
+/* AJUSTE 2: Altura base no Desktop (mais baixos) */
+.btn-floating-help { bottom: 25px; }
+.btn-floating-top { bottom: 25px; opacity: 0; visibility: hidden; }
+.btn-floating-bottom { bottom: 85px; opacity: 0; visibility: hidden; }
 
-/* Posição Base do Foguete (Sobe) */
-.btn-floating-top { bottom: 59px; opacity: 0; visibility: hidden; }
-
-/* Posição Base do Meteoro (Desce) */
-.btn-floating-bottom { bottom: 120px; opacity: 0; visibility: hidden; }
-
-/* Classes dinâmicas quando a Ajuda aparece na tela de Avaliação */
-.btn-floating-top.empurrado { bottom: 120px; }
-.btn-floating-bottom.empurrado { bottom: 180px; }
+/* Quando "empurrados" pela Ajuda na tela de Avaliação */
+.btn-floating-top.empurrado { bottom: 85px; }
+.btn-floating-bottom.empurrado { bottom: 145px; }
 
 /* Estados Visíveis */
 .btn-floating-top.visible, .btn-floating-bottom.visible { opacity: 1; visibility: visible; }
@@ -219,7 +216,8 @@ body {
 }
 
 footer {
-    padding-bottom: 90px !important;
+    /* AJUSTE 3: Rodapé ainda mais sequinho no desktop */
+    padding-bottom: 15px !important;
     margin-bottom: 0 !important;
     position: relative;
     z-index: 10;
@@ -228,12 +226,10 @@ footer {
 /* --- AJUSTES CIRÚRGICOS PARA CELULAR (Até 768px) --- */
 @media (max-width: 768px) {
     
-    /* 1. Força o conteúdo principal a descer, fugindo do menu */
     #telalista, #telaAvaliacao {
         padding-top: 50px !important; 
     }
     
-    /* Ajusta o botão do menu para ficar harmonioso */
     .btn-menu-lateral {
         top: 15px;
         left: 15px;
@@ -241,7 +237,7 @@ footer {
         height: 42px;
     }
     
-    /* 2. Rodapé mais contido, mas garantindo que você consiga rolar até o fim */
+    /* Mantendo a margem de segurança do celular por causa da barra do Safari/Chrome */
     footer {
         padding-bottom: calc(30px + env(safe-area-inset-bottom)) !important;
         text-align: center;
@@ -252,20 +248,24 @@ footer {
         gap: 8px;
     }
 
-    /* 3. Posicionamento exato dos botões ACIMA da linha do rodapé */
+    /* Mantendo as alturas base do mobile intactas para não conflitar com a barra do iPhone */
     .btn-floating-top, .btn-floating-help { 
-        /* Com esse valor, ao rolar até o fundo, ele estaciona ~4px acima da linha cinza */
         bottom: calc(108px + env(safe-area-inset-bottom)) !important; 
     }
     .btn-floating-bottom { 
         bottom: calc(168px + env(safe-area-inset-bottom)) !important; 
     }
-    
-    /* Quando são "empurrados" na tela de avaliação */
     .btn-floating-top.empurrado { 
         bottom: calc(168px + env(safe-area-inset-bottom)) !important; 
     }
     .btn-floating-bottom.empurrado { 
         bottom: calc(228px + env(safe-area-inset-bottom)) !important; 
     }
+}
+
+/* --- AJUSTE DE FONTES PARA CAIXAS DE SELEÇÃO (PREVINE ZOOM NO IOS E DISTORÇÕES) --- */
+.form-select, 
+.form-control,
+.form-select option {
+    font-size: 16px !important;
 }
