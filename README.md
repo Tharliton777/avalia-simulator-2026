@@ -11,22 +11,24 @@ Um sistema web robusto e responsivo desenvolvido para simular, gerenciar e calcu
 
 ## ✨ Principais Funcionalidades
 
-* **🔒 Autenticação Segura:** Acesso restrito protegido pelo cofre do Google Firebase Authentication (E-mail e Senha).
-* **📊 Cálculo Automático de Selos:** O sistema calcula a porcentagem de transparência em tempo real e atribui os selos oficiais (Diamante, Ouro, Prata, Elevado, Intermediário, Básico, Inicial ou Inexistente) com base em critérios *Essenciais, Obrigatórios e Recomendados*.
-* **📱 Mobile First:** Interface 100% responsiva. Menus laterais dinâmicos (Sidebar) e botões flutuantes adaptados para uso em campo (smartphones e tablets).
-* **💾 Gestão Avançada de Dados (Backup & Relatórios):**
-    * **JSON:** Importação e Exportação do banco de dados completo (Backup de segurança com histórico de avaliações).
-    * **CSV:** Importação em lote e Exportação de relatórios gerenciais compatíveis com Excel.
-* **⚙️ CRUD Completo:** Cadastro, edição, listagem e exclusão de entidades, associando operadores e controladores responsáveis.
+* **🔒 Autenticação e Cadastro:** Acesso restrito protegido pelo Google Firebase Authentication, com opção de cadastro seguro para novos usuários da equipe diretamente na tela de login.
+* **☁️ Sincronização em Nuvem (Real-time):** Todos os dados, avaliações e notas são salvos e sincronizados instantaneamente usando o Cloud Firestore, permitindo que toda a equipe veja as mesmas informações atualizadas.
+* **📊 Cálculo Automático de Selos:** O sistema calcula a porcentagem de transparência e atribui os selos oficiais (Diamante, Ouro, Prata, Elevado, Intermediário, Básico, Inicial ou Inexistente) com base em critérios *Essenciais, Obrigatórios e Recomendados*.
+* **📋 Painel de Gerenciamento (Tabelas):** Visualização rápida e filtrável de todos os cadastros divididos por Prefeituras, Câmaras e Controladores (com cruzamento de dados de contato e responsáveis).
+* **📱 Mobile First:** Interface 100% responsiva. Menus laterais dinâmicos e botões flutuantes adaptados para uso em campo (smartphones e tablets).
+* **💾 Gestão Avançada de Dados:**
+    * **JSON:** Importação e Exportação do banco de dados completo (Backup de segurança).
+    * **CSV:** Exportação de relatórios gerenciais, download de **Modelos de Importação** em branco e importação em lote compatível com Excel.
+* **⚙️ CRUD Completo:** Cadastro, edição, listagem e exclusão de entidades diretamente pela interface.
 
 ## 🛠️ Tecnologias Utilizadas
 
 A arquitetura do projeto foi totalmente refatorada para garantir máxima performance e componentização:
 
-* **Front-end:** React.js construído com Vite (Substituindo a antiga arquitetura Vanilla JS).
-* **Estilização:** Bootstrap 5 + CSS Customizado (`index.css`).
+* **Front-end:** React.js construído com Vite.
+* **Estilização:** Bootstrap 5 + CSS Customizado (`index.css`) compatível com Dark Mode.
 * **Back-end / Segurança:** Firebase Authentication.
-* **Persistência de Dados Local:** `localStorage` (Mantém o progresso do usuário no navegador).
+* **Banco de Dados:** Cloud Firestore (NoSQL em tempo real).
 * **Deploy Contínuo:** Vercel.
 
 ## 🚀 Como rodar o projeto localmente
@@ -35,4 +37,18 @@ Siga os passos abaixo para rodar o ambiente de desenvolvimento na sua máquina:
 
 1. **Clone o repositório:**
    ```bash
-   git clone [https://github.com/SEU_USUARIO/simulador-atricon.git](https://github.com/Tharliton777/simulador-atricon.git)
+   git clone [https://github.com/Tharliton777/simulador-atricon.git](https://github.com/Tharliton777/simulador-atricon.git)
+
+2.  Acesse a pasta do projeto:
+   bash
+   cd simulador-atricon
+
+3. Instale as dependências:
+
+   bash
+   npm install
+
+4. Inicie o servidor de desenvolvimento:
+
+   bash
+   npm install
