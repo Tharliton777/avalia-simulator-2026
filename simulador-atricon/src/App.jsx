@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
 import { auth } from './firebase';
 import './index.css';
 
@@ -249,11 +249,12 @@ function App() {
   const [loginUser, setLoginUser] = useState("");
   const [loginSenha, setLoginSenha] = useState("");
   const [loginErro, setLoginErro] = useState("");
+  
+  // --- NOVA VARIÁVEL: Controla se estamos no modo de Cadastro ou Login ---
+  const [modoCadastro, setModoCadastro] = useState(false);
 
   const [menuAberto, setMenuAberto] = useState(false);
   const [submenuTabelasAberto, setSubmenuTabelasAberto] = useState(false);
-  
-  // --- NOVO ESTADO: CONTROLA O "SANFONA" DO MENU DADOS E BACKUP ---
   const [submenuDadosAberto, setSubmenuDadosAberto] = useState(false);
 
   useEffect(() => {
@@ -334,14 +335,26 @@ function App() {
   const rolarParaTopo = () => window.scrollTo({ top: 0, behavior: 'smooth' });
   const rolarParaFundo = () => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
 
+  // --- NOVA FUNÇÃO DE LOGIN E CADASTRO UNIFICADA ---
   const efetuarLogin = async (e) => {
       e.preventDefault();
+      setLoginErro("");
       try {
-          await signInWithEmailAndPassword(auth, loginUser, loginSenha);
-          setLoginErro("");
+          if (modoCadastro) {
+              // Se estiver no modo de cadastro, cria a conta
+              await createUserWithEmailAndPassword(auth, loginUser, loginSenha);
+              alert("Conta criada com sucesso! Redirecionando...");
+          } else {
+              // Se estiver no modo normal, faz o login
+              await signInWithEmailAndPassword(auth, loginUser, loginSenha);
+          }
       } catch (error) {
           console.error(error);
-          setLoginErro("E-mail ou senha incorretos!");
+          // Tratamento de erros amigável em português
+          if (error.code === 'auth/email-already-in-use') setLoginErro("Este e-mail já está cadastrado.");
+          else if (error.code === 'auth/weak-password') setLoginErro("A senha deve ter pelo menos 6 caracteres.");
+          else if (error.code === 'auth/invalid-credential') setLoginErro("E-mail ou senha incorretos.");
+          else setLoginErro("Erro na autenticação. Verifique os dados e tente novamente.");
       }
   };
 
@@ -357,8 +370,6 @@ function App() {
   };
 
   // --- LÓGICA DE IMPORTAÇÃO E EXPORTAÇÃO ---
-  
-  // 1. Exportar JSON (Backup Completo)
   const exportarJSON = () => {
       const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(bancoDeDados, null, 2));
       const downloadAnchorNode = document.createElement('a');
@@ -370,7 +381,6 @@ function App() {
       setMenuAberto(false);
   };
 
-  // 2. Importar JSON (Restaura Backup Completo)
   const importarJSON = (event) => {
       const file = event.target.files[0];
       if (!file) return;
@@ -383,21 +393,17 @@ function App() {
           } catch (err) {
               alert("Erro: O arquivo selecionado não é um JSON válido.");
           }
-          // Limpa o input para poder importar o mesmo arquivo de novo se precisar
           event.target.value = null; 
       };
       reader.readAsText(file);
       setMenuAberto(false);
   };
 
-  // 3. Exportar CSV (Relatório Excel)
   const exportarCSV = () => {
       let csvContent = "data:text/csv;charset=utf-8,";
-      // Cabeçalho da tabela
       csvContent += "ID;Nome da Entidade;Operador;Controlador;Telefone;Progresso (%);Selo Atual\n"; 
       
       Object.values(bancoDeDados).forEach(ent => {
-          // Limpa aspas ou pontos e vírgulas que possam quebrar a formatação do Excel
           const nomeLimpo = ent.nome.replace(/;/g, ",").replace(/"/g, "");
           const ctrlLimpo = (ent.controlador || "").replace(/;/g, ",");
           const row = `${ent.id};"${nomeLimpo}";${ent.operador};"${ctrlLimpo}";${ent.telefone || ""};${ent.perc};${ent.selo}`;
@@ -414,7 +420,6 @@ function App() {
       setMenuAberto(false);
   };
 
-  // 4. Importar CSV (Atualizar em Lote)
   const importarCSV = (event) => {
       const file = event.target.files[0];
       if (!file) return;
@@ -425,11 +430,9 @@ function App() {
               const lines = text.split("\n");
               const newDb = { ...bancoDeDados };
               
-              // Pula o cabeçalho (linha 0)
               for(let i = 1; i < lines.length; i++) {
-                  if(!lines[i].trim()) continue; // Pula linha em branco
+                  if(!lines[i].trim()) continue;
                   
-                  // Separa as colunas respeitando o ponto e vírgula
                   const cols = lines[i].split(";"); 
                   if(cols.length >= 5) {
                       const id = cols[0].trim();
@@ -439,13 +442,11 @@ function App() {
                       const telefone = cols[4].trim();
 
                       if(newDb[id]) {
-                          // Se já existe, atualiza os dados básicos (não zera as notas)
                           newDb[id].nome = nome;
                           newDb[id].operador = operador;
                           newDb[id].controlador = controlador;
                           newDb[id].telefone = telefone;
                       } else {
-                          // Se é novo, cria do zero
                           newDb[id] = {
                               id: id, nome: nome, operador: operador, controlador: controlador, 
                               telefone: telefone, perc: 0, selo: "INEXISTENTE", marcados: {}
@@ -607,6 +608,9 @@ function App() {
       return null; 
   }
 
+  // ============================================================================
+  // TELA DE LOGIN / CADASTRO
+  // ============================================================================
   if (!usuarioLogado) {
       return (
           <div className="d-flex align-items-center justify-content-center vh-100" style={{ backgroundColor: 'var(--bg-pagina)' }}>
@@ -614,10 +618,14 @@ function App() {
                   <div className="card-body p-5">
                       <div className="text-center mb-4">
                           <div className="bg-primary text-white d-inline-flex align-items-center justify-content-center mb-3 shadow-sm" style={{ width: '60px', height: '60px', borderRadius: '12px' }}>
-                              <i className="bi bi-shield-lock-fill fs-2"></i>
+                              <i className={modoCadastro ? "bi bi-person-plus-fill fs-2" : "bi bi-shield-lock-fill fs-2"}></i>
                           </div>
-                          <h4 className="fw-bold text-primary">Acesso Restrito</h4>
-                          <p className="text-muted small">Faça login para acessar o Simulador Atricon.</p>
+                          <h4 className="fw-bold text-primary">
+                              {modoCadastro ? "Criar Nova Conta" : "Acesso Restrito"}
+                          </h4>
+                          <p className="text-muted small">
+                              {modoCadastro ? "Cadastre-se para acessar o Simulador Atricon." : "Faça login para acessar o Simulador Atricon."}
+                          </p>
                       </div>
 
                       {loginErro && (
@@ -642,10 +650,20 @@ function App() {
                               </div>
                           </div>
                           <button type="submit" className="btn btn-primary w-100 py-2 fw-bold shadow-sm">
-                              Entrar no Sistema
+                              {modoCadastro ? "Cadastrar e Entrar" : "Entrar no Sistema"}
                           </button>
                       </form>
                       
+                      {/* --- LINK PARA ALTERNAR ENTRE LOGIN E CADASTRO --- */}
+                      <div className="text-center mt-3">
+                          <span 
+                              onClick={() => { setModoCadastro(!modoCadastro); setLoginErro(""); }} 
+                              style={{ color: '#0d6efd', cursor: 'pointer', textDecoration: 'underline', fontSize: '0.85rem', fontWeight: '500' }}
+                          >
+                              {modoCadastro ? "Já tem uma conta? Faça login." : "Não tem uma conta? Cadastre-se."}
+                          </span>
+                      </div>
+
                       <div className="text-center mt-4 text-muted" style={{ fontSize: '0.75rem' }}>
                           © 2026 TD2 - Simulador de Transparência
                       </div>
@@ -655,6 +673,9 @@ function App() {
       );
   }
 
+  // ============================================================================
+  // TELA PRINCIPAL (SISTEMA LOGADO)
+  // ============================================================================
   return (
     <>
       <button onClick={() => setMenuAberto(true)} className="btn-menu-lateral border-0 shadow-sm">
