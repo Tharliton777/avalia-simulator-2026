@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
-import { auth } from './firebase';
+import { doc, setDoc, getDoc } from "firebase/firestore"; 
+import { auth, db } from './firebase'; 
 import './index.css';
 
 // ============================================================================
@@ -42,7 +43,7 @@ const GRUPOS_CRITERIOS = [
         titulo: "4. Despesas", pesoDimensao: 4,
         itens: [
             { id: "4.1", nome: "Divulga o total das despesas empenhadas, liquidadas e pagas?", classificacao: "essencial", exige: ['g', 's', 'a'] },
-            { id: "4.2", nome: "Divulga as despesas por classificação orçamentária?", classificacao: "essencial", exige: ['g', 's', 'a'] },
+            { id: "4.2", nome: "Divulga as despesas por classification orçamentária?", classificacao: "essencial", exige: ['g', 's', 'a'] },
             { id: "4.3", nome: "Possibilita a consulta de empenhos com detalhes do beneficiário, valor, objeto e licitação originária?", classificacao: "essencial", exige: ['g', 's', 'a'] },
             { id: "4.4", nome: "Publica relação das despesas com aquisições de bens efetuadas pela instituição contendo: identificação do bem, preço unitário, quantidade, nome do fornecedor e valor total de cada aquisição?", classificacao: "recomendada", exige: ['g', 's', 'a'] },
             { id: "4.5", nome: "Publica informações sobre despesas de patrocínio?", classificacao: "recomendada", exige: ['g', 's', 'a'] },
@@ -249,41 +250,64 @@ function App() {
   const [loginUser, setLoginUser] = useState("");
   const [loginSenha, setLoginSenha] = useState("");
   const [loginErro, setLoginErro] = useState("");
-  
-  // --- NOVA VARIÁVEL: Controla se estamos no modo de Cadastro ou Login ---
   const [modoCadastro, setModoCadastro] = useState(false);
-
   const [menuAberto, setMenuAberto] = useState(false);
   const [submenuTabelasAberto, setSubmenuTabelasAberto] = useState(false);
   const [submenuDadosAberto, setSubmenuDadosAberto] = useState(false);
 
+  // --- NOVO: ESTADOS DO BANCO DE DADOS EM NUVEM ---
+  const [bancoDeDados, setBancoDeDados] = useState({});
+  const [dadosCarregadosDaNuvem, setDadosCarregadosDaNuvem] = useState(false);
+
+  // --- BUSCAR DADOS DA NUVEM AO LOGAR ---
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
         if (user) {
             setUsuarioLogado(true);
+            try {
+                const docRef = doc(db, "sistema", "bancoGeral");
+                const docSnap = await getDoc(docRef);
+                
+                if (docSnap.exists()) {
+                    setBancoDeDados(docSnap.data());
+                } else {
+                    // Se o banco estiver vazio na nuvem, ele cria a base
+                    let dbInicial = {};
+                    DATA_ENTIDADES.forEach(item => {
+                        const id = "ENT_" + item.n.replace(/\s/g, "_");
+                        dbInicial[id] = { id: id, nome: item.n, operador: item.o, controlador: "", telefone: "", perc: 0, selo: "INEXISTENTE", marcados: {} };
+                    });
+                    setBancoDeDados(dbInicial);
+                    await setDoc(docRef, dbInicial);
+                }
+                setDadosCarregadosDaNuvem(true);
+            } catch(e) {
+                console.error("Erro ao carregar do Firestore:", e);
+                alert("Erro ao conectar com a nuvem. Verifique sua conexão.");
+            }
         } else {
             setUsuarioLogado(false);
+            setBancoDeDados({});
+            setDadosCarregadosDaNuvem(false);
         }
         setCarregandoLogin(false);
     });
     return () => unsubscribe();
   }, []);
 
-  const [bancoDeDados, setBancoDeDados] = useState(() => {
-    const salvo = localStorage.getItem('assesi_atricon_v3_clean');
-    if (salvo) return JSON.parse(salvo);
-    
-    let dbInicial = {};
-    DATA_ENTIDADES.forEach(item => {
-        const id = "ENT_" + item.n.replace(/\s/g, "_");
-        dbInicial[id] = { 
-          id: id, nome: item.n, operador: item.o, 
-          controlador: "", telefone: "", perc: 0, 
-          selo: "INEXISTENTE", marcados: {} 
+  // --- SALVAR NA NUVEM AUTOMATICAMENTE ---
+  useEffect(() => {
+    if (dadosCarregadosDaNuvem && usuarioLogado) {
+        const salvar = async () => {
+            try {
+                await setDoc(doc(db, "sistema", "bancoGeral"), bancoDeDados);
+            } catch (e) {
+                console.error("Erro ao salvar na nuvem:", e);
+            }
         };
-    });
-    return dbInicial;
-  });
+        salvar();
+    }
+  }, [bancoDeDados, dadosCarregadosDaNuvem, usuarioLogado]);
 
   const [telaAtiva, setTelaAtiva] = useState('lista'); 
   const [entidadeEditando, setEntidadeEditando] = useState(null); 
@@ -309,10 +333,6 @@ function App() {
   const [idExclusao, setIdExclusao] = useState(null);
 
   useEffect(() => {
-    localStorage.setItem('assesi_atricon_v3_clean', JSON.stringify(bancoDeDados));
-  }, [bancoDeDados]);
-
-  useEffect(() => {
     const handleScroll = () => {
         const scrolled = document.documentElement.scrollTop;
         const windowHeight = document.documentElement.clientHeight;
@@ -335,22 +355,18 @@ function App() {
   const rolarParaTopo = () => window.scrollTo({ top: 0, behavior: 'smooth' });
   const rolarParaFundo = () => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
 
-  // --- NOVA FUNÇÃO DE LOGIN E CADASTRO UNIFICADA ---
   const efetuarLogin = async (e) => {
       e.preventDefault();
       setLoginErro("");
       try {
           if (modoCadastro) {
-              // Se estiver no modo de cadastro, cria a conta
               await createUserWithEmailAndPassword(auth, loginUser, loginSenha);
               alert("Conta criada com sucesso! Redirecionando...");
           } else {
-              // Se estiver no modo normal, faz o login
               await signInWithEmailAndPassword(auth, loginUser, loginSenha);
           }
       } catch (error) {
           console.error(error);
-          // Tratamento de erros amigável em português
           if (error.code === 'auth/email-already-in-use') setLoginErro("Este e-mail já está cadastrado.");
           else if (error.code === 'auth/weak-password') setLoginErro("A senha deve ter pelo menos 6 caracteres.");
           else if (error.code === 'auth/invalid-credential') setLoginErro("E-mail ou senha incorretos.");
@@ -369,7 +385,6 @@ function App() {
       }
   };
 
-  // --- LÓGICA DE IMPORTAÇÃO E EXPORTAÇÃO ---
   const exportarJSON = () => {
       const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(bancoDeDados, null, 2));
       const downloadAnchorNode = document.createElement('a');
@@ -389,7 +404,7 @@ function App() {
           try {
               const parsed = JSON.parse(e.target.result);
               setBancoDeDados(parsed);
-              alert("Backup restaurado com sucesso! 🎉");
+              alert("Backup restaurado e salvo na nuvem com sucesso! 🎉");
           } catch (err) {
               alert("Erro: O arquivo selecionado não é um JSON válido.");
           }
@@ -455,7 +470,7 @@ function App() {
                   }
               }
               setBancoDeDados(newDb);
-              alert("Dados do CSV importados/atualizados com sucesso! 📊");
+              alert("Dados do CSV importados para a nuvem com sucesso! 📊");
           } catch (err) {
               alert("Erro ao ler o arquivo CSV. Verifique a formatação.");
           }
@@ -465,7 +480,6 @@ function App() {
       setMenuAberto(false);
   }
 
-  // Funções de CRUD
   const executarCadastroModal = () => {
       const nomeOriginal = novoNome.trim().toUpperCase();
       if (!nomeOriginal || !novoOperador) { alert("Preencha os campos obrigatórios."); return; }
@@ -604,8 +618,16 @@ function App() {
   const totalNoBanco = Object.keys(bancoDeDados).length;
   const entidadesAvaliadas = Object.values(bancoDeDados).filter(e => e.perc > 0).length;
 
-  if (carregandoLogin) {
-      return null; 
+  // ============================================================================
+  // TELA DE CARREGAMENTO INICIAL
+  // ============================================================================
+  if (carregandoLogin || (usuarioLogado && !dadosCarregadosDaNuvem)) {
+      return (
+          <div className="d-flex flex-column align-items-center justify-content-center vh-100" style={{ backgroundColor: 'var(--bg-pagina)' }}>
+              <div className="spinner-border text-primary mb-3" role="status" style={{ width: '3rem', height: '3rem' }}></div>
+              <h5 className="fw-bold text-muted">Sincronizando com a nuvem... ☁️</h5>
+          </div>
+      ); 
   }
 
   // ============================================================================
@@ -654,7 +676,6 @@ function App() {
                           </button>
                       </form>
                       
-                      {/* --- LINK PARA ALTERNAR ENTRE LOGIN E CADASTRO --- */}
                       <div className="text-center mt-3">
                           <span 
                               onClick={() => { setModoCadastro(!modoCadastro); setLoginErro(""); }} 
@@ -757,8 +778,6 @@ function App() {
 
               </div>
             )}
-            {/* ------------------------------------ */}
-
           </div>
 
           <hr className="text-muted mt-auto" />

@@ -1,5 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore"; // NOVO: Importando o Firestore (Banco na Nuvem)
 
 // A sua chave secreta do cofre
 const firebaseConfig = {
@@ -14,5 +15,8 @@ const firebaseConfig = {
 // 1. O React liga para o Google e apresenta o mapa
 const app = initializeApp(firebaseConfig);
 
-// 2. Nós pegamos o "Cão de Guarda" (Autenticação) e exportamos para usar no App.jsx
+// 2. Nós pegamos o "Cão de Guarda" (Autenticação) e exportamos
 export const auth = getAuth(app);
+
+// 3. NOVO: Nós pegamos o "Cofre de Dados" (Firestore) e exportamos
+export const db = getFirestore(app);
