@@ -231,8 +231,227 @@ const GRUPOS_CRITERIOS = [
 ];
 
 const DATA_ENTIDADES = [
-    {"n": "PREFEITURA MUNICIPAL DE MAURITI", "o": "CLEYDIR"}, {"n": "PREFEITURA MUNICIPAL DE AMONTADA", "o": "CLEYDIR"}, {"n": "PREFEITURA MUNICIPAL DE CAMPOS SALES", "o": "CLEYDIR"}, {"n": "PREFEITURA MUNICIPAL DE SÃO BENEDITO", "o": "CLEYDIR"}, {"n": "PREFEITURA MUNICIPAL DE REDENÇÃO", "o": "CLEYDIR"}, {"n": "PREFEITURA MUNICIPAL DE PENTECOSTE", "o": "CLEYDIR"}, {"n": "PREFEITURA MUNICIPAL DE CRATEÚS", "o": "CLEYDIR"}, {"n": "PREFEITURA MUNICIPAL DE CASCAVEL", "o": "CLEYDIR"}, {"n": "PREFEITURA MUNICIPAL DE PEDRA BRANCA", "o": "CLEYDIR"}, {"n": "PREFEITURA MUNICIPAL DE MILHÃ", "o": "CLEYDIR"}, {"n": "PREFEITURA MUNICIPAL DE MADALENA", "o": "CLEYDIR"}, {"n": "PREFEITURA MUNICIPAL DE VIÇOSA DO CEARÁ", "o": "CLEYDIR"}, {"n": "PREFEITURA MUNICIPAL DE MONSENHOR TABOSA", "o": "CLEYDIR"}, {"n": "PREFEITURA MUNICIPAL DE SABOEIRO", "o": "CLEYDIR"}, {"n": "PREFEITURA MUNICIPAL DE MARTINÓPOLE", "o": "CLEYDIR"}, {"n": "PREFEITURA MUNICIPAL DE JIJOCA DE JERICOACOARA", "o": "CLEYDIR"}, {"n": "PREFEITURA MUNICIPAL DE HIDROLÂNDIA", "o": "CLEYDIR"}, {"n": "PREFEITURA MUNICIPAL DE GRANJEIRO", "o": "CLEYDIR"}, {"n": "PREFEITURA MUNICIPAL DE CARIDADE", "o": "CLEYDIR"}, {"n": "PREFEITURA MUNICIPAL DE CHORÓ", "o": "CLEYDIR"}, {"n": "PREFEITURA MUNICIPAL DE CAPISTRANO", "o": "CLEYDIR"}, {"n": "PREFEITURA MUNICIPAL DE BEBERIBE", "o": "CLEYDIR"}, {"n": "PREFEITURA MUNICIPAL DE APUIARÉS", "o": "CLEYDIR"}, {"n": "PREFEITURA MUNICIPAL DE IPAUMIRIM", "o": "DAVI"}, {"n": "PREFEITURA MUNICIPAL DE GUAIÚBA", "o": "DAVI"}, {"n": "PREFEITURA MUNICIPAL DE GENERAL SAMPAIO", "o": "DAVI"}, {"n": "PREFEITURA MUNICIPAL DE IPUEIRAS", "o": "DAVI"}, {"n": "PREFEITURA MUNICIPAL DE PALMÁCIA", "o": "DAVI"}, {"n": "PREFEITURA MUNICIPAL DE ITATIRA", "o": "DAVI"}, {"n": "PREFEITURA MUNICIPAL DE IPAPORANGA", "o": "DAVI"}, {"n": "PREFEITURA MUNICIPAL DE IBIAPINA", "o": "DAVI"}, {"n": "PREFEITURA MUNICIPAL DE ACARAPE", "o": "DAVI"}, {"n": "PREFEITURA MUNICIPAL DE IPU", "o": "DAVI"}, {"n": "PREFEITURA MUNICIPAL DE SÃO GONÇALO DO AMARANTE", "o": "DAVI"}, {"n": "PREFEITURA MUNICIPAL DE PARACURU", "o": "DAVI"}, {"n": "PREFEITURA MUNICIPAL DE IBICUITINGA", "o": "DAVI"}, {"n": "PREFEITURA MUNICIPAL DE AQUIRAZ", "o": "DAVI"}, {"n": "PREFEITURA MUNICIPAL DE QUIXELÔ", "o": "DAVI"}, {"n": "PREFEITURA MUNICIPAL DE ICÓ", "o": "DAVI"}, {"n": "PREFEITURA MUNICIPAL DE CAUCAIA", "o": "DAVI"}, {"n": "PREFEITURA MUNICIPAL DE SÃO JOÃO DO JAGUARIBE", "o": "DAVI"}, {"n": "PREFEITURA MUNICIPAL DE QUITERIANÓPOLIS", "o": "DAVI"}, {"n": "PREFEITURA MUNICIPAL DE PARAIPABA", "o": "DAVI"}, {"n": "PREFEITURA MUNICIPAL DE MERUOCA", "o": "DAVI"}, {"n": "PREFEITURA MUNICIPAL DE URUOCA", "o": "DAVI"}, {"n": "PREFEITURA MUNICIPAL DE PACAJUS", "o": "DAVI"}, {"n": "PREFEITURA MUNICIPAL DE SALITRE", "o": "DAVI"}, {"n": "PREFEITURA MUNICIPAL DE SANTANA DO ACARAÚ", "o": "DAVI"}, {"n": "PREFEITURA MUNICIPAL DE CEDRO", "o": "DAVI"}, {"n": "PREFEITURA MUNICIPAL DE ERERE", "o": "FELIPE"}, {"n": "PREFEITURA MUNICIPAL DE GUARAMIRANGA", "o": "FELIPE"}, {"n": "PREFEITURA MUNICIPAL DE BATURITÉ", "o": "FELIPE"}, {"n": "PREFEITURA MUNICIPAL DE COREAÚ", "o": "FELIPE"}, {"n": "PREFEITURA MUNICIPAL DE IRACEMA", "o": "FELIPE"}, {"n": "PREFEITURA MUNICIPAL DE ORÓS", "o": "FELIPE"}, {"n": "PREFEITURA MUNICIPAL DE IRAUÇUBA", "o": "FELIPE"}, {"n": "PREFEITURA MUNICIPAL DE ACARAÚ", "o": "FELIPE"}, {"n": "PREFEITURA MUNICIPAL DE SENADOR POMPEU", "o": "FELIPE"}, {"n": "PREFEITURA MUNICIPAL DE ITAIÇABA", "o": "FELIPE"}, {"n": "PREFEITURA MUNICIPAL DE EUSÉBIO", "o": "FELIPE"}, {"n": "PREFEITURA MUNICIPAL DE UMARI", "o": "FELIPE"}, {"n": "PREFEITURA MUNICIPAL DE UBAJARA", "o": "FELIPE"}, {"n": "PREFEITURA MUNICIPAL DE ACOPIARA", "o": "FELIPE"}, {"n": "PREFEITURA MUNICIPAL DE VARZEA ALEGRE", "o": "FELIPE"}, {"n": "PREFEITURA MUNICIPAL DE TAUÁ", "o": "FELIPE"}, {"n": "PREFEITURA MUNICIPAL DE RUSSAS", "o": "FELIPE"}, {"n": "PREFEITURA MUNICIPAL DE TRAIRI", "o": "FELIPE"}, {"n": "PREFEITURA MUNICIPAL DE TAMBORIL", "o": "FELIPE"}, {"n": "PREFEITURA MUNICIPAL DE MOMBAÇA", "o": "FELIPE"}, {"n": "PREFEITURA MUNICIPAL DE JARDIM", "o": "FELIPE"}, {"n": "PREFEITURA MUNICIPAL DE DEP. IRAPUAN PINHEIRO", "o": "FELIPE"}, {"n": "PREFEITURA MUNICIPAL DE URUBURETAMA", "o": "FELIPE"}, {"n": "PREFEITURA MUNICIPAL DE LAVRAS DA MANGABEIRA", "o": "FELIPE"}, {"n": "PREFEITURA MUNICIPAL DE FRECHEIRINHA", "o": "FELIPE"}, {"n": "PREFEITURA MUNICIPAL DE BAIXIO", "o": "FELIPE"}, {"n": "PREFEITURA MUNICIPAL DE CRATO", "o": "JOÃO"}, {"n": "PREFEITURA MUNICIPAL DE QUIXERAMOBIM", "o": "JOÃO"}, {"n": "SECRETARIA DE EDUCACAO DE JAGUARETAMA", "o": "JOÃO"}, {"n": "PREFEITURA MUNICIPAL DE ITAPIUNA", "o": "JOÃO"}, {"n": "PREFEITURA MUNICIPAL DE MORRINHOS", "o": "JOÃO"}, {"n": "PREFEITURA MUNICIPAL DE ARACATI", "o": "JOÃO"}, {"n": "PREFEITURA MUNICIPAL DE VARJOTA", "o": "JOÃO"}, {"n": "PREFEITURA MUNICIPAL DE OCARA", "o": "JOÃO"}, {"n": "PREFEITURA MUNICIPAL DE MASSAPÊ", "o": "JOÃO"}, {"n": "PREFEITURA MUNICIPAL DE LIMOEIRO DO NORTE", "o": "JOÃO"}, {"n": "PREFEITURA MUNICIPAL DE ALTANEIRA", "o": "JOÃO"}, {"n": "PREFEITURA MUNICIPAL DE GRAÇA", "o": "JOÃO"}, {"n": "PREFEITURA MUNICIPAL DE PARAMOTI", "o": "JOÃO"}, {"n": "PREFEITURA MUNICIPAL DE MORADA NOVA", "o": "JOÃO"}, {"n": "PREFEITURA MUNICIPAL DE HORIZONTE", "o": "JOÃO"}, {"n": "PREFEITURA MUNICIPAL DE GRANJA", "o": "JOÃO"}, {"n": "PREFEITURA MUNICIPAL DE FORQUILHA", "o": "JOÃO"}, {"n": "PREFEITURA MUNICIPAL DE PINDORETAMA", "o": "JOÃO"}, {"n": "PREFEITURA MUNICIPAL DE NOVA RUSSAS", "o": "JOÃO"}, {"n": "PREFEITURA MUNICIPAL DE ITAPAJÉ", "o": "JOÃO"}, {"n": "PREFEITURA MUNICIPAL DE TURURU", "o": "JOÃO"}, {"n": "PREFEITURA MUNICIPAL DE SANTA QUITÉRIA", "o": "JOÃO"}, {"n": "PREFEITURA MUNICIPAL DE MARANGUAPE", "o": "JOÃO"}, {"n": "PREFEITURA MUNICIPAL DE CANINDÉ", "o": "JOÃO"}, {"n": "PREFEITURA MUNICIPAL DE AURORA", "o": "JOÃO"}, {"n": "PREFEITURA MUNICIPAL DE ICAPUÍ", "o": "KAIKE"}, {"n": "PREFEITURA MUNICIPAL DE PEREIRO", "o": "KAIKE"}, {"n": "PREFEITURA MUNICIPAL DE QUIXERÉ", "o": "KAIKE"}, {"n": "PREFEITURA MUNICIPAL DE POTENGI", "o": "KAIKE"}, {"n": "PREFEITURA MUNICIPAL DE CATARINA", "o": "KAIKE"}, {"n": "PREFEITURA MUNICIPAL DE ARATUBA", "o": "KAIKE"}, {"n": "PREFEITURA MUNICIPAL DE QUIXADA", "o": "KAIKE"}, {"n": "PREFEITURA MUNICIPAL DE JAGUARETAMA", "o": "KAIKE"}, {"n": "PREFEITURA MUNICIPAL DE PORANGA", "o": "KAIKE"}, {"n": "PREFEITURA MUNICIPAL DE CARNAUBAL", "o": "KAIKE"}, {"n": "PREFEITURA MUNICIPAL DE ARACOIABA", "o": "KAIKE"}, {"n": "PREFEITURA MUNICIPAL DE ITAPIPOCA", "o": "KAIKE"}, {"n": "PREFEITURA MUNICIPAL DE AIUABA", "o": "KAIKE"}, {"n": "PREFEITURA MUNICIPAL DE TIANGUÁ", "o": "KAIKE"}, {"n": "PREFEITURA MUNICIPAL DE JUAZEIRO DO NORTE", "o": "KAIKE"}, {"n": "PREFEITURA MUNICIPAL DE ITAREMA", "o": "KAIKE"}, {"n": "PREFEITURA MUNICIPAL DE ITAITINGA", "o": "KAIKE"}, {"n": "PREFEITURA MUNICIPAL DE FORTIM", "o": "KAIKE"}, {"n": "PREFEITURA MUNICIPAL DE PACOTI", "o": "KAIKE"}, {"n": "PREFEITURA MUNICIPAL DE MARCO", "o": "KAIKE"}, {"n": "PREFEITURA MUNICIPAL DE BARBALHA", "o": "KAIKE"}, {"n": "PREFEITURA MUNICIPAL DE ASSARÉ", "o": "KAIKE"}, {"n": "PREFEITURA MUNICIPAL DE JAGUARUANA", "o": "KAIKE"}, {"n": "PREFEITURA MUNICIPAL DE CATUNDA", "o": "KAIKE"}, {"n": "PREFEITURA MUNICIPAL DE BELA CRUZ", "o": "KAIRON"}, {"n": "PREFEITURA MUNICIPAL DE BOA VIAGEM", "o": "KAIRON"}, {"n": "PREFEITURA MUNICIPAL DE ALTO SANTO", "o": "KAIRON"}, {"n": "PREFEITURA MUNICIPAL DE PIQUET CARNEIRO", "o": "KAIRON"}, {"n": "PREFEITURA MUNICIPAL DE PALHANO", "o": "KAIRON"}, {"n": "PREFEITURA MUNICIPAL DE INDEPENDENCIA", "o": "KAIRON"}, {"n": "PREFEITURA MUNICIPAL DE TEJUÇUOCA", "o": "KAIRON"}, {"n": "PREFEITURA MUNICIPAL DE SANTANA DO CARIRI", "o": "KAIRON"}, {"n": "PREFEITURA MUNICIPAL DE POTIRETAMA", "o": "KAIRON"}, {"n": "PREFEITURA MUNICIPAL DE NOVO ORIENTE", "o": "KAIRON"}, {"n": "PREFEITURA MUNICIPAL DE MIRAÍMA", "o": "KAIRON"}, {"n": "PREFEITURA MUNICIPAL DE MILAGRES", "o": "KAIRON"}, {"n": "PREFEITURA MUNICIPAL DE GUARACIABA DO NORTE", "o": "KAIRON"}, {"n": "PREFEITURA MUNICIPAL DE CARIRÉ", "o": "KAIRON"}, {"n": "PREFEITURA MUNICIPAL DE PACATUBA", "o": "KAIRON"}, {"n": "PREFEITURA MUNICIPAL DE BARRO", "o": "KAIRON"},
-    {n:"CÂMARA MUNICIPAL DE ACARAPE", o:"CLEYDIR"}, {n:"CAMARA MUNICIPAL DE ARARENDA", o:"CLEYDIR"}, {n:"CÂMARA MUNICIPAL DE ASSARÉ", o:"CLEYDIR"}, {n:"CÂMARA MUNICIPAL DE CARIRÉ", o:"CLEYDIR"}, {n:"CÂMARA MUNICIPAL DE ERERÉ", o:"CLEYDIR"}, {n:"CÂMARA MUNICIPAL DE GRANJA", o:"CLEYDIR"}, {n:"CÂMARA MUNICIPAL DE ICÓ", o:"CLEYDIR"}, {n:"CÂMARA MUNICIPAL DE JARDIM", o:"CLEYDIR"}, {n:"CÂMARA MUNICIPAL DE MONSENHOR TABOSA", o:"CLEYDIR"}, {n:"CÂMARA MUNICIPAL DE MORADA NOVA", o:"CLEYDIR"}, {n:"CÂMARA MUNICIPAL DE ORÓS", o:"CLEYDIR"}, {n:"CÂMARA MUNICIPAL DE AIUABA", o:"DAVI"}, {n:"CÂMARA MUNICIPAL DE ARARIPE", o:"DAVI"}, {n:"CÂMARA MUNICIPAL DE PACAJUS", o:"DAVI"}, {n:"CÂMARA MUNICIPAL DE PACATUBA", o:"DAVI"}, {n:"CÂMARA MUNICIPAL DE PEDRA BRANCA", o:"DAVI"}, {n:"CÂMARA MUNICIPAL DE PEREIRO", o:"DAVI"}, {n:"CÂMARA MUNICIPAL DE POTENGI", o:"DAVI"}, {n:"CÂMARA MUNICIPAL DE POTIRETAMA", o:"DAVI"}, {n:"CÂMARA MUNICIPAL DE SABOEIRO", o:"DAVI"}, {n:"CÂMARA MUNICIPAL DE VARZEA ALEGRE", o:"DAVI"}, {n:"CÂMARA MUNICIPAL DE BATURITÉ", o:"CLEYDIR"}, {n:"CÂMARA MUNICIPAL DE CEDRO", o:"FELIPE"}, {n:"CÂMARA MUNICIPAL DE GENERAL SAMPAIO", o:"DAVI"}, {n:"CÂMARA MUNICIPAL DE IPU", o:"KAIRON"}, {n:"CÂMARA MUNICIPAL DE ITAPIPOCA", o:"FELIPE"}, {n:"CÂMARA MUNICIPAL DE JIJOCA DE JERICOACOARA", o:"JOÃO"}, {n:"CÂMARA MUNICIPAL DE LIMOEIRO DO NORTE", o:"DAVI"}, {n:"CÂMARA MUNICIPAL DE MILAGRES", o:"KAIKE"}, {n:"CÂMARA MUNICIPAL DE PENTECOSTE", o:"KAIRON"}, {n:"CÂMARA MUNICIPAL DE QUIXELÔ", o:"JOÃO"}, {n:"CÂMARA MUNICIPAL DE SALITRE", o:"DAVI"}, {n:"CÂMARA MUNICIPAL DE ALTANEIRA", o:"FELIPE"}, {n:"CAMARA MUNICIPAL DE AQUIRAZ", o:"FELIPE"}, {n:"CÂMARA MUNICIPAL DE CAMOCIM", o:"FELIPE"}, {n:"CÂMARA MUNICIPAL DE HIDROLÂNDIA", o:"FELIPE"}, {n:"CÂMARA MUNICIPAL DE LAVRAS DA MANGABEIRA", o:"FELIPE"}, {n:"CÂMARA MUNICIPAL DE MADALENA", o:"FELIPE"}, {n:"CÂMARA MUNICIPAL DE MAURITI", o:"FELIPE"}, {n:"CÂMARA MUNICIPAL DE NOVO ORIENTE", o:"FELIPE"}, {n:"CÂMARA MUNICIPAL DE SÃO BENEDITO", o:"FELIPE"}, {n:"CÂMARA MUNICIPAL DE SOBRAL", o:"FELIPE"}, {n:"CÂMARA MUNICIPAL DE UMARI", o:"FELIPE"}, {n:"CÂMARA MUNICIPAL DE AMONTADA", o:"JOÃO"}, {n:"CÂMARA MUNICIPAL DE APUIARÉS", o:"JOÃO"}, {n:"CÂMARA MUNICIPAL DE AURORA", o:"JOÃO"}, {n:"CÂMARA MUNICIPAL DE BAIXIO", o:"JOÃO"}, {n:"CÂMARA MUNICIPAL DE BARBALHA", o:"JOÃO"}, {n:"CÂMARA MUNICIPAL DE BARREIRA", o:"JOÃO"}, {n:"CÂMARA MUNICIPAL DE FORTIM - CE", o:"JOÃO"}, {n:"CÂMARA MUNICIPAL DE IPAUMIRIM", o:"JOÃO"}, {n:"CÂMARA MUNICIPAL DE MARACANAÚ", o:"JOÃO"}, {n:"CÂMARA MUNICIPAL DE MIRAÍMA", o:"JOÃO"}, {n:"CÂMARA MUNICIPAL DE MISSÃO VELHA", o:"JOÃO"}, {n:"CÂMARA MUNICIPAL DE TRAIRI", o:"JOÃO"}, {n:"CÂMARA MUNICIPAL DE CAMPOS SALES", o:"KAIKE"}, {n:"CÂMARA MUNICIPAL DE ICAPUÍ", o:"KAIKE"}, {n:"CÂMARA MUNICIPAL DE INDEPENDÊNCIA", o:"KAIKE"}, {n:"CÂMARA MUNICIPAL DE IPAPORANGA", o:"KAIKE"}, {n:"CÂMARA MUNICIPAL DE ITAITINGA", o:"KAIKE"}, {n:"CÂMARA MUNICIPAL de MARCO", o:"KAIKE"}, {n:"CÂMARA MUNICIPAL DE TAUÁ", o:"KAIKE"}, {n:"CÂMARA MUNICIPAL DE TURURU", o:"KAIKE"}, {n:"CÂMARA MUNICIPAL DE URUOCA", o:"KAIKE"}, {n:"CÂMARA MUNICIPAL DE VIÇOSA DO CEARA", o:"KAIKE"}, {n:"CÂMARA MUNICIPAL DE ARACOIABA", o:"KAIRON"}, {n:"CÂMARA MUNICIPAL DE CAPISTRANO", o:"KAIRON"}, {n:"CÂMARA MUNICIPAL DE CARIDADE", o:"KAIRON"}, {n:"CÂMARA MUNICIPAL DE CHORÓ", o:"KAIRON"}, {n:"CÂMARA MUNICIPAL DE CRUZ", o:"KAIRON"}, {n:"CÂMARA MUNICIPAL DE GRANJEIRO", o:"KAIRON"}, {n:"CÂMARA MUNICIPAL DE GUARAMIRANGA", o:"KAIRON"}, {n:"CÂMARA MUNICIPAL DE MORRINHOS", o:"KAIRON"}, {n:"CÂMARA MUNICIPAL DE PALHANO", o:"KAIRON"}, {n:"CÂMARA MUNICIPAL DE PORANGA", o:"KAIRON"}
+    {n: "PREFEITURA MUNICIPAL DE MAURITI", o: "CLEYDIR", t: "8881224899", c: "Erilaila Pm Mauriti"},
+    {n: "PREFEITURA MUNICIPAL DE AMONTADA", o: "CLEYDIR", t: "88999258479", c: "GLEILTON XAVIER"},
+    {n: "PREFEITURA MUNICIPAL DE CAMPOS SALES", o: "CLEYDIR", t: "8893650388", c: "Emiliano Morais"},
+    {n: "PREFEITURA MUNICIPAL DE SÃO BENEDITO", o: "CLEYDIR", t: "88992735249", c: "JOAO MACIEL"},
+    {n: "PREFEITURA MUNICIPAL DE REDENÇÃO", o: "CLEYDIR", t: "8585640084", c: "Diego Leandro"},
+    {n: "PREFEITURA MUNICIPAL DE PENTECOSTE", o: "CLEYDIR", t: "", c: ""},
+    {n: "PREFEITURA MUNICIPAL DE CRATEÚS", o: "CLEYDIR", t: "88981776281", c: "BÁRBARA APOLONIO"},
+    {n: "PREFEITURA MUNICIPAL DE CASCAVEL", o: "CLEYDIR", t: "8599189492", c: "Patrick"},
+    {n: "PREFEITURA MUNICIPAL DE PEDRA BRANCA", o: "CLEYDIR", t: "88999762543", c: "ANTONIO BRUNO"},
+    {n: "PREFEITURA MUNICIPAL DE MILHÃ", o: "CLEYDIR", t: "88998068629", c: "JOSE JACKSON"},
+    {n: "PREFEITURA MUNICIPAL DE MADALENA", o: "CLEYDIR", t: "8892812540", c: "Juliano"},
+    {n: "PREFEITURA MUNICIPAL DE VIÇOSA DO CEARÁ", o: "CLEYDIR", t: "88992848979", c: "FRANCISCA GISELE"},
+    {n: "PREFEITURA MUNICIPAL DE MONSENHOR TABOSA", o: "CLEYDIR", t: "(88)9.9459-7640", c: "RONALDO MARÇAL"},
+    {n: "PREFEITURA MUNICIPAL DE SABOEIRO", o: "CLEYDIR", t: "(88)9.8180-2572", c: "TULIO LIMA"},
+    {n: "PREFEITURA MUNICIPAL DE MARTINÓPOLE", o: "CLEYDIR", t: "88 9401-0369", c: "Nathalia"},
+    {n: "PREFEITURA MUNICIPAL DE JIJOCA DE JERICOACOARA", o: "CLEYDIR", t: "(88)9.9905-8234", c: "MISAEL GONSALVES"},
+    {n: "PREFEITURA MUNICIPAL DE HIDROLÂNDIA", o: "CLEYDIR", t: "(85)9.9904-9838", c: "IZABEL CRISTINA"},
+    {n: "PREFEITURA MUNICIPAL DE GRANJEIRO", o: "CLEYDIR", t: "(61)9.8190-5599", c: "RAIMUNDO NONATO"},
+    {n: "PREFEITURA MUNICIPAL DE CARIDADE", o: "CLEYDIR", t: "+55 85 8140-2467", c: "Pedro Targino"},
+    {n: "PREFEITURA MUNICIPAL DE CHORÓ", o: "CLEYDIR", t: "(88)9.8831-0397", c: "MARIA LUCIANA"},
+    {n: "PREFEITURA MUNICIPAL DE CAPISTRANO", o: "CLEYDIR", t: "", c: ""},
+    {n: "PREFEITURA MUNICIPAL DE BEBERIBE", o: "CLEYDIR", t: "", c: ""},
+    {n: "PREFEITURA MUNICIPAL DE APUIARÉS", o: "CLEYDIR", t: "85992359860", c: ""},
+    {n: "PREFEITURA MUNICIPAL DE IPAUMIRIM", o: "DAVI", t: "+55 88 9710-5818", c: "lucas"},
+    {n: "PREFEITURA MUNICIPAL DE GUAIÚBA", o: "DAVI", t: "+55 88 9922-8628", c: "Ilene"},
+    {n: "PREFEITURA MUNICIPAL DE GENERAL SAMPAIO", o: "DAVI", t: "+55 85 8818-9684", c: "Guiga"},
+    {n: "PREFEITURA MUNICIPAL DE IPUEIRAS", o: "DAVI", t: "+55 88 8111-4498", c: "Gildazio"},
+    {n: "PREFEITURA MUNICIPAL DE PALMÁCIA", o: "DAVI", t: "+55 85 9993-4383", c: "Andrezza"},
+    {n: "PREFEITURA MUNICIPAL DE ITATIRA", o: "DAVI", t: "+55 88 8101-8039", c: "Edson"},
+    {n: "PREFEITURA MUNICIPAL DE IPAPORANGA", o: "DAVI", t: "88 8172-4151", c: "Gustavo Gomes"},
+    {n: "PREFEITURA MUNICIPAL DE IBIAPINA", o: "DAVI", t: "", c: ""},
+    {n: "PREFEITURA MUNICIPAL DE ACARAPE", o: "DAVI", t: "", c: ""},
+    {n: "PREFEITURA MUNICIPAL DE IPU", o: "DAVI", t: "+55 88 9967-9923", c: "Roque"},
+    {n: "PREFEITURA MUNICIPAL DE SÃO GONÇALO DO AMARANTE", o: "DAVI", t: "(85)99299-4137", c: "Estácio"},
+    {n: "PREFEITURA MUNICIPAL DE PARACURU", o: "DAVI", t: "+55 85 9832-8921", c: "Ricardo Martins"},
+    {n: "PREFEITURA MUNICIPAL DE IBICUITINGA", o: "DAVI", t: "", c: ""},
+    {n: "PREFEITURA MUNICIPAL DE AQUIRAZ", o: "DAVI", t: "+55 85 8816-0659", c: "Gaby"},
+    {n: "PREFEITURA MUNICIPAL DE QUIXELÔ", o: "DAVI", t: "+55 88 9934-7397", c: "Marciana"},
+    {n: "PREFEITURA MUNICIPAL DE ICÓ", o: "DAVI", t: "", c: ""},
+    {n: "PREFEITURA MUNICIPAL DE CAUCAIA", o: "DAVI", t: "+55 85 8754-2703", c: "Daniel"},
+    {n: "PREFEITURA MUNICIPAL DE SÃO JOÃO DO JAGUARIBE", o: "DAVI", t: "", c: ""},
+    {n: "PREFEITURA MUNICIPAL DE QUITERIANÓPOLIS", o: "DAVI", t: "+55 88 9640-6953", c: "Leidaiana"},
+    {n: "PREFEITURA MUNICIPAL DE PARAIPABA", o: "DAVI", t: "+55 85 9702-0850", c: "Thaiza"},
+    {n: "PREFEITURA MUNICIPAL DE MERUOCA", o: "DAVI", t: "+55 88 9365-4644", c: "Tayná"},
+    {n: "PREFEITURA MUNICIPAL DE URUOCA", o: "DAVI", t: "", c: ""},
+    {n: "PREFEITURA MUNICIPAL DE PACAJUS", o: "DAVI", t: "+55 85 9256-0602", c: "Alice"},
+    {n: "PREFEITURA MUNICIPAL DE SALITRE", o: "DAVI", t: "88 9282-8693", c: "Dr Cícero Belo"},
+    {n: "PREFEITURA MUNICIPAL DE SANTANA DO ACARAÚ", o: "DAVI", t: "", c: ""},
+    {n: "PREFEITURA MUNICIPAL DE CEDRO", o: "DAVI", t: "88 9787-0561", c: "Daniel Bento"},
+    {n: "PREFEITURA MUNICIPAL DE ERERE", o: "FELIPE", t: "(88)9.9994-7898", c: "GIERDSON"},
+    {n: "PREFEITURA MUNICIPAL DE GUARAMIRANGA", o: "FELIPE", t: "(85)9.9985-4313", c: "BRENDA UCHÔA"},
+    {n: "PREFEITURA MUNICIPAL DE BATURITÉ", o: "FELIPE", t: "", c: ""},
+    {n: "PREFEITURA MUNICIPAL DE COREAÚ", o: "FELIPE", t: "", c: ""},
+    {n: "PREFEITURA MUNICIPAL DE IRACEMA", o: "FELIPE", t: "", c: ""},
+    {n: "PREFEITURA MUNICIPAL DE ORÓS", o: "FELIPE", t: "88997854200", c: "MARCIO"},
+    {n: "PREFEITURA MUNICIPAL DE IRAUÇUBA", o: "FELIPE", t: "85997645043", c: "LUCIO FLÁVIO"},
+    {n: "PREFEITURA MUNICIPAL DE ACARAÚ", o: "FELIPE", t: "88994088787", c: "CAIRON FORTE"},
+    {n: "PREFEITURA MUNICIPAL DE SENADOR POMPEU", o: "FELIPE", t: "88998582675", c: "CALEBE TAVARES"},
+    {n: "PREFEITURA MUNICIPAL DE ITAIÇABA", o: "FELIPE", t: "(31)9.9435-6181", c: "MATHEUS SANTIAGO"},
+    {n: "PREFEITURA MUNICIPAL DE EUSÉBIO", o: "FELIPE", t: "61999114748", c: "ROBERTA FROES"},
+    {n: "PREFEITURA MUNICIPAL DE UMARI", o: "FELIPE", t: "88996649737", c: "FLÁVIO"},
+    {n: "PREFEITURA MUNICIPAL DE UBAJARA", o: "FELIPE", t: "88997473080", c: "EDUARDO"},
+    {n: "PREFEITURA MUNICIPAL DE ACOPIARA", o: "FELIPE", t: "88996411444", c: "DOIA"},
+    {n: "PREFEITURA MUNICIPAL DE VARZEA ALEGRE", o: "FELIPE", t: "88994075101", c: "RAQUEL SOUSA"},
+    {n: "PREFEITURA MUNICIPAL DE TAUÁ", o: "FELIPE", t: "88998044289", c: "CILANDIA MARIA"},
+    {n: "PREFEITURA MUNICIPAL DE RUSSAS", o: "FELIPE", t: "88981226108", c: "GABRIELLA COSTA"},
+    {n: "PREFEITURA MUNICIPAL DE TRAIRI", o: "FELIPE", t: "85999185388", c: "Virgenio"},
+    {n: "PREFEITURA MUNICIPAL DE TAMBORIL", o: "FELIPE", t: "88981239248", c: "Wilson"},
+    {n: "PREFEITURA MUNICIPAL DE MOMBAÇA", o: "FELIPE", t: "(88)9.8880-0889", c: "LUCAS CASTRO"},
+    {n: "PREFEITURA MUNICIPAL DE JARDIM", o: "FELIPE", t: "88988626662", c: "SAVIO"},
+    {n: "PREFEITURA MUNICIPAL DE DEP. IRAPUAN PINHEIRO", o: "FELIPE", t: "", c: ""},
+    {n: "PREFEITURA MUNICIPAL DE URUBURETAMA", o: "FELIPE", t: "", c: "CLEYSON"},
+    {n: "PREFEITURA MUNICIPAL DE LAVRAS DA MANGABEIRA", o: "FELIPE", t: "88994988132", c: "ERBERSON LEMOS"},
+    {n: "PREFEITURA MUNICIPAL DE FRECHEIRINHA", o: "FELIPE", t: "88994147991", c: "LEILA"},
+    {n: "PREFEITURA MUNICIPAL DE BAIXIO", o: "FELIPE", t: "88996786652", c: "beto farias"},
+    {n: "PREFEITURA MUNICIPAL DE CRATO", o: "JOÃO", t: "88 8123-2317", c: "Júlio César"},
+    {n: "PREFEITURA MUNICIPAL DE QUIXERAMOBIM", o: "JOÃO", t: "", c: ""},
+    {n: "SECRETARIA DE EDUCACAO DE JAGUARETAMA", o: "JOÃO", t: "", c: ""},
+    {n: "PREFEITURA MUNICIPAL DE ITAPIUNA", o: "JOÃO", t: "", c: ""},
+    {n: "PREFEITURA MUNICIPAL DE MORRINHOS", o: "JOÃO", t: "88 9742-7966", c: "NAIARA"},
+    {n: "PREFEITURA MUNICIPAL DE ARACATI", o: "JOÃO", t: "85 9698-5272", c: "MARIANA"},
+    {n: "PREFEITURA MUNICIPAL DE VARJOTA", o: "JOÃO", t: "88 9680-3943", c: "Guilherme Paiva"},
+    {n: "PREFEITURA MUNICIPAL DE OCARA", o: "JOÃO", t: "85 9277-2032", c: "WELYSSON"},
+    {n: "PREFEITURA MUNICIPAL DE MASSAPÊ", o: "JOÃO", t: "88 9785-6104", c: "MARCIO"},
+    {n: "PREFEITURA MUNICIPAL DE LIMOEIRO DO NORTE", o: "JOÃO", t: "88 8156-2249", c: "Marden"},
+    {n: "PREFEITURA MUNICIPAL DE ALTANEIRA", o: "JOÃO", t: "88 9414-4994", c: "Virley Batista"},
+    {n: "PREFEITURA MUNICIPAL DE GRAÇA", o: "JOÃO", t: "(88)9.9295-7709", c: "ANTONIA BARBARA"},
+    {n: "PREFEITURA MUNICIPAL DE PARAMOTI", o: "JOÃO", t: "88 8877-6829", c: "Marcos Soares"},
+    {n: "PREFEITURA MUNICIPAL DE MORADA NOVA", o: "JOÃO", t: "88 9654-4900", c: "Benegildo Cruz"},
+    {n: "PREFEITURA MUNICIPAL DE HORIZONTE", o: "JOÃO", t: "85 9196-5902", c: "Fabricio"},
+    {n: "PREFEITURA MUNICIPAL DE GRANJA", o: "JOÃO", t: "88 9370-1074", c: "Edvando Aragão"},
+    {n: "PREFEITURA MUNICIPAL DE FORQUILHA", o: "JOÃO", t: "88 9232-7305", c: "Edgleison"},
+    {n: "PREFEITURA MUNICIPAL DE PINDORETAMA", o: "JOÃO", t: "88 9755-9233", c: "LEO"},
+    {n: "PREFEITURA MUNICIPAL DE NOVA RUSSAS", o: "JOÃO", t: "88 8220-0809", c: "Matheus Farias"},
+    {n: "PREFEITURA MUNICIPAL DE ITAPAJÉ", o: "JOÃO", t: "85 9290-2523", c: ""},
+    {n: "PREFEITURA MUNICIPAL DE TURURU", o: "JOÃO", t: "85 8501-6489", c: ""},
+    {n: "PREFEITURA MUNICIPAL DE SANTA QUITÉRIA", o: "JOÃO", t: "", c: ""},
+    {n: "PREFEITURA MUNICIPAL DE MARANGUAPE", o: "JOÃO", t: "85 8894-8445", c: "Helio"},
+    {n: "PREFEITURA MUNICIPAL DE CANINDÉ", o: "JOÃO", t: "(85) 98208-8515", c: "Marcos Salmo"},
+    {n: "PREFEITURA MUNICIPAL DE AURORA", o: "JOÃO", t: "88999450180", c: "Raquel Toquarto"},
+    {n: "PREFEITURA MUNICIPAL DE ICAPUÍ", o: "KAIKE", t: "88981128848", c: "LUCAS DAVI"},
+    {n: "PREFEITURA MUNICIPAL DE PEREIRO", o: "KAIKE", t: "88996649737", c: ""},
+    {n: "PREFEITURA MUNICIPAL DE QUIXERÉ", o: "KAIKE", t: "84998190325", c: "Taymara"},
+    {n: "PREFEITURA MUNICIPAL DE POTENGI", o: "KAIKE", t: "88 9489-7096", c: "Herllon"},
+    {n: "PREFEITURA MUNICIPAL DE CATARINA", o: "KAIKE", t: "", c: ""},
+    {n: "PREFEITURA MUNICIPAL DE ARATUBA", o: "KAIKE", t: "85998166106", c: "Alan Santos"},
+    {n: "PREFEITURA MUNICIPAL DE QUIXADA", o: "KAIKE", t: "", c: ""},
+    {n: "PREFEITURA MUNICIPAL DE JAGUARETAMA", o: "KAIKE", t: "88 8106-2747", c: "LARA"},
+    {n: "PREFEITURA MUNICIPAL DE PORANGA", o: "KAIKE", t: "8596083273", c: "dacio+"},
+    {n: "PREFEITURA MUNICIPAL DE CARNAUBAL", o: "KAIKE", t: "", c: ""},
+    {n: "PREFEITURA MUNICIPAL DE ARACOIABA", o: "KAIKE", t: "85 9626-4604", c: "bianca"},
+    {n: "PREFEITURA MUNICIPAL DE ITAPIPOCA", o: "KAIKE", t: "85 9855-0245", c: "alexadrina"},
+    {n: "PREFEITURA MUNICIPAL DE AIUABA", o: "KAIKE", t: "88 9348-6586", c: "BRUNA"},
+    {n: "PREFEITURA MUNICIPAL DE TIANGUÁ", o: "KAIKE", t: "88 9404-2405", c: "Julio Fidelis"},
+    {n: "PREFEITURA MUNICIPAL DE JUAZEIRO DO NORTE", o: "KAIKE", t: "88 9482-9814", c: "DUDA"},
+    {n: "PREFEITURA MUNICIPAL DE ITAREMA", o: "KAIKE", t: "88 8111-5393", c: "eduardo"},
+    {n: "PREFEITURA MUNICIPAL DE ITAITINGA", o: "KAIKE", t: "", c: ""},
+    {n: "PREFEITURA MUNICIPAL DE FORTIM", o: "KAIKE", t: "(88)9.8879-2867", c: "cinthia"},
+    {n: "PREFEITURA MUNICIPAL DE PACOTI", o: "KAIKE", t: "85 99285-3692", c: "Frederico"},
+    {n: "PREFEITURA MUNICIPAL DE MARCO", o: "KAIKE", t: "", c: ""},
+    {n: "PREFEITURA MUNICIPAL DE BARBALHA", o: "KAIKE", t: "", c: ""},
+    {n: "PREFEITURA MUNICIPAL DE ASSARÉ", o: "KAIKE", t: "88994992156", c: "Jaqueline"},
+    {n: "PREFEITURA MUNICIPAL DE JAGUARUANA", o: "KAIKE", t: "85 9865-2960", c: "BRENA"},
+    {n: "PREFEITURA MUNICIPAL DE CATUNDA", o: "KAIKE", t: "", c: ""},
+    {n: "PREFEITURA MUNICIPAL DE BELA CRUZ", o: "KAIRON", t: "88992562845", c: "Fabricio"},
+    {n: "PREFEITURA MUNICIPAL DE BOA VIAGEM", o: "KAIRON", t: "88 9960-7757", c: "Fabricio"},
+    {n: "PREFEITURA MUNICIPAL DE ALTO SANTO", o: "KAIRON", t: "88 9430-8147", c: "Wanderson"},
+    {n: "PREFEITURA MUNICIPAL DE PIQUET CARNEIRO", o: "KAIRON", t: "88997101381", c: "Samara"},
+    {n: "PREFEITURA MUNICIPAL DE PALHANO", o: "KAIRON", t: "88997108664", c: "Danylo"},
+    {n: "PREFEITURA MUNICIPAL DE INDEPENDENCIA", o: "KAIRON", t: "85999632215", c: ""},
+    {n: "PREFEITURA MUNICIPAL DE TEJUÇUOCA", o: "KAIRON", t: "(85)9.9222-9767", c: "LARA"},
+    {n: "PREFEITURA MUNICIPAL DE SANTANA DO CARIRI", o: "KAIRON", t: "85 9829-8980", c: "Viviane"},
+    {n: "PREFEITURA MUNICIPAL DE POTIRETAMA", o: "KAIRON", t: "88 92166-7094", c: "Eliane"},
+    {n: "PREFEITURA MUNICIPAL DE NOVO ORIENTE", o: "KAIRON", t: "85 9219-8776", c: "Toribio Nogueira"},
+    {n: "PREFEITURA MUNICIPAL DE MIRAÍMA", o: "KAIRON", t: "85 9160-9069", c: "Raimundo"},
+    {n: "PREFEITURA MUNICIPAL DE MILAGRES", o: "KAIRON", t: "88992286639", c: ""},
+    {n: "PREFEITURA MUNICIPAL DE GUARACIABA DO NORTE", o: "KAIRON", t: "88992074236", c: "Cilas"},
+    {n: "PREFEITURA MUNICIPAL DE CARIRIAÇU", o: "KAIRON", t: "88 9647-9869", c: "Jhonatan"},
+    {n: "PREFEITURA MUNICIPAL DE BARREIRA", o: "KAIRON", t: "85 9609-6115", c: "Fernando"},
+    {n: "PREFEITURA MUNICIPAL DE TABULEIRO DO NORTE", o: "KAIRON", t: "88 9950-2020", c: "Rafael"},
+    {n: "PREFEITURA MUNICIPAL DE SOLONÓPOLE", o: "KAIRON", t: "(88)9.9918-9652", c: "MARIA VILANEIDE"},
+    {n: "PREFEITURA MUNICIPAL DE JAGUARIBE", o: "KAIRON", t: "(88)9.9727-4962", c: "CARLUCIA ANGELICA"},
+    {n: "PREFEITURA MUNICIPAL DE CARIRÉ", o: "KAIRON", t: "88981213743", c: ""},
+    {n: "PREFEITURA MUNICIPAL DE PACATUBA", o: "KAIRON", t: "85 8160-3842", c: "Tamise"},
+    {n: "PREFEITURA MUNICIPAL DE BARRO", o: "KAIRON", t: "88 9826-0863", c: "Paulo"},
+
+    {n:"CÂMARA MUNICIPAL DE ACARAPE", o:"CLEYDIR", t:"", c:""},
+    {n:"CAMARA MUNICIPAL DE ARARENDA", o:"CLEYDIR", t:"", c:""},
+    {n:"CÂMARA MUNICIPAL DE ASSARÉ", o:"CLEYDIR", t:"", c:""},
+    {n:"CÂMARA MUNICIPAL DE CARIRÉ", o:"CLEYDIR", t:"", c:""},
+    {n:"CÂMARA MUNICIPAL DE ERERÉ", o:"CLEYDIR", t:"", c:""},
+    {n:"CÂMARA MUNICIPAL DE GRANJA", o:"CLEYDIR", t:"", c:""},
+    {n:"CÂMARA MUNICIPAL DE ICÓ", o:"CLEYDIR", t:"+55 88 9995-0999", c:"César gregório"},
+    {n:"CÂMARA MUNICIPAL DE JARDIM", o:"CLEYDIR", t:"", c:""},
+    {n:"CÂMARA MUNICIPAL DE MONSENHOR TABOSA", o:"CLEYDIR", t:"", c:""},
+    {n:"CÂMARA MUNICIPAL DE MORADA NOVA", o:"CLEYDIR", t:"", c:""},
+    {n:"CÂMARA MUNICIPAL DE ORÓS", o:"CLEYDIR", t:"", c:""},
+    {n:"CÂMARA MUNICIPAL DE AIUABA", o:"DAVI", t:"+55 88 9823-4060", c:"Pedro Luan"},
+    {n:"CÂMARA MUNICIPAL DE ARARIPE", o:"DAVI", t:"", c:""},
+    {n:"CÂMARA MUNICIPAL DE PACAJUS", o:"DAVI", t:"", c:""},
+    {n:"CÂMARA MUNICIPAL DE PACATUBA", o:"DAVI", t:"", c:""},
+    {n:"CÂMARA MUNICIPAL DE PEDRA BRANCA", o:"DAVI", t:"+55 88 8879-3846", c:"Joao Paulo"},
+    {n:"CÂMARA MUNICIPAL DE PEREIRO", o:"DAVI", t:"+55 88 9664-9737", c:"Flavio"},
+    {n:"CÂMARA MUNICIPAL DE POTENGI", o:"DAVI", t:"", c:""},
+    {n:"CÂMARA MUNICIPAL DE POTIRETAMA", o:"DAVI", t:"+55 88 9608-0740", c:"Elizelda"},
+    {n:"CÂMARA MUNICIPAL DE SABOEIRO", o:"DAVI", t:"+55 88 8120-0430", c:"Juninho Feitosa"},
+    {n:"CÂMARA MUNICIPAL DE VARZEA ALEGRE", o:"DAVI", t:"+55 88 9995-099", c:"Cézar gregório"},
+    {n:"CÂMARA MUNICIPAL DE BATURITÉ", o:"CLEYDIR", t:"", c:""},
+    {n:"CÂMARA MUNICIPAL DE CEDRO", o:"FELIPE", t:"(88)9.9933-8875", c:"Ana"},
+    {n:"CÂMARA MUNICIPAL DE GENERAL SAMPAIO", o:"DAVI", t:"85992990133", c:"kêtila"},
+    {n:"CÂMARA MUNICIPAL DE IPU", o:"KAIRON", t:"", c:""},
+    {n:"CÂMARA MUNICIPAL DE ITAPIPOCA", o:"FELIPE", t:"", c:""},
+    {n:"CÂMARA MUNICIPAL DE JIJOCA DE JERICOACOARA", o:"JOÃO", t:"88 9767-2586", c:"Erika"},
+    {n:"CÂMARA MUNICIPAL DE LIMOEIRO DO NORTE", o:"DAVI", t:"88996384559", c:"João"},
+    {n:"CÂMARA MUNICIPAL DE MILAGRES", o:"KAIKE", t:"", c:""},
+    {n:"CÂMARA MUNICIPAL DE PENTECOSTE", o:"KAIRON", t:"85 9161-4810", c:"Paulo Henrique"},
+    {n:"CÂMARA MUNICIPAL DE QUIXELÔ", o:"JOÃO", t:"(88)9.9905-0212", c:"ARIANNE DE LIMA"},
+    {n:"CÂMARA MUNICIPAL DE SALITRE", o:"DAVI", t:"88992768261", c:"Huan"},
+    {n:"CÂMARA MUNICIPAL DE ALTANEIRA", o:"FELIPE", t:"(88)9.9734-4503", c:"MARCOS JOSÉ"},
+    {n:"CAMARA MUNICIPAL DE AQUIRAZ", o:"FELIPE", t:"85986513262", c:"Ianara Mota"},
+    {n:"CÂMARA MUNICIPAL DE CAMOCIM", o:"FELIPE", t:"(88)9.9215-3122", c:"FRANCISCO HELTON"},
+    {n:"CÂMARA MUNICIPAL DE HIDROLÂNDIA", o:"FELIPE", t:"(85)9.9787-5253", c:"Junior Martins"},
+    {n:"CÂMARA MUNICIPAL DE LAVRAS DA MANGABEIRA", o:"FELIPE", t:"(88)9.9767-4785", c:"BRUNO JONATAS"},
+    {n:"CÂMARA MUNICIPAL DE MADALENA", o:"FELIPE", t:"(88)9.9341-6922", c:"HELÁDIO ALVES"},
+    {n:"CÂMARA MUNICIPAL DE MAURITI", o:"FELIPE", t:"", c:""},
+    {n:"CÂMARA MUNICIPAL DE NOVO ORIENTE", o:"FELIPE", t:"88997347973", c:"Francisco nailson"},
+    {n:"CÂMARA MUNICIPAL DE SÃO BENEDITO", o:"FELIPE", t:"88999960183", c:"STEFANY MARTINS"},
+    {n:"CÂMARA MUNICIPAL DE SOBRAL", o:"FELIPE", t:"(85)9.9739-4342", c:"ANTONIA DANIELLE"},
+    {n:"CÂMARA MUNICIPAL DE UMARI", o:"FELIPE", t:"(83)9.8196-7391", c:"CLEDIANO MARK"},
+    {n:"CÂMARA MUNICIPAL DE AMONTADA", o:"JOÃO", t:"88 9925-8479", c:"Gleilton Xavier"},
+    {n:"CÂMARA MUNICIPAL DE APUIARÉS", o:"JOÃO", t:"85 9402-9881", c:"Juliane Santiago"},
+    {n:"CÂMARA MUNICIPAL DE AURORA", o:"JOÃO", t:"88992616605", c:"DANIEL GUSTAVO"},
+    {n:"CÂMARA MUNICIPAL DE BAIXIO", o:"JOÃO", t:"", c:""},
+    {n:"CÂMARA MUNICIPAL DE BARBALHA", o:"JOÃO", t:"88 8155-1008", c:"Tiago Pereira"},
+    {n:"CÂMARA MUNICIPAL DE BARREIRA", o:"JOÃO", t:"", c:""},
+    {n:"CÂMARA MUNICIPAL DE FORTIM - CE", o:"JOÃO", t:"88 9855-9412", c:"EMANUEL"},
+    {n:"CÂMARA MUNICIPAL DE IPAUMIRIM", o:"JOÃO", t:"8899975-3351", c:"Salomão"},
+    {n:"CÂMARA MUNICIPAL DE MARACANAÚ", o:"JOÃO", t:"85988923546", c:"anne Katherine"},
+    {n:"CÂMARA MUNICIPAL DE MIRAÍMA", o:"JOÃO", t:"8899278-3299", c:"Aline Custodio"},
+    {n:"CÂMARA MUNICIPAL DE MISSÃO VELHA", o:"JOÃO", t:"88996671013", c:"moisés saraiva"},
+    {n:"CÂMARA MUNICIPAL DE TRAIRI", o:"JOÃO", t:"", c:""},
+    {n:"CÂMARA MUNICIPAL DE CAMPOS SALES", o:"KAIKE", t:"", c:""},
+    {n:"CÂMARA MUNICIPAL DE ICAPUÍ", o:"KAIKE", t:"(88)981773635", c:"LUÍS FILIPE LIMA"},
+    {n:"CÂMARA MUNICIPAL DE INDEPENDÊNCIA", o:"KAIKE", t:"88 9802-9505", c:"cezar Gustavo"},
+    {n:"CÂMARA MUNICIPAL DE IPAPORANGA", o:"KAIKE", t:"8899618-7678", c:"chaguinha"},
+    {n:"CÂMARA MUNICIPAL DE ITAITINGA", o:"KAIKE", t:"", c:""},
+    {n:"CÂMARA MUNICIPAL DE MARCO", o:"KAIKE", t:"88999419962", c:"ALEXANDRA MARIA"},
+    {n:"CÂMARA MUNICIPAL DE TAUÁ", o:"KAIKE", t:"85981597498", c:"HYGOR PINHEIRO"},
+    {n:"CÂMARA MUNICIPAL DE TURURU", o:"KAIKE", t:"88 9607-7460", c:"marilia"},
+    {n:"CÂMARA MUNICIPAL DE URUOCA", o:"KAIKE", t:"(88)9.8224-3813", c:"DUDA"},
+    {n:"CÂMARA MUNICIPAL DE VIÇOSA DO CEARA", o:"KAIKE", t:"88 9995-0999", c:"cezar"},
+    {n:"CÂMARA MUNICIPAL DE ARACOIABA", o:"KAIRON", t:"", c:""},
+    {n:"CÂMARA MUNICIPAL DE CAPISTRANO", o:"KAIRON", t:"", c:""},
+    {n:"CÂMARA MUNICIPAL DE CARIDADE", o:"KAIRON", t:"", c:""},
+    {n:"CÂMARA MUNICIPAL DE CHORÓ", o:"KAIRON", t:"", c:""},
+    {n:"CÂMARA MUNICIPAL DE CRUZ", o:"KAIRON", t:"", c:""},
+    {n:"CÂMARA MUNICIPAL DE GRANJEIRO", o:"KAIRON", t:"", c:""},
+    {n:"CÂMARA MUNICIPAL DE GUARAMIRANGA", o:"KAIRON", t:"", c:""},
+    {n:"CÂMARA MUNICIPAL DE MORRINHOS", o:"KAIRON", t:"", c:""},
+    {n:"CÂMARA MUNICIPAL DE PALHANO", o:"KAIRON", t:"88997108664", c:"Danylo"},
+    {n:"CÂMARA MUNICIPAL DE PORANGA", o:"KAIRON", t:"", c:""}
 ];
 
 function normalizarTexto(texto) {
@@ -268,12 +487,35 @@ function App() {
                 const docSnap = await getDoc(docRef);
                 
                 if (docSnap.exists()) {
-                    setBancoDeDados(docSnap.data());
+                    // SE O BANCO EXISTE, ELE ATUALIZA TELEFONES/CONTROLADORES SEM APAGAR AS NOTAS
+                    const dadosAtuais = docSnap.data();
+                    let precisaAtualizar = false;
+
+                    DATA_ENTIDADES.forEach(item => {
+                        const id = "ENT_" + item.n.replace(/\s/g, "_");
+                        if (!dadosAtuais[id]) {
+                            dadosAtuais[id] = { id: id, nome: item.n, operador: item.o, controlador: item.c || "", telefone: item.t || "", perc: 0, selo: "INEXISTENTE", marcados: {} };
+                            precisaAtualizar = true;
+                        } else {
+                            if (item.c && dadosAtuais[id].controlador !== item.c) {
+                                dadosAtuais[id].controlador = item.c;
+                                precisaAtualizar = true;
+                            }
+                            if (item.t && dadosAtuais[id].telefone !== item.t) {
+                                dadosAtuais[id].telefone = item.t;
+                                precisaAtualizar = true;
+                            }
+                        }
+                    });
+
+                    setBancoDeDados(dadosAtuais);
+                    if(precisaAtualizar) await setDoc(docRef, dadosAtuais);
+
                 } else {
                     let dbInicial = {};
                     DATA_ENTIDADES.forEach(item => {
                         const id = "ENT_" + item.n.replace(/\s/g, "_");
-                        dbInicial[id] = { id: id, nome: item.n, operador: item.o, controlador: "", telefone: "", perc: 0, selo: "INEXISTENTE", marcados: {} };
+                        dbInicial[id] = { id: id, nome: item.n, operador: item.o, controlador: item.c || "", telefone: item.t || "", perc: 0, selo: "INEXISTENTE", marcados: {} };
                     });
                     setBancoDeDados(dbInicial);
                     await setDoc(docRef, dbInicial);
@@ -358,11 +600,8 @@ function App() {
       window.scrollTo(0,0);
   };
 
-  // --- FUNÇÃO ATUALIZADA: Filtra a tabela respeitando os campos de busca e operadores ---
   const getDadosTabela = () => {
       let arr = Object.values(bancoDeDados);
-      
-      // 1. Filtro base pelo tipo de tabela clicada no menu
       if (tipoTabela === 'prefeituras') {
           arr = arr.filter(e => normalizarTexto(e.nome).includes('prefeitura'));
       } else if (tipoTabela === 'camaras') {
@@ -371,7 +610,6 @@ function App() {
           arr = arr.filter(e => e.controlador && e.controlador.trim() !== "");
       }
 
-      // 2. Aplica os filtros da tela (Barra de pesquisa, Operador, Selo)
       const termoNorm = normalizarTexto(termoBusca);
       arr = arr.filter(e => {
           const passaTexto = normalizarTexto(e.nome).includes(termoNorm) || (e.controlador && normalizarTexto(e.controlador).includes(termoNorm));
@@ -380,13 +618,11 @@ function App() {
           return passaTexto && passaOperador && passaSelo;
       });
 
-      // 3. Ordenação alfabética
       if (tipoTabela === 'controladores') {
           arr.sort((a,b) => a.controlador.localeCompare(b.controlador));
       } else {
           arr.sort((a,b) => a.nome.localeCompare(b.nome));
       }
-
       return arr;
   };
 
@@ -441,7 +677,7 @@ function App() {
               setBancoDeDados(parsed);
               alert("Backup restaurado e salvo na nuvem com sucesso! 🎉");
           } catch (err) {
-              alert("Erro: O arquivo selecionado não é um JSON válido.");
+              alert("Erro: O arquivo selecionado não é JSON válido.");
           }
           event.target.value = null; 
       };
@@ -514,6 +750,22 @@ function App() {
       reader.readAsText(file);
       setMenuAberto(false);
   }
+
+  const baixarModeloCSV = () => {
+      const csvContent = "data:text/csv;charset=utf-8,"
+          + "ID;Nome da Entidade;Operador;Controlador;Telefone\n"
+          + "ENT_NOME_DA_ENTIDADE_1;\"PREFEITURA MUNICIPAL EXEMPLO\";CLEYDIR;\"NOME DO CONTROLADOR\";85999999999\n"
+          + "ENT_NOME_DA_ENTIDADE_2;\"CAMARA MUNICIPAL EXEMPLO\";DAVI;;";
+
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", "modelo_importacao_atricon.csv");
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      setMenuAberto(false);
+  };
 
   const executarCadastroModal = () => {
       const nomeOriginal = novoNome.trim().toUpperCase();
@@ -791,6 +1043,11 @@ function App() {
                   <i className="bi bi-file-earmark-arrow-up me-2"></i> Importar (CSV)
                 </button>
                 <input type="file" id="importarCsvInput" accept=".csv" style={{ display: 'none' }} onChange={importarCSV} />
+                
+                <hr className="my-2 text-muted" />
+                <button className="btn btn-light text-start fw-bold p-2 shadow-sm text-info" onClick={baixarModeloCSV}>
+                  <i className="bi bi-file-earmark-spreadsheet me-2"></i> Baixar Modelo (CSV)
+                </button>
               </div>
             )}
           </div>
@@ -935,7 +1192,6 @@ function App() {
               <i className="bi bi-arrow-left me-2"></i> Voltar para Cards
             </button>
 
-            {/* --- BLOCO DE FILTROS E NOVO REGISTRO PARA A TABELA --- */}
             <div className="card shadow-sm border-0 mb-4 dark-card-target">
               <div className="card-body p-3">
                 <div className="d-flex gap-2 mb-3">
@@ -974,7 +1230,6 @@ function App() {
                 </div>
               </div>
             </div>
-            {/* --- FIM DO BLOCO DE FILTROS --- */}
             
             <div className="card shadow-sm border-0 mb-4 dark-card-target">
               <div className="card-body">
