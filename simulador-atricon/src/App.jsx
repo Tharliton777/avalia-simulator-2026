@@ -223,7 +223,7 @@ const GRUPOS_CRITERIOS = [
             { id: "20.6", nome: "Divulga as atas das sessões e lista de presença?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
             { id: "20.7", nome: "Divulga lista sobre as votações nominais?", classificacao: "recomendada", exige: ['g', 's', 'a'] },
             { id: "20.8", nome: "Divulga o ato que aprecia as Contas do Chefe do Executivo?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
-            { id: "20.9", nome: "Há transmissão de sessões ou outras formas de participação popular?", classificacao: "recomendada", exige: ['g'] },
+            { id: "20.9", nome: "Há transmissão de sessões ou outras formas de participation popular?", classificacao: "recomendada", exige: ['g'] },
             { id: "20.10", nome: "Divulga valores relativos às cotas para exercício da atividade parlamentar?", classificacao: "recomendada", exige: ['g', 's', 'a'] },
             { id: "20.11", nome: "Divulga dados sobre as atividades legislativas dos parlamentares?", classificacao: "recomendada", exige: ['g', 's', 'a'] }
         ]
@@ -255,11 +255,10 @@ function App() {
   const [submenuTabelasAberto, setSubmenuTabelasAberto] = useState(false);
   const [submenuDadosAberto, setSubmenuDadosAberto] = useState(false);
 
-  // --- NOVO: ESTADOS DO BANCO DE DADOS EM NUVEM ---
   const [bancoDeDados, setBancoDeDados] = useState({});
   const [dadosCarregadosDaNuvem, setDadosCarregadosDaNuvem] = useState(false);
+  const [tipoTabela, setTipoTabela] = useState('');
 
-  // --- BUSCAR DADOS DA NUVEM AO LOGAR ---
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
         if (user) {
@@ -271,7 +270,6 @@ function App() {
                 if (docSnap.exists()) {
                     setBancoDeDados(docSnap.data());
                 } else {
-                    // Se o banco estiver vazio na nuvem, ele cria a base
                     let dbInicial = {};
                     DATA_ENTIDADES.forEach(item => {
                         const id = "ENT_" + item.n.replace(/\s/g, "_");
@@ -295,7 +293,6 @@ function App() {
     return () => unsubscribe();
   }, []);
 
-  // --- SALVAR NA NUVEM AUTOMATICAMENTE ---
   useEffect(() => {
     if (dadosCarregadosDaNuvem && usuarioLogado) {
         const salvar = async () => {
@@ -320,7 +317,6 @@ function App() {
   const [showTopBtn, setShowTopBtn] = useState(false);
   const [showBottomBtn, setShowBottomBtn] = useState(false);
 
-  // Estados Cadastro/Edição
   const [novoNome, setNovoNome] = useState("");
   const [novoOperador, setNovoOperador] = useState("CLEYDIR");
   const [novoControlador, setNovoControlador] = useState("");
@@ -354,6 +350,45 @@ function App() {
 
   const rolarParaTopo = () => window.scrollTo({ top: 0, behavior: 'smooth' });
   const rolarParaFundo = () => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+
+  const abrirTabela = (tipo) => {
+      setTipoTabela(tipo);
+      setTelaAtiva('tabela');
+      setMenuAberto(false);
+      window.scrollTo(0,0);
+  };
+
+  // --- FUNÇÃO ATUALIZADA: Filtra a tabela respeitando os campos de busca e operadores ---
+  const getDadosTabela = () => {
+      let arr = Object.values(bancoDeDados);
+      
+      // 1. Filtro base pelo tipo de tabela clicada no menu
+      if (tipoTabela === 'prefeituras') {
+          arr = arr.filter(e => normalizarTexto(e.nome).includes('prefeitura'));
+      } else if (tipoTabela === 'camaras') {
+          arr = arr.filter(e => normalizarTexto(e.nome).includes('camara'));
+      } else if (tipoTabela === 'controladores') {
+          arr = arr.filter(e => e.controlador && e.controlador.trim() !== "");
+      }
+
+      // 2. Aplica os filtros da tela (Barra de pesquisa, Operador, Selo)
+      const termoNorm = normalizarTexto(termoBusca);
+      arr = arr.filter(e => {
+          const passaTexto = normalizarTexto(e.nome).includes(termoNorm) || (e.controlador && normalizarTexto(e.controlador).includes(termoNorm));
+          const passaOperador = (filtroOperador === 'todos') || (e.operador === filtroOperador);
+          const passaSelo = (filtroSelo === 'todos') || (e.selo === filtroSelo);
+          return passaTexto && passaOperador && passaSelo;
+      });
+
+      // 3. Ordenação alfabética
+      if (tipoTabela === 'controladores') {
+          arr.sort((a,b) => a.controlador.localeCompare(b.controlador));
+      } else {
+          arr.sort((a,b) => a.nome.localeCompare(b.nome));
+      }
+
+      return arr;
+  };
 
   const efetuarLogin = async (e) => {
       e.preventDefault();
@@ -618,9 +653,6 @@ function App() {
   const totalNoBanco = Object.keys(bancoDeDados).length;
   const entidadesAvaliadas = Object.values(bancoDeDados).filter(e => e.perc > 0).length;
 
-  // ============================================================================
-  // TELA DE CARREGAMENTO INICIAL
-  // ============================================================================
   if (carregandoLogin || (usuarioLogado && !dadosCarregadosDaNuvem)) {
       return (
           <div className="d-flex flex-column align-items-center justify-content-center vh-100" style={{ backgroundColor: 'var(--bg-pagina)' }}>
@@ -630,9 +662,6 @@ function App() {
       ); 
   }
 
-  // ============================================================================
-  // TELA DE LOGIN / CADASTRO
-  // ============================================================================
   if (!usuarioLogado) {
       return (
           <div className="d-flex align-items-center justify-content-center vh-100" style={{ backgroundColor: 'var(--bg-pagina)' }}>
@@ -694,16 +723,12 @@ function App() {
       );
   }
 
-  // ============================================================================
-  // TELA PRINCIPAL (SISTEMA LOGADO)
-  // ============================================================================
   return (
     <>
       <button onClick={() => setMenuAberto(true)} className="btn-menu-lateral border-0 shadow-sm">
         <i className="bi bi-list fs-4"></i>
       </button>
 
-      {/* --- CÓDIGO DO MENU LATERAL (SIDEBAR) --- */}
       {menuAberto && (
         <div className="modal-backdrop fade show" onClick={() => setMenuAberto(false)} style={{ zIndex: 1040 }}></div>
       )}
@@ -719,7 +744,6 @@ function App() {
           
           <div className="d-flex flex-column gap-2 mb-4">
             
-            {/* --- GAVETA 1: TABELAS --- */}
             <button 
               className="btn btn-light text-start fw-bold p-3 border shadow-sm d-flex justify-content-between align-items-center" 
               onClick={() => setSubmenuTabelasAberto(!submenuTabelasAberto)}
@@ -730,19 +754,18 @@ function App() {
 
             {submenuTabelasAberto && (
               <div className="d-flex flex-column gap-2 ms-3 border-start ps-2">
-                <button className="btn btn-light text-start fw-bold p-2 shadow-sm" onClick={() => { setMenuAberto(false); alert("Em breve!"); }}>
+                <button className="btn btn-light text-start fw-bold p-2 shadow-sm" onClick={() => abrirTabela('prefeituras')}>
                   <i className="bi bi-building me-2 text-secondary"></i> Prefeituras
                 </button>
-                <button className="btn btn-light text-start fw-bold p-2 shadow-sm" onClick={() => { setMenuAberto(false); alert("Em breve!"); }}>
+                <button className="btn btn-light text-start fw-bold p-2 shadow-sm" onClick={() => abrirTabela('camaras')}>
                   <i className="bi bi-bank me-2 text-secondary"></i> Câmaras
                 </button>
-                <button className="btn btn-light text-start fw-bold p-2 shadow-sm" onClick={() => { setMenuAberto(false); alert("Em breve!"); }}>
+                <button className="btn btn-light text-start fw-bold p-2 shadow-sm" onClick={() => abrirTabela('controladores')}>
                   <i className="bi bi-people me-2 text-secondary"></i> Controladores
                 </button>
               </div>
             )}
 
-            {/* --- GAVETA 2: DADOS E BACKUP --- */}
             <button 
               className="btn btn-light text-start fw-bold p-3 border shadow-sm d-flex justify-content-between align-items-center mt-2" 
               onClick={() => setSubmenuDadosAberto(!submenuDadosAberto)}
@@ -753,29 +776,21 @@ function App() {
 
             {submenuDadosAberto && (
               <div className="d-flex flex-column gap-2 ms-3 border-start ps-2">
-                
-                {/* Exportar JSON */}
                 <button className="btn btn-light text-start fw-bold p-2 shadow-sm text-success" onClick={exportarJSON}>
                   <i className="bi bi-download me-2"></i> Exportar (JSON)
                 </button>
-                
-                {/* Importar JSON (Usa um input file escondido) */}
                 <button className="btn btn-light text-start fw-bold p-2 shadow-sm text-success" onClick={() => document.getElementById('importarJsonInput').click()}>
                   <i className="bi bi-upload me-2"></i> Importar (JSON)
                 </button>
                 <input type="file" id="importarJsonInput" accept=".json" style={{ display: 'none' }} onChange={importarJSON} />
 
-                {/* Exportar CSV */}
                 <button className="btn btn-light text-start fw-bold p-2 shadow-sm text-primary mt-2" onClick={exportarCSV}>
                   <i className="bi bi-file-earmark-excel me-2"></i> Exportar (CSV)
                 </button>
-                
-                {/* Importar CSV */}
                 <button className="btn btn-light text-start fw-bold p-2 shadow-sm text-primary" onClick={() => document.getElementById('importarCsvInput').click()}>
                   <i className="bi bi-file-earmark-arrow-up me-2"></i> Importar (CSV)
                 </button>
                 <input type="file" id="importarCsvInput" accept=".csv" style={{ display: 'none' }} onChange={importarCSV} />
-
               </div>
             )}
           </div>
@@ -786,8 +801,6 @@ function App() {
           </button>
         </div>
       </div>
-      {/* --- FIM DO MENU LATERAL --- */}
-
 
       <button 
         onClick={efetuarLogout} 
@@ -811,6 +824,10 @@ function App() {
       )}
 
       <main className="container pb-1" style={{ paddingTop: '85px' }}>
+        
+        {/* ===================================================================
+            TELA 1: LISTA (CARDS)
+            =================================================================== */}
         {telaAtiva === 'lista' && (
           <div className="fade-screen show">
             <div className="text-center mb-4">
@@ -909,6 +926,131 @@ function App() {
           </div>
         )}
 
+        {/* ===================================================================
+            TELA 2: TABELAS DE LISTAGEM
+            =================================================================== */}
+        {telaAtiva === 'tabela' && (
+          <div className="fade-screen show">
+            <button onClick={() => { setTelaAtiva('lista'); window.scrollTo(0,0); }} className="btn btn-light border shadow-sm mb-4 fw-bold">
+              <i className="bi bi-arrow-left me-2"></i> Voltar para Cards
+            </button>
+
+            {/* --- BLOCO DE FILTROS E NOVO REGISTRO PARA A TABELA --- */}
+            <div className="card shadow-sm border-0 mb-4 dark-card-target">
+              <div className="card-body p-3">
+                <div className="d-flex gap-2 mb-3">
+                  <div className="input-group">
+                    <span className="input-group-text bg-white border-end-0"><i className="bi bi-search text-muted"></i></span>
+                    <input type="text" className="form-control border-start-0 ps-0" placeholder="Pesquisar por entidade ou controlador..." value={termoBusca} onChange={(e) => setTermoBusca(e.target.value)} />
+                  </div>
+                  <button className="btn btn-primary px-4 fw-bold" data-bs-toggle="modal" data-bs-target="#modalNovoCadastro">
+                    <i className="bi bi-plus-lg me-1"></i> Novo
+                  </button>
+                </div>
+                
+                <div className="d-flex flex-column gap-2">
+                  <select className="form-select text-muted bg-light" value={filtroOperador} onChange={(e) => setFiltroOperador(e.target.value)}>
+                    <option value="todos">📱 Todos Operadores</option>
+                    <option value="CLEYDIR">CLEYDIR</option>
+                    <option value="DAVI">DAVI</option>
+                    <option value="FELIPE">FELIPE</option>
+                    <option value="JOÃO">JOÃO</option>
+                    <option value="KAIKE">KAIKE</option>
+                    <option value="KAIRON">KAIRON</option>
+                  </select>
+                  {tipoTabela !== 'controladores' && (
+                    <select className="form-select text-muted bg-light" value={filtroSelo} onChange={(e) => setFiltroSelo(e.target.value)}>
+                      <option value="todos">🎖️ Todos Selos</option>
+                      <option value="DIAMANTE">DIAMANTE</option>
+                      <option value="OURO">OURO</option>
+                      <option value="PRATA">PRATA</option>
+                      <option value="ELEVADO">ELEVADO</option>
+                      <option value="INTERMEDIARIO">INTERMEDIARIO</option>
+                      <option value="BASICO">BÁSICO</option>
+                      <option value="INICIAL">INICIAL</option>
+                      <option value="INEXISTENTE">INEXISTENTE</option>
+                    </select>
+                  )}
+                </div>
+              </div>
+            </div>
+            {/* --- FIM DO BLOCO DE FILTROS --- */}
+            
+            <div className="card shadow-sm border-0 mb-4 dark-card-target">
+              <div className="card-body">
+                <h4 className="fw-bold text-primary mb-3">
+                  {tipoTabela === 'prefeituras' ? 'Lista de Prefeituras' : 
+                   tipoTabela === 'camaras' ? 'Lista de Câmaras' : 
+                   'Lista de Controladores'}
+                </h4>
+                <div className="table-responsive">
+                  <table className="table table-hover align-middle">
+                    <thead className="table-light">
+                      <tr>
+                        {tipoTabela === 'controladores' ? (
+                          <>
+                            <th>Controlador</th>
+                            <th>Entidade</th>
+                            <th>Operador</th>
+                            <th>Telefone</th>
+                            <th className="text-center">Ações</th>
+                          </>
+                        ) : (
+                          <>
+                            <th>Entidade</th>
+                            <th>Controlador</th>
+                            <th>Operador</th>
+                            <th>Selo</th>
+                            <th className="text-center">Ações</th>
+                          </>
+                        )}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {getDadosTabela().map(ent => (
+                        <tr key={ent.id}>
+                          {tipoTabela === 'controladores' ? (
+                            <>
+                              <td className="fw-bold">{ent.controlador}</td>
+                              <td>{ent.nome}</td>
+                              <td><span className="badge bg-secondary">{ent.operador}</span></td>
+                              <td>{ent.telefone || '---'}</td>
+                            </>
+                          ) : (
+                            <>
+                              <td className="fw-bold">{ent.nome}</td>
+                              <td>{ent.controlador || '---'}</td>
+                              <td><span className="badge bg-secondary">{ent.operador}</span></td>
+                              <td>
+                                <span className={`badge selo-${normalizarTexto(ent.selo)}`}>{ent.selo}</span>
+                              </td>
+                            </>
+                          )}
+                          <td className="text-center">
+                            <div className="d-flex justify-content-center gap-1">
+                                <button onClick={() => { setEntidadeEditando(ent.id); setTelaAtiva('avaliacao'); window.scrollTo(0,0); }} className="btn btn-sm btn-primary py-0 px-2" title="Avaliar"><i className="bi bi-check2-square"></i></button>
+                                <button onClick={() => prepararEdicao(ent.id)} data-bs-toggle="modal" data-bs-target="#modalEditarCadastro" className="btn btn-sm btn-outline-secondary py-0 px-2" title="Editar"><i className="bi bi-pencil"></i></button>
+                                <button onClick={() => prepararExclusao(ent.id)} data-bs-toggle="modal" data-bs-target="#modalConfirmarExclusao" className="btn btn-sm btn-outline-danger py-0 px-2" title="Excluir"><i className="bi bi-trash"></i></button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                      {getDadosTabela().length === 0 && (
+                        <tr>
+                          <td colSpan="5" className="text-center py-4 text-muted">Nenhum registro encontrado para esta categoria com os filtros atuais.</td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ===================================================================
+            TELA 3: AVALIAÇÃO DETALHADA
+            =================================================================== */}
         {telaAtiva === 'avaliacao' && entidadeEditando && (
           <div className="fade-screen show">
             <button onClick={() => { setTelaAtiva('lista'); setEntidadeEditando(null); window.scrollTo(0,0); }} className="btn btn-light border shadow-sm mb-4 fw-bold">
