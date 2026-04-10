@@ -925,6 +925,20 @@ function App() {
       setTimeout(() => { window.print(); }, 300);
   };
 
+  // --- NOVA FUNÇÃO: Botão de Finalizar Avaliação ---
+  const finalizarAvaliacao = async () => {
+      try {
+          await setDoc(doc(db, "sistema", "bancoGeral"), bancoDeDados);
+          alert("Avaliação salva e sincronizada com sucesso! ✅");
+          setTelaAtiva('lista');
+          setEntidadeEditando(null);
+          window.scrollTo(0,0);
+      } catch (e) {
+          alert("Erro ao salvar a avaliação.");
+          console.error(e);
+      }
+  };
+
   if (carregandoLogin || (usuarioLogado && !dadosCarregadosDaNuvem)) {
       return (
           <div className="d-flex flex-column align-items-center justify-content-center vh-100" style={{ backgroundColor: 'var(--bg-pagina)' }}>
@@ -1355,7 +1369,6 @@ function App() {
             <div className="card shadow-sm border-0 mb-4 dark-card-target">
               <div className="card-body text-center">
                 
-                {/* --- LOGO DA ENTIDADE NO TOPO DA AVALIAÇÃO --- */}
                 {bancoDeDados[entidadeEditando].logo && (
                    <img src={bancoDeDados[entidadeEditando].logo} alt="Brasão da Entidade" className="mb-3" style={{ maxHeight: '80px', maxWidth: '100%', objectFit: 'contain' }} />
                 )}
@@ -1432,6 +1445,14 @@ function App() {
                   )
               })}
             </div>
+
+            {/* --- BOTÃO DE CONFIRMAR E SALVAR --- */}
+            <div className="mt-5 mb-4 text-center d-print-none">
+                <button onClick={finalizarAvaliacao} className="btn btn-success btn-lg fw-bold shadow border-0 px-5 rounded-pill" style={{ padding: '15px 30px', fontSize: '1.1rem' }}>
+                    <i className="bi bi-check-circle-fill me-2"></i> Confirmar e Salvar Avaliação
+                </button>
+            </div>
+
           </div>
         )}
 
@@ -1448,7 +1469,6 @@ function App() {
         <div className="d-none d-print-block" style={{ width: '100%', backgroundColor: 'white', color: 'black' }}>
             <div className="text-center mb-4" style={{ borderBottom: '2px solid #000', paddingBottom: '10px' }}>
                 
-                {/* --- A LOGO NO RELATÓRIO AGORA PUXA DIRETO DO BANCO --- */}
                 {bancoDeDados[entidadeEditando].logo && (
                     <img src={bancoDeDados[entidadeEditando].logo} alt="Logo" style={{ maxHeight: '100px', marginBottom: '15px' }} />
                 )}
@@ -1519,7 +1539,6 @@ function App() {
                 );
             })}
 
-            {/* --- NOVO RODAPÉ OFICIAL PARA O PDF --- */}
             <div className="mt-5 pt-5 text-center" style={{ pageBreakInside: 'avoid' }}>
                 <div className="d-flex justify-content-center mb-2">
                     <div style={{ width: '250px', borderTop: '1px solid #000' }}></div>
