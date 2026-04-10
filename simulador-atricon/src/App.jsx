@@ -925,7 +925,6 @@ function App() {
       setTimeout(() => { window.print(); }, 300);
   };
 
-  // --- NOVA FUNÇÃO: Botão de Finalizar Avaliação ---
   const finalizarAvaliacao = async () => {
       try {
           await setDoc(doc(db, "sistema", "bancoGeral"), bancoDeDados);
@@ -1380,10 +1379,16 @@ function App() {
                     {bancoDeDados[entidadeEditando].selo}
                   </span>
                 </div>
-                <div className="progress" style={{ height: '25px', borderRadius: '12px' }}>
+                <div className="progress mb-3" style={{ height: '25px', borderRadius: '12px' }}>
                   <div className="progress-bar bg-success progress-bar-striped progress-bar-animated fw-bold fs-6" style={{ width: `${bancoDeDados[entidadeEditando].perc}%` }}>
                     {bancoDeDados[entidadeEditando].perc}%
                   </div>
+                </div>
+                
+                {/* --- AVISO DE MARGEM DE ERRO NA TELA --- */}
+                <div className="alert alert-warning py-2 m-0 small d-flex align-items-center justify-content-center text-start border-0 shadow-sm" style={{ borderRadius: '10px' }}>
+                    <i className="bi bi-exclamation-triangle-fill me-2 fs-5"></i>
+                    <span><strong>Aviso:</strong> Por se tratar de uma simulação (metodologia Atricon), o resultado final pode apresentar variação de até <strong>±1,5%</strong>.</span>
                 </div>
               </div>
             </div>
@@ -1446,7 +1451,6 @@ function App() {
               })}
             </div>
 
-            {/* --- BOTÃO DE CONFIRMAR E SALVAR --- */}
             <div className="mt-5 mb-4 text-center d-print-none">
                 <button onClick={finalizarAvaliacao} className="btn btn-success btn-lg fw-bold shadow border-0 px-5 rounded-pill" style={{ padding: '15px 30px', fontSize: '1.1rem' }}>
                     <i className="bi bi-check-circle-fill me-2"></i> Confirmar e Salvar Avaliação
@@ -1486,6 +1490,11 @@ function App() {
                     Selo Projetado: <b>{bancoDeDados[entidadeEditando].selo}</b> <br/>
                     Aderência aos Critérios: <b>{bancoDeDados[entidadeEditando].perc}%</b>
                 </h5>
+                
+                {/* --- AVISO DE MARGEM DE ERRO NO PDF --- */}
+                <p className="mt-2 mb-0 small text-danger fw-bold">
+                    * Nota de Simulação: A pontuação pode variar em até ±1,5% em relação à avaliação oficial.
+                </p>
             </div>
 
             <h5 className="fw-bold mb-3">Critérios Avaliados ({filtroRelatorio === 'todos' ? 'Todos' : filtroRelatorio === 'atendendo' ? 'Atendidos' : 'Pendentes'})</h5>
