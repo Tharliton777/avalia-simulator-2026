@@ -47,7 +47,7 @@ const GRUPOS_CRITERIOS = [
             { id: "4.3", nome: "Possibilita a consulta de empenhos com detalhes do beneficiário, valor, objeto e licitação originária?", classificacao: "essencial", exige: ['g', 's', 'a'] },
             { id: "4.4", nome: "Publica relação das despesas com aquisições de bens efetuadas pela instituição contendo: identificação do bem, preço unitário, quantidade, nome do fornecedor e valor total de cada aquisição?", classificacao: "recomendada", exige: ['g', 's', 'a'] },
             { id: "4.5", nome: "Publica informações sobre despesas de patrocínio?", classificacao: "recomendada", exige: ['g', 's', 'a'] },
-            { id: "4.6", nome: "Publica informações detalhadas sobre a execution dos contratos de publicidade, com nomes dos fornecedores de serviços especializados e veículos, bem como informações sobre os totais de valores pagos para cada tipo de serviço e meio de divulgação?", classificacao: "recomendada", exige: ['g', 's', 'a'] }
+            { id: "4.6", nome: "Publica informações detalhadas sobre a execution dos contratos de publicidade, com nomes dos fornecedores de completion de serviços especializados e veículos, bem como informações sobre os totais de valores pagos para cada tipo de serviço e meio de divulgação?", classificacao: "recomendada", exige: ['g', 's', 'a'] }
         ]
     },
     {
@@ -459,6 +459,16 @@ function normalizarTexto(texto) {
     return texto.toString().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
 }
 
+function verificaSeAtende(item, marcados) {
+    const s = marcados[item.id] || {g:false, s:false, a:false};
+    const exige = item.exige || ['g', 's', 'a'];
+    let atende = true;
+    if (exige.includes('g') && !s.g) atende = false;
+    if (exige.includes('s') && !s.s) atende = false;
+    if (exige.includes('a') && !s.a) atende = false;
+    return atende;
+}
+
 // ============================================================================
 // 2. FUNÇÃO PRINCIPAL DO APP 
 // ============================================================================
@@ -478,6 +488,22 @@ function App() {
   const [dadosCarregadosDaNuvem, setDadosCarregadosDaNuvem] = useState(false);
   const [tipoTabela, setTipoTabela] = useState('');
 
+  const [temaEscuro, setTemaEscuro] = useState(() => {
+      return localStorage.getItem('temaAtricon') === 'escuro';
+  });
+
+  const [filtroRelatorio, setFiltroRelatorio] = useState('todos');
+
+  useEffect(() => {
+      if (temaEscuro) {
+          document.documentElement.setAttribute('data-bs-theme', 'dark');
+          localStorage.setItem('temaAtricon', 'escuro');
+      } else {
+          document.documentElement.setAttribute('data-bs-theme', 'light');
+          localStorage.setItem('temaAtricon', 'claro');
+      }
+  }, [temaEscuro]);
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
         if (user) {
@@ -487,14 +513,13 @@ function App() {
                 const docSnap = await getDoc(docRef);
                 
                 if (docSnap.exists()) {
-                    // SE O BANCO EXISTE, ELE ATUALIZA TELEFONES/CONTROLADORES SEM APAGAR AS NOTAS
                     const dadosAtuais = docSnap.data();
                     let precisaAtualizar = false;
 
                     DATA_ENTIDADES.forEach(item => {
                         const id = "ENT_" + item.n.replace(/\s/g, "_");
                         if (!dadosAtuais[id]) {
-                            dadosAtuais[id] = { id: id, nome: item.n, operador: item.o, controlador: item.c || "", telefone: item.t || "", perc: 0, selo: "INEXISTENTE", marcados: {} };
+                            dadosAtuais[id] = { id: id, nome: item.n, operador: item.o, controlador: item.c || "", telefone: item.t || "", logo: "", perc: 0, selo: "INEXISTENTE", marcados: {} };
                             precisaAtualizar = true;
                         } else {
                             if (item.c && dadosAtuais[id].controlador !== item.c) {
@@ -503,6 +528,10 @@ function App() {
                             }
                             if (item.t && dadosAtuais[id].telefone !== item.t) {
                                 dadosAtuais[id].telefone = item.t;
+                                precisaAtualizar = true;
+                            }
+                            if (dadosAtuais[id].logo === undefined) {
+                                dadosAtuais[id].logo = "";
                                 precisaAtualizar = true;
                             }
                         }
@@ -515,7 +544,7 @@ function App() {
                     let dbInicial = {};
                     DATA_ENTIDADES.forEach(item => {
                         const id = "ENT_" + item.n.replace(/\s/g, "_");
-                        dbInicial[id] = { id: id, nome: item.n, operador: item.o, controlador: item.c || "", telefone: item.t || "", perc: 0, selo: "INEXISTENTE", marcados: {} };
+                        dbInicial[id] = { id: id, nome: item.n, operador: item.o, controlador: item.c || "", telefone: item.t || "", logo: "", perc: 0, selo: "INEXISTENTE", marcados: {} };
                     });
                     setBancoDeDados(dbInicial);
                     await setDoc(docRef, dbInicial);
@@ -563,11 +592,14 @@ function App() {
   const [novoOperador, setNovoOperador] = useState("CLEYDIR");
   const [novoControlador, setNovoControlador] = useState("");
   const [novoTelefone, setNovoTelefone] = useState("");
+  const [novoLogo, setNovoLogo] = useState("");
+
   const [idEdicao, setIdEdicao] = useState(null);
   const [editNome, setEditNome] = useState("");
   const [editOperador, setEditOperador] = useState("");
   const [editControlador, setEditControlador] = useState("");
   const [editTelefone, setEditTelefone] = useState("");
+  const [editLogo, setEditLogo] = useState("");
   const [idExclusao, setIdExclusao] = useState(null);
 
   useEffect(() => {
@@ -706,51 +738,6 @@ function App() {
       setMenuAberto(false);
   };
 
-  const importarCSV = (event) => {
-      const file = event.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = (e) => {
-          try {
-              const text = e.target.result;
-              const lines = text.split("\n");
-              const newDb = { ...bancoDeDados };
-              
-              for(let i = 1; i < lines.length; i++) {
-                  if(!lines[i].trim()) continue;
-                  
-                  const cols = lines[i].split(";"); 
-                  if(cols.length >= 5) {
-                      const id = cols[0].trim();
-                      const nome = cols[1].replace(/"/g, "").trim();
-                      const operador = cols[2].trim();
-                      const controlador = cols[3].replace(/"/g, "").trim();
-                      const telefone = cols[4].trim();
-
-                      if(newDb[id]) {
-                          newDb[id].nome = nome;
-                          newDb[id].operador = operador;
-                          newDb[id].controlador = controlador;
-                          newDb[id].telefone = telefone;
-                      } else {
-                          newDb[id] = {
-                              id: id, nome: nome, operador: operador, controlador: controlador, 
-                              telefone: telefone, perc: 0, selo: "INEXISTENTE", marcados: {}
-                          };
-                      }
-                  }
-              }
-              setBancoDeDados(newDb);
-              alert("Dados do CSV importados para a nuvem com sucesso! 📊");
-          } catch (err) {
-              alert("Erro ao ler o arquivo CSV. Verifique a formatação.");
-          }
-          event.target.value = null;
-      };
-      reader.readAsText(file);
-      setMenuAberto(false);
-  }
-
   const baixarModeloCSV = () => {
       const csvContent = "data:text/csv;charset=utf-8,"
           + "ID;Nome da Entidade;Operador;Controlador;Telefone\n"
@@ -767,6 +754,34 @@ function App() {
       setMenuAberto(false);
   };
 
+  const handleUploadLogoNova = (e) => {
+      const file = e.target.files[0];
+      if (file) {
+          if (file.size > 500 * 1024) {
+              alert("A imagem é muito grande! Escolha um brasão de até 500KB para não sobrecarregar o sistema.");
+              e.target.value = null;
+              return;
+          }
+          const reader = new FileReader();
+          reader.onload = (event) => setNovoLogo(event.target.result);
+          reader.readAsDataURL(file);
+      }
+  };
+
+  const handleUploadLogoEdit = (e) => {
+      const file = e.target.files[0];
+      if (file) {
+          if (file.size > 500 * 1024) {
+              alert("A imagem é muito grande! Escolha um brasão de até 500KB para não sobrecarregar o sistema.");
+              e.target.value = null;
+              return;
+          }
+          const reader = new FileReader();
+          reader.onload = (event) => setEditLogo(event.target.result);
+          reader.readAsDataURL(file);
+      }
+  };
+
   const executarCadastroModal = () => {
       const nomeOriginal = novoNome.trim().toUpperCase();
       if (!nomeOriginal || !novoOperador) { alert("Preencha os campos obrigatórios."); return; }
@@ -778,18 +793,18 @@ function App() {
           const newDb = { ...prevDb };
           newDb[id] = {
               id: id, nome: nomeOriginal, operador: novoOperador, controlador: novoControlador,
-              telefone: novoTelefone, perc: 0, selo: "INEXISTENTE", marcados: {}
+              telefone: novoTelefone, logo: novoLogo, perc: 0, selo: "INEXISTENTE", marcados: {}
           };
           return newDb;
       });
-      setNovoNome(""); setNovoOperador("CLEYDIR"); setNovoControlador(""); setNovoTelefone("");
+      setNovoNome(""); setNovoOperador("CLEYDIR"); setNovoControlador(""); setNovoTelefone(""); setNovoLogo("");
       document.getElementById('btnFecharModalNovo').click();
   };
 
   const prepararEdicao = (id) => {
       const ent = bancoDeDados[id];
       setIdEdicao(id); setEditNome(ent.nome); setEditOperador(ent.operador);
-      setEditControlador(ent.controlador || ""); setEditTelefone(ent.telefone || "");
+      setEditControlador(ent.controlador || ""); setEditTelefone(ent.telefone || ""); setEditLogo(ent.logo || "");
   };
 
   const salvarEdicao = () => {
@@ -801,7 +816,7 @@ function App() {
       }
       setBancoDeDados(prevDb => {
           const newDb = { ...prevDb };
-          newDb[idEdicao] = { ...newDb[idEdicao], nome: nomeFinal, operador: editOperador, controlador: editControlador, telefone: editTelefone };
+          newDb[idEdicao] = { ...newDb[idEdicao], nome: nomeFinal, operador: editOperador, controlador: editControlador, telefone: editTelefone, logo: editLogo };
           return newDb;
       });
       document.getElementById('btnFecharModalEdit').click();
@@ -905,6 +920,11 @@ function App() {
   const totalNoBanco = Object.keys(bancoDeDados).length;
   const entidadesAvaliadas = Object.values(bancoDeDados).filter(e => e.perc > 0).length;
 
+  const imprimirPDF = () => {
+      document.getElementById('btnFecharModalRelatorio').click();
+      setTimeout(() => { window.print(); }, 300);
+  };
+
   if (carregandoLogin || (usuarioLogado && !dadosCarregadosDaNuvem)) {
       return (
           <div className="d-flex flex-column align-items-center justify-content-center vh-100" style={{ backgroundColor: 'var(--bg-pagina)' }}>
@@ -941,15 +961,15 @@ function App() {
                           <div className="mb-3">
                               <label className="form-label fw-bold text-muted small">E-mail</label>
                               <div className="input-group shadow-sm">
-                                  <span className="input-group-text bg-light border-end-0"><i className="bi bi-envelope text-muted"></i></span>
-                                  <input type="email" className="form-control bg-light border-start-0 ps-0" placeholder="Digite seu e-mail" value={loginUser} onChange={(e) => setLoginUser(e.target.value)} required />
+                                  <span className="input-group-text bg-transparent border-end-0"><i className="bi bi-envelope text-body"></i></span>
+                                  <input type="email" className="form-control bg-transparent text-body border-start-0 ps-0" placeholder="Digite seu e-mail" value={loginUser} onChange={(e) => setLoginUser(e.target.value)} required />
                               </div>
                           </div>
                           <div className="mb-4">
                               <label className="form-label fw-bold text-muted small">Senha</label>
                               <div className="input-group shadow-sm">
-                                  <span className="input-group-text bg-light border-end-0"><i className="bi bi-key text-muted"></i></span>
-                                  <input type="password" className="form-control bg-light border-start-0 ps-0" placeholder="••••••••" value={loginSenha} onChange={(e) => setLoginSenha(e.target.value)} required />
+                                  <span className="input-group-text bg-transparent border-end-0"><i className="bi bi-key text-body"></i></span>
+                                  <input type="password" className="form-control bg-transparent text-body border-start-0 ps-0" placeholder="••••••••" value={loginSenha} onChange={(e) => setLoginSenha(e.target.value)} required />
                               </div>
                           </div>
                           <button type="submit" className="btn btn-primary w-100 py-2 fw-bold shadow-sm">
@@ -977,15 +997,15 @@ function App() {
 
   return (
     <>
-      <button onClick={() => setMenuAberto(true)} className="btn-menu-lateral border-0 shadow-sm">
+      <button onClick={() => setMenuAberto(true)} className="btn-menu-lateral border-0 shadow-sm d-print-none">
         <i className="bi bi-list fs-4"></i>
       </button>
 
       {menuAberto && (
-        <div className="modal-backdrop fade show" onClick={() => setMenuAberto(false)} style={{ zIndex: 1040 }}></div>
+        <div className="modal-backdrop fade show d-print-none" onClick={() => setMenuAberto(false)} style={{ zIndex: 1040 }}></div>
       )}
       
-      <div id="sidebar" className={menuAberto ? 'active' : ''} style={{ zIndex: 1050, overflowY: 'auto' }}>
+      <div id="sidebar" className={`${menuAberto ? 'active' : ''} d-print-none`} style={{ zIndex: 1050, overflowY: 'auto' }}>
         <div className="p-4 d-flex flex-column min-vh-100">
           <div className="d-flex justify-content-between align-items-center mb-4">
             <h5 className="fw-bold text-primary m-0"><i className="bi bi-grid-1x2-fill me-2"></i> Menu</h5>
@@ -995,7 +1015,6 @@ function App() {
           </div>
           
           <div className="d-flex flex-column gap-2 mb-4">
-            
             <button 
               className="btn btn-light text-start fw-bold p-3 border shadow-sm d-flex justify-content-between align-items-center" 
               onClick={() => setSubmenuTabelasAberto(!submenuTabelasAberto)}
@@ -1060,31 +1079,39 @@ function App() {
       </div>
 
       <button 
+        onClick={() => setTemaEscuro(!temaEscuro)} 
+        className={`btn ${temaEscuro ? 'btn-dark border-secondary' : 'btn-light border'} shadow-sm d-print-none`} 
+        style={{ position: 'fixed', right: '74px', top: '20px', zIndex: 1000, borderRadius: '50%', width: '48px', height: '48px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+        title={temaEscuro ? "Mudar para Tema Claro" : "Mudar para Tema Escuro"}
+      >
+        <i className={`bi ${temaEscuro ? 'bi-sun-fill text-warning' : 'bi-moon-fill'} fs-5`}></i>
+      </button>
+
+      <button 
         onClick={efetuarLogout} 
-        className="btn btn-light text-danger shadow-sm border" 
-        style={{ position: 'fixed', right: '8px', top: '20px', zIndex: 1000, borderRadius: '50%', width: '48px', height: '48px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+        className="btn btn-light text-danger shadow-sm border d-print-none" 
+        style={{ position: 'fixed', right: '16px', top: '20px', zIndex: 1000, borderRadius: '50%', width: '48px', height: '48px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
         title="Sair do Sistema"
       >
         <i className="bi bi-box-arrow-right fs-5"></i>
       </button>
 
-      <div onClick={rolarParaTopo} className={`btn-floating-top ${showTopBtn ? 'visible' : ''} ${telaAtiva === 'avaliacao' ? 'empurrado' : ''}`}>
+      <div onClick={rolarParaTopo} className={`btn-floating-top ${showTopBtn ? 'visible' : ''} ${telaAtiva === 'avaliacao' ? 'empurrado' : ''} d-print-none`}>
         <i className="bi bi-rocket-fill"></i>
       </div>
-      <div onClick={rolarParaFundo} className={`btn-floating-bottom ${showBottomBtn ? 'visible' : ''} ${telaAtiva === 'avaliacao' ? 'empurrado' : ''}`}>
+      <div onClick={rolarParaFundo} className={`btn-floating-bottom ${showBottomBtn ? 'visible' : ''} ${telaAtiva === 'avaliacao' ? 'empurrado' : ''} d-print-none`}>
         <i className="bi bi-arrow-down-square-fill"></i>
       </div>
       {telaAtiva === 'avaliacao' && (
-        <div className="btn-floating-help" data-bs-toggle="modal" data-bs-target="#modalAjuda">
+        <div className="btn-floating-help d-print-none" data-bs-toggle="modal" data-bs-target="#modalAjuda">
           <i className="bi bi-question-lg"></i>
         </div>
       )}
 
-      <main className="container pb-1" style={{ paddingTop: '85px' }}>
+      {/* --- CORPO PRINCIPAL DO SISTEMA --- */}
+      <main className="container pb-1 d-print-none" style={{ paddingTop: '85px' }}>
         
-        {/* ===================================================================
-            TELA 1: LISTA (CARDS)
-            =================================================================== */}
+        {/* === TELA 1: LISTA (CARDS) === */}
         {telaAtiva === 'lista' && (
           <div className="fade-screen show">
             <div className="text-center mb-4">
@@ -1104,8 +1131,8 @@ function App() {
               <div className="card-body p-3">
                 <div className="d-flex gap-2 mb-3">
                   <div className="input-group">
-                    <span className="input-group-text bg-white border-end-0"><i className="bi bi-search text-muted"></i></span>
-                    <input type="text" className="form-control border-start-0 ps-0" placeholder="Pesquisar..." value={termoBusca} onChange={(e) => { setTermoBusca(e.target.value); setLimiteExibicao(25); }} />
+                    <span className="input-group-text bg-transparent border-end-0"><i className="bi bi-search text-body"></i></span>
+                    <input type="text" className="form-control bg-transparent text-body border-start-0 ps-0" placeholder="Pesquisar..." value={termoBusca} onChange={(e) => { setTermoBusca(e.target.value); setLimiteExibicao(25); }} />
                   </div>
                   <button className="btn btn-primary px-4 fw-bold" data-bs-toggle="modal" data-bs-target="#modalNovoCadastro">
                     <i className="bi bi-plus-lg me-1"></i> Novo
@@ -1113,7 +1140,7 @@ function App() {
                 </div>
                 
                 <div className="d-flex flex-column gap-2">
-                  <select className="form-select text-muted bg-light" value={filtroOperador} onChange={(e) => setFiltroOperador(e.target.value)}>
+                  <select className="form-select" value={filtroOperador} onChange={(e) => setFiltroOperador(e.target.value)}>
                     <option value="todos">📱 Todos Operadores</option>
                     <option value="CLEYDIR">CLEYDIR</option>
                     <option value="DAVI">DAVI</option>
@@ -1122,7 +1149,7 @@ function App() {
                     <option value="KAIKE">KAIKE</option>
                     <option value="KAIRON">KAIRON</option>
                   </select>
-                  <select className="form-select text-muted bg-light" value={filtroSelo} onChange={(e) => setFiltroSelo(e.target.value)}>
+                  <select className="form-select" value={filtroSelo} onChange={(e) => setFiltroSelo(e.target.value)}>
                     <option value="todos">🎖️ Todos Selos</option>
                     <option value="DIAMANTE">DIAMANTE</option>
                     <option value="OURO">OURO</option>
@@ -1133,7 +1160,7 @@ function App() {
                     <option value="INICIAL">INICIAL</option>
                     <option value="INEXISTENTE">INEXISTENTE</option>
                   </select>
-                  <select className="form-select text-muted bg-light" value={filtroControlador} onChange={(e) => setFiltroControlador(e.target.value)}>
+                  <select className="form-select" value={filtroControlador} onChange={(e) => setFiltroControlador(e.target.value)}>
                     <option value="todos">👤 Controladores: Todos</option>
                     <option value="com">Com Controlador</option>
                     <option value="sem">Sem Controlador</option>
@@ -1151,7 +1178,18 @@ function App() {
                 return (
                   <div className="col-md-4" key={id}>
                     <div className="card shadow-sm border-0 p-3 h-100 dark-card-target text-center">
-                      <div className="mb-2"><span className="badge-operador">{ent.operador}</span></div>
+                      <div className="mb-2 d-flex justify-content-between align-items-start">
+                        <span className="badge-operador">{ent.operador}</span>
+                      </div>
+
+                      <div className="mb-2" style={{ height: '50px', display: 'flex', alignItems: 'center', justifyItems: 'center' }}>
+                         {ent.logo ? (
+                            <img src={ent.logo} alt="Brasão" className="mx-auto" style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain' }} />
+                         ) : (
+                            <i className="bi bi-building text-muted opacity-50 mx-auto" style={{ fontSize: '2rem' }}></i>
+                         )}
+                      </div>
+
                       <h6 className="fw-bold mb-1">{ent.nome}</h6>
                       <div className="d-flex justify-content-between align-items-center mb-3">
                         <span className="text-muted small" style={{ fontSize: '0.75rem' }}>Controlador: {ent.controlador || '---'}</span>
@@ -1183,9 +1221,7 @@ function App() {
           </div>
         )}
 
-        {/* ===================================================================
-            TELA 2: TABELAS DE LISTAGEM
-            =================================================================== */}
+        {/* === TELA 2: TABELAS DE LISTAGEM === */}
         {telaAtiva === 'tabela' && (
           <div className="fade-screen show">
             <button onClick={() => { setTelaAtiva('lista'); window.scrollTo(0,0); }} className="btn btn-light border shadow-sm mb-4 fw-bold">
@@ -1196,8 +1232,8 @@ function App() {
               <div className="card-body p-3">
                 <div className="d-flex gap-2 mb-3">
                   <div className="input-group">
-                    <span className="input-group-text bg-white border-end-0"><i className="bi bi-search text-muted"></i></span>
-                    <input type="text" className="form-control border-start-0 ps-0" placeholder="Pesquisar por entidade ou controlador..." value={termoBusca} onChange={(e) => setTermoBusca(e.target.value)} />
+                    <span className="input-group-text bg-transparent border-end-0"><i className="bi bi-search text-body"></i></span>
+                    <input type="text" className="form-control bg-transparent text-body border-start-0 ps-0" placeholder="Pesquisar por entidade ou controlador..." value={termoBusca} onChange={(e) => setTermoBusca(e.target.value)} />
                   </div>
                   <button className="btn btn-primary px-4 fw-bold" data-bs-toggle="modal" data-bs-target="#modalNovoCadastro">
                     <i className="bi bi-plus-lg me-1"></i> Novo
@@ -1205,7 +1241,7 @@ function App() {
                 </div>
                 
                 <div className="d-flex flex-column gap-2">
-                  <select className="form-select text-muted bg-light" value={filtroOperador} onChange={(e) => setFiltroOperador(e.target.value)}>
+                  <select className="form-select" value={filtroOperador} onChange={(e) => setFiltroOperador(e.target.value)}>
                     <option value="todos">📱 Todos Operadores</option>
                     <option value="CLEYDIR">CLEYDIR</option>
                     <option value="DAVI">DAVI</option>
@@ -1215,7 +1251,7 @@ function App() {
                     <option value="KAIRON">KAIRON</option>
                   </select>
                   {tipoTabela !== 'controladores' && (
-                    <select className="form-select text-muted bg-light" value={filtroSelo} onChange={(e) => setFiltroSelo(e.target.value)}>
+                    <select className="form-select" value={filtroSelo} onChange={(e) => setFiltroSelo(e.target.value)}>
                       <option value="todos">🎖️ Todos Selos</option>
                       <option value="DIAMANTE">DIAMANTE</option>
                       <option value="OURO">OURO</option>
@@ -1303,18 +1339,28 @@ function App() {
           </div>
         )}
 
-        {/* ===================================================================
-            TELA 3: AVALIAÇÃO DETALHADA
-            =================================================================== */}
+        {/* === TELA 3: AVALIAÇÃO DETALHADA === */}
         {telaAtiva === 'avaliacao' && entidadeEditando && (
           <div className="fade-screen show">
-            <button onClick={() => { setTelaAtiva('lista'); setEntidadeEditando(null); window.scrollTo(0,0); }} className="btn btn-light border shadow-sm mb-4 fw-bold">
-              <i className="bi bi-arrow-left me-2"></i> Voltar
-            </button>
+            <div className="d-flex justify-content-between align-items-center mb-4">
+              <button onClick={() => { setTelaAtiva('lista'); setEntidadeEditando(null); window.scrollTo(0,0); }} className="btn btn-light border shadow-sm fw-bold">
+                <i className="bi bi-arrow-left me-2"></i> Voltar
+              </button>
+              
+              <button className="btn btn-outline-danger shadow-sm fw-bold" data-bs-toggle="modal" data-bs-target="#modalRelatorio">
+                <i className="bi bi-file-earmark-pdf-fill me-2"></i> Gerar PDF
+              </button>
+            </div>
 
             <div className="card shadow-sm border-0 mb-4 dark-card-target">
-              <div className="card-body">
-                <h4 className="fw-bold text-center text-primary mb-3">{bancoDeDados[entidadeEditando].nome}</h4>
+              <div className="card-body text-center">
+                
+                {/* --- LOGO DA ENTIDADE NO TOPO DA AVALIAÇÃO --- */}
+                {bancoDeDados[entidadeEditando].logo && (
+                   <img src={bancoDeDados[entidadeEditando].logo} alt="Brasão da Entidade" className="mb-3" style={{ maxHeight: '80px', maxWidth: '100%', objectFit: 'contain' }} />
+                )}
+
+                <h4 className="fw-bold text-primary mb-3">{bancoDeDados[entidadeEditando].nome}</h4>
                 <div className="d-flex justify-content-between align-items-center mb-2">
                   <span className="fw-bold">Progresso Geral:</span>
                   <span className={`badge p-3 fs-6 rounded-pill selo-${normalizarTexto(bancoDeDados[entidadeEditando].selo)}`}>
@@ -1396,11 +1442,137 @@ function App() {
       </main>
 
       {/* ===================================================================
-          MODAIS DO SISTEMA
+          A MÁGICA: LAYOUT INVISÍVEL PARA IMPRESSÃO DO PDF
+          =================================================================== */}
+      {telaAtiva === 'avaliacao' && entidadeEditando && (
+        <div className="d-none d-print-block" style={{ width: '100%', backgroundColor: 'white', color: 'black' }}>
+            <div className="text-center mb-4" style={{ borderBottom: '2px solid #000', paddingBottom: '10px' }}>
+                
+                {/* --- A LOGO NO RELATÓRIO AGORA PUXA DIRETO DO BANCO --- */}
+                {bancoDeDados[entidadeEditando].logo && (
+                    <img src={bancoDeDados[entidadeEditando].logo} alt="Logo" style={{ maxHeight: '100px', marginBottom: '15px' }} />
+                )}
+
+                <h3 className="fw-bold m-0">{bancoDeDados[entidadeEditando].nome}</h3>
+                <h5 className="text-muted">Relatório de Simulação - PNTP Atricon</h5>
+                <div className="mt-3 d-flex justify-content-around">
+                    <span><b>Data:</b> {new Date().toLocaleDateString('pt-BR')}</span>
+                    <span><b>Controlador:</b> {bancoDeDados[entidadeEditando].controlador || 'Não informado'}</span>
+                </div>
+            </div>
+
+            <div className="mb-4 p-3 bg-light rounded text-center" style={{ border: '1px solid #ccc' }}>
+                <h5 className="m-0">
+                    Selo Projetado: <b>{bancoDeDados[entidadeEditando].selo}</b> <br/>
+                    Aderência aos Critérios: <b>{bancoDeDados[entidadeEditando].perc}%</b>
+                </h5>
+            </div>
+
+            <h5 className="fw-bold mb-3">Critérios Avaliados ({filtroRelatorio === 'todos' ? 'Todos' : filtroRelatorio === 'atendendo' ? 'Atendidos' : 'Pendentes'})</h5>
+
+            {GRUPOS_CRITERIOS.map((grupo, idx) => {
+                const ehCamara = normalizarTexto(bancoDeDados[entidadeEditando].nome).includes('camara');
+                const num = parseInt(grupo.titulo);
+                if (ehCamara && [16, 17, 18, 19].includes(num)) return null;
+                if (!ehCamara && num === 20) return null;
+
+                const itensFiltrados = grupo.itens.filter(item => {
+                    const atende = verificaSeAtende(item, bancoDeDados[entidadeEditando].marcados);
+                    if (filtroRelatorio === 'atendendo') return atende;
+                    if (filtroRelatorio === 'nao_atendendo') return !atende;
+                    return true;
+                });
+
+                if (itensFiltrados.length === 0) return null;
+
+                return (
+                    <div key={idx} className="print-avoid-break mb-4">
+                        <div className="p-2 fw-bold text-white bg-dark mb-2" style={{ backgroundColor: '#000 !important', WebkitPrintColorAdjust: 'exact', printColorAdjust: 'exact' }}>
+                            {grupo.titulo}
+                        </div>
+                        <table className="table table-sm table-bordered">
+                            <thead>
+                                <tr className="bg-light">
+                                    <th style={{ width: '8%' }}>ID</th>
+                                    <th>Critério</th>
+                                    <th style={{ width: '15%' }}>Tipo</th>
+                                    <th className="text-center" style={{ width: '15%' }}>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {itensFiltrados.map(item => {
+                                    const atende = verificaSeAtende(item, bancoDeDados[entidadeEditando].marcados);
+                                    return (
+                                        <tr key={item.id}>
+                                            <td><b>{item.id}</b></td>
+                                            <td>{item.nome}</td>
+                                            <td className="text-capitalize">{item.classificacao}</td>
+                                            <td className="text-center fw-bold" style={{ color: atende ? 'green' : 'red' }}>
+                                                {atende ? 'Atende ✓' : 'Não Atende ✗'}
+                                            </td>
+                                        </tr>
+                                    );
+                                })}
+                            </tbody>
+                        </table>
+                    </div>
+                );
+            })}
+
+            {/* --- NOVO RODAPÉ OFICIAL PARA O PDF --- */}
+            <div className="mt-5 pt-5 text-center" style={{ pageBreakInside: 'avoid' }}>
+                <div className="d-flex justify-content-center mb-2">
+                    <div style={{ width: '250px', borderTop: '1px solid #000' }}></div>
+                </div>
+                <p className="fw-bold mb-4">{bancoDeDados[entidadeEditando].operador} (Operador Responsável)</p>
+                
+                <p className="text-muted small mb-0">
+                    Gerado pelo <b>Simulador de Avaliação Atricon 2026 - TD2</b>
+                </p>
+                <p className="text-muted small">
+                    Data de emissão: {new Date().toLocaleDateString('pt-BR')} às {new Date().toLocaleTimeString('pt-BR')}
+                </p>
+            </div>
+
+        </div>
+      )}
+
+      {/* ===================================================================
+          MODAIS DO SISTEMA (ESCONDIDOS NA IMPRESSÃO)
           =================================================================== */}
       
+      {/* 0. MODAL GERAÇÃO DE RELATÓRIO PDF */}
+      <div className="modal fade d-print-none" id="modalRelatorio" tabIndex="-1" aria-hidden="true">
+        <div className="modal-dialog modal-dialog-centered">
+          <div className="modal-content border-0 shadow-lg">
+            <div className="modal-header bg-danger text-white border-0">
+              <h5 className="modal-title fw-bold"><i className="bi bi-file-earmark-pdf-fill me-2"></i> Configurar PDF</h5>
+              <button type="button" className="btn-close btn-close-white" data-bs-dismiss="modal" id="btnFecharModalRelatorio"></button>
+            </div>
+            <div className="modal-body p-4">
+              <div className="alert alert-info border-0 small mb-4">
+                <i className="bi bi-info-circle-fill me-2"></i> O PDF será gerado nativamente pelo seu navegador. A logo oficial da entidade será incluída automaticamente se estiver cadastrada.
+              </div>
+              
+              <div className="mb-4">
+                <label className="form-label fw-bold">O que incluir no relatório?</label>
+                <select className="form-select" value={filtroRelatorio} onChange={(e) => setFiltroRelatorio(e.target.value)}>
+                    <option value="todos">Listar Todos os Critérios</option>
+                    <option value="atendendo">Apenas Itens Atendidos (Verdes)</option>
+                    <option value="nao_atendendo">Apenas Pendências (Vermelhos)</option>
+                </select>
+              </div>
+            </div>
+            <div className="modal-footer border-0 pt-0">
+              <button type="button" className="btn btn-light shadow-sm" data-bs-dismiss="modal">Cancelar</button>
+              <button type="button" className="btn btn-danger shadow-sm fw-bold" onClick={imprimirPDF}>Gerar / Imprimir</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* 1. MODAL DE AJUDA */}
-      <div className="modal fade" id="modalAjuda" tabIndex="-1" aria-hidden="true">
+      <div className="modal fade d-print-none" id="modalAjuda" tabIndex="-1" aria-hidden="true">
         <div className="modal-dialog modal-dialog-centered">
           <div className="modal-content border-0 shadow-lg">
             <div className="modal-header bg-primary text-white border-0">
@@ -1433,7 +1605,7 @@ function App() {
       </div>
 
       {/* 2. MODAL DE CADASTRAR NOVA ENTIDADE */}
-      <div className="modal fade" id="modalNovoCadastro" tabIndex="-1" aria-hidden="true">
+      <div className="modal fade d-print-none" id="modalNovoCadastro" tabIndex="-1" aria-hidden="true">
         <div className="modal-dialog modal-dialog-centered">
           <div className="modal-content border-0 shadow-lg">
             <div className="modal-header bg-primary text-white border-0">
@@ -1464,6 +1636,19 @@ function App() {
                 <label className="form-label fw-bold">Telefone</label>
                 <input type="text" className="form-control" value={novoTelefone} onChange={(e) => setNovoTelefone(e.target.value)} placeholder="(XX) 9XXXX-XXXX" />
               </div>
+              <div className="mb-3">
+                <label className="form-label fw-bold">Logo Oficial (Máx 500KB)</label>
+                <input type="file" id="logoInputNovo" className="form-control" accept="image/png, image/jpeg" onChange={handleUploadLogoNova} />
+                {novoLogo && (
+                    <div className="mt-3 text-center">
+                        <img src={novoLogo} alt="Preview" className="bg-white border p-1 rounded mb-2" style={{maxHeight: '60px'}}/>
+                        <br/>
+                        <button type="button" className="btn btn-sm btn-outline-danger" onClick={() => { setNovoLogo(""); document.getElementById("logoInputNovo").value = ""; }}>
+                            <i className="bi bi-trash me-1"></i> Remover Logo
+                        </button>
+                    </div>
+                )}
+              </div>
             </div>
             <div className="modal-footer border-0 pt-0">
               <button type="button" className="btn btn-light shadow-sm" data-bs-dismiss="modal">Cancelar</button>
@@ -1474,7 +1659,7 @@ function App() {
       </div>
 
       {/* 3. MODAL DE EDITAR ENTIDADE EXISTENTE */}
-      <div className="modal fade" id="modalEditarCadastro" tabIndex="-1" aria-hidden="true">
+      <div className="modal fade d-print-none" id="modalEditarCadastro" tabIndex="-1" aria-hidden="true">
         <div className="modal-dialog modal-dialog-centered">
           <div className="modal-content border-0 shadow-lg">
             <div className="modal-header bg-secondary text-white border-0">
@@ -1505,6 +1690,19 @@ function App() {
                 <label className="form-label fw-bold">Telefone</label>
                 <input type="text" className="form-control" value={editTelefone} onChange={(e) => setEditTelefone(e.target.value)} />
               </div>
+              <div className="mb-3">
+                <label className="form-label fw-bold">Logo Oficial (Máx 500KB)</label>
+                <input type="file" id="logoInputEdit" className="form-control" accept="image/png, image/jpeg" onChange={handleUploadLogoEdit} />
+                {editLogo && (
+                    <div className="mt-3 text-center">
+                        <img src={editLogo} alt="Preview" className="bg-white border p-1 rounded mb-2" style={{maxHeight: '60px'}}/>
+                        <br/>
+                        <button type="button" className="btn btn-sm btn-outline-danger" onClick={() => { setEditLogo(""); document.getElementById("logoInputEdit").value = ""; }}>
+                            <i className="bi bi-trash me-1"></i> Remover Logo
+                        </button>
+                    </div>
+                )}
+              </div>
             </div>
             <div className="modal-footer border-0 pt-0">
               <button type="button" className="btn btn-light shadow-sm" data-bs-dismiss="modal">Cancelar</button>
@@ -1515,7 +1713,7 @@ function App() {
       </div>
 
       {/* 4. MODAL DE CONFIRMAÇÃO DE EXCLUSÃO */}
-      <div className="modal fade" id="modalConfirmarExclusao" tabIndex="-1" aria-hidden="true">
+      <div className="modal fade d-print-none" id="modalConfirmarExclusao" tabIndex="-1" aria-hidden="true">
         <div className="modal-dialog modal-dialog-centered modal-sm">
           <div className="modal-content border-0 shadow-lg">
             <div className="modal-body p-4 text-center">
