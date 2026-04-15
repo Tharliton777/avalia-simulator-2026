@@ -12,7 +12,7 @@
     --border-cor: #333333 !important; 
 }
 
-html, body { height: 100%; margin: 0; padding: 0; }
+html, body { min-height: 100%; margin: 0; padding: 0; }
 
 body { 
     background-color: var(--bg-pagina) !important; 
@@ -84,7 +84,6 @@ body {
 /* --- BOTÕES FLUTUANTES (FOGUETE, AJUDA E METEORO) PADRONIZADOS --- */
 .btn-floating-top, .btn-floating-help, .btn-floating-bottom {
     position: fixed;
-    /* AJUSTE 1: Colado na direita (8px em vez de 15px) */
     right: 8px; 
     width: 50px;
     height: 50px;
@@ -102,19 +101,15 @@ body {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* AJUSTE 2: Altura base no Desktop (mais baixos) */
 .btn-floating-help { bottom: 25px; }
 .btn-floating-top { bottom: 25px; opacity: 0; visibility: hidden; }
 .btn-floating-bottom { bottom: 85px; opacity: 0; visibility: hidden; }
 
-/* Quando "empurrados" pela Ajuda na tela de Avaliação */
 .btn-floating-top.empurrado { bottom: 85px; }
 .btn-floating-bottom.empurrado { bottom: 145px; }
 
-/* Estados Visíveis */
 .btn-floating-top.visible, .btn-floating-bottom.visible { opacity: 1; visibility: visible; }
 
-/* Hovers Específicos */
 .btn-floating-top:hover, .btn-floating-help:hover {
     background-color: #3b71fe !important;
     color: white !important;
@@ -200,7 +195,6 @@ body {
 /* ==========================================
    CORREÇÕES VISUAIS E RODAPÉ
    ========================================== */
-
 .modal-dialog { margin-top: 3rem !important; }
 .modal-body { overflow: visible !important; }
 
@@ -211,59 +205,24 @@ body {
 }
 
 footer {
-    /* AJUSTE 3: Rodapé ainda mais sequinho no desktop */
     padding-bottom: 15px !important;
     margin-bottom: 0 !important;
     position: relative;
     z-index: 10;
 }
 
-/* --- AJUSTES CIRÚRGICOS PARA CELULAR (Até 768px) --- */
 @media (max-width: 768px) {
-    
-    #telalista, #telaAvaliacao {
-        padding-top: 50px !important; 
-    }
-    
-    .btn-menu-lateral {
-        top: 15px;
-        left: 15px;
-        width: 42px;
-        height: 42px;
-    }
-    
-    /* Mantendo a margem de segurança do celular por causa da barra do Safari/Chrome */
-    footer {
-        padding-bottom: calc(30px + env(safe-area-inset-bottom)) !important;
-        text-align: center;
-    }
-    
-    #footerStatus {
-        flex-direction: column;
-        gap: 8px;
-    }
-
-    /* Mantendo as alturas base do mobile intactas para não conflitar com a barra do iPhone */
-    .btn-floating-top, .btn-floating-help { 
-        bottom: calc(108px + env(safe-area-inset-bottom)) !important; 
-    }
-    .btn-floating-bottom { 
-        bottom: calc(168px + env(safe-area-inset-bottom)) !important; 
-    }
-    .btn-floating-top.empurrado { 
-        bottom: calc(168px + env(safe-area-inset-bottom)) !important; 
-    }
-    .btn-floating-bottom.empurrado { 
-        bottom: calc(228px + env(safe-area-inset-bottom)) !important; 
-    }
+    #telalista, #telaAvaliacao { padding-top: 50px !important; }
+    .btn-menu-lateral { top: 15px; left: 15px; width: 42px; height: 42px; }
+    footer { padding-bottom: calc(30px + env(safe-area-inset-bottom)) !important; text-align: center; }
+    #footerStatus { flex-direction: column; gap: 8px; }
+    .btn-floating-top, .btn-floating-help { bottom: calc(108px + env(safe-area-inset-bottom)) !important; }
+    .btn-floating-bottom { bottom: calc(168px + env(safe-area-inset-bottom)) !important; }
+    .btn-floating-top.empurrado { bottom: calc(168px + env(safe-area-inset-bottom)) !important; }
+    .btn-floating-bottom.empurrado { bottom: calc(228px + env(safe-area-inset-bottom)) !important; }
 }
 
-/* --- AJUSTE DE FONTES PARA CAIXAS DE SELEÇÃO (PREVINE ZOOM NO IOS E DISTORÇÕES) --- */
-.form-select, 
-.form-control,
-.form-select option {
-    font-size: 16px !important;
-}
+.form-select, .form-control, .form-select option { font-size: 16px !important; }
 
 /* ==========================================
    CORREÇÃO DE INPUTS E SELECTS NO MODO ESCURO
@@ -276,9 +235,7 @@ footer {
     border-color: var(--border-cor) !important;
 }
 
-[data-bs-theme="dark"] .form-control::placeholder {
-    color: #888888 !important;
-}
+[data-bs-theme="dark"] .form-control::placeholder { color: #888888 !important; }
 
 [data-bs-theme="dark"] .form-control:focus,
 [data-bs-theme="dark"] .form-select:focus {
@@ -287,61 +244,73 @@ footer {
     border-color: #0d6efd !important;
     box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25) !important;
 }
-
-/* Garante que os ícones (lupinha, cadeado, email) fiquem visíveis */
-[data-bs-theme="dark"] .input-group-text i {
-    color: #adb5bd !important;
-}
+[data-bs-theme="dark"] .input-group-text i { color: #adb5bd !important; }
 
 /* ==========================================
-   CONFIGURAÇÕES PARA GERAÇÃO DO PDF (IMPRESSÃO)
+   MÁGICA DA IMPRESSÃO (PDF BLINDADO E MARGENS)
    ========================================== */
+
+/* Margem da folha de papel real, menor para evitar conflitos */
+@page {
+    margin: 5mm; 
+}
+
 @media print {
-    /* Força fundo branco e texto preto no PDF, ignorando o Dark Mode */
-    body, html, .dark-card-target, [data-bs-theme="dark"] body {
+    /* 1. Libera a altura e zera as margens base */
+    html, body, #root {
+        height: auto !important;
+        min-height: auto !important;
+        overflow: visible !important;
+        background-color: #ffffff !important;
+        color: #000000 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    
+    [data-bs-theme="dark"] body, .dark-card-target {
         background-color: #ffffff !important;
         color: #000000 !important;
     }
-    
-    /* Esconde elementos que não devem ir pro PDF */
-    .d-print-none, #sidebar, .btn-floating-top, .btn-floating-bottom, .btn-floating-help, .modal, .modal-backdrop {
+
+    /* 2. Esconde o sistema de UI */
+    .d-print-none, #sidebar, .btn-floating-top, .btn-floating-bottom, .btn-floating-help, .modal, .modal-backdrop, main {
         display: none !important;
     }
 
-    /* Mostra a área exclusiva do relatório */
-    .d-print-block {
+    /* 3. A SOLUÇÃO: Força o próprio relatório impresso a agir como uma folha e ter uma borda interna */
+    .d-none.d-print-block {
         display: block !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        box-sizing: border-box !important;
+        /* Padding gigantesco aqui em vez do @page pra forçar a tabela pra dentro */
+        padding: 20px 40px !important; 
+        max-width: 100vw !important;
     }
-    
-    /* Remove margens e sombras desnecessárias */
+
     .container { max-width: 100% !important; padding: 0 !important; margin: 0 !important; }
     .shadow-sm { box-shadow: none !important; }
+    .border-0 { border: 1px solid #ccc !important; }
 
-    /* --- CORREÇÃO DOS ESPAÇOS EM BRANCO --- */
-    
-    /* Permite que o bloco quebre de página naturalmente para preencher os buracos */
-    .print-avoid-break {
-        page-break-inside: auto !important;
+    /* 4. Força tabela branca no modo escuro e garante que caiba na div do relatório */
+    table, .table, table *, [data-bs-theme="dark"] .table {
+        background-color: #ffffff !important;
+        color: #000000 !important;
+        border-color: #000000 !important;
+        width: 100% !important;
+        --bs-table-bg: transparent !important;
+        --bs-table-color: #000000 !important;
+        --bs-table-border-color: #000000 !important;
+        --bs-table-striped-bg: #ffffff !important;
     }
 
-    /* Permite que a tabela divida entre páginas */
-    table {
-        page-break-inside: auto;
-    }
-
-    /* Mas PROÍBE que uma linha individual seja cortada no meio da palavra */
-    tr {
-        page-break-inside: avoid;
-        page-break-after: auto;
-    }
-
-    /* Mágica: Se a tabela for dividida, repete o cabeçalho (ID, Critério, etc) na nova página! */
-    thead {
-        display: table-header-group;
-    }
-
-    /* Evita que o título escuro do grupo fique viúvo no final da página sem a tabela embaixo */
-    .bg-dark.text-white {
-        page-break-after: avoid;
-    }
+    /* 5. Prevenção contra cortes de página */
+    .print-avoid-break { page-break-inside: auto !important; }
+    table { page-break-inside: auto; margin-bottom: 25px !important; }
+    tr { page-break-inside: avoid; page-break-after: auto; }
+    thead { display: table-header-group; }
+    .bg-dark { background-color: #000 !important; color: #fff !important; }
+    .table-light th { background-color: #f8f9fa !important; color: #000 !important; }
 }

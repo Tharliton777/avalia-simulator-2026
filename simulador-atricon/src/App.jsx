@@ -469,9 +469,6 @@ function verificaSeAtende(item, marcados) {
     return atende;
 }
 
-// ============================================================================
-// 2. FUNÇÃO PRINCIPAL DO APP 
-// ============================================================================
 function App() {
 
   const [usuarioLogado, setUsuarioLogado] = useState(false);
@@ -482,7 +479,7 @@ function App() {
   const [modoCadastro, setModoCadastro] = useState(false);
   const [menuAberto, setMenuAberto] = useState(false);
   const [submenuTabelasAberto, setSubmenuTabelasAberto] = useState(false);
-  const [submenuDadosAberto, setSubmenuDadosAberto] = useState(false);
+  const [submenuRelatoriosAberto, setSubmenuRelatoriosAberto] = useState(false);
 
   const [bancoDeDados, setBancoDeDados] = useState({});
   const [dadosCarregadosDaNuvem, setDadosCarregadosDaNuvem] = useState(false);
@@ -493,6 +490,15 @@ function App() {
   });
 
   const [filtroRelatorio, setFiltroRelatorio] = useState('todos');
+
+  // Estados do Modal Gerencial de Relatórios
+  const [relTipo, setRelTipo] = useState('todos');
+  const [relValor, setRelValor] = useState('todos');
+  const [dadosRelatorioAgrupado, setDadosRelatorioAgrupado] = useState([]);
+
+  useEffect(() => {
+      setRelValor('todos');
+  }, [relTipo]);
 
   useEffect(() => {
       if (temaEscuro) {
@@ -717,11 +723,74 @@ function App() {
       setMenuAberto(false);
   };
 
-  const exportarCSV = () => {
+  const importarCSV = (event) => {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+          try {
+              const text = e.target.result;
+              const lines = text.split("\n");
+              const newDb = { ...bancoDeDados };
+              
+              for(let i = 1; i < lines.length; i++) {
+                  if(!lines[i].trim()) continue;
+                  
+                  const cols = lines[i].split(";"); 
+                  if(cols.length >= 5) {
+                      const id = cols[0].trim();
+                      const nome = cols[1].replace(/"/g, "").trim();
+                      const operador = cols[2].trim();
+                      const controlador = cols[3].replace(/"/g, "").trim();
+                      const telefone = cols[4].trim();
+
+                      if(newDb[id]) {
+                          newDb[id].nome = nome;
+                          newDb[id].operador = operador;
+                          newDb[id].controlador = controlador;
+                          newDb[id].telefone = telefone;
+                      } else {
+                          newDb[id] = {
+                              id: id, nome: nome, operador: operador, controlador: controlador, 
+                              telefone: telefone, logo: "", perc: 0, selo: "INEXISTENTE", marcados: {}
+                          };
+                      }
+                  }
+              }
+              setBancoDeDados(newDb);
+              alert("Dados do CSV importados para a nuvem com sucesso! 📊");
+          } catch (err) {
+              alert("Erro ao ler o arquivo CSV. Verifique a formatação.");
+          }
+          event.target.value = null;
+      };
+      reader.readAsText(file);
+      setMenuAberto(false);
+  };
+
+  const getDadosFiltradosAgrupamento = () => {
+      let dados = Object.values(bancoDeDados);
+      if (relTipo === 'operador' && relValor !== 'todos') {
+          dados = dados.filter(e => e.operador === relValor);
+      } else if (relTipo === 'selo' && relValor !== 'todos') {
+          dados = dados.filter(e => e.selo === relValor);
+      } else if (relTipo === 'controlador' && relValor !== 'todos') {
+          if (relValor === 'com') dados = dados.filter(e => e.controlador && e.controlador.trim() !== "");
+          if (relValor === 'sem') dados = dados.filter(e => !e.controlador || e.controlador.trim() === "");
+      } else if (relTipo === 'poder' && relValor !== 'todos') {
+          if (relValor === 'executivo') dados = dados.filter(e => normalizarTexto(e.nome).includes('prefeitura'));
+          if (relValor === 'legislativo') dados = dados.filter(e => normalizarTexto(e.nome).includes('camara'));
+      }
+      dados.sort((a,b) => a.nome.localeCompare(b.nome));
+      return dados;
+  };
+
+  const gerarRelatorioGerencialCSV = () => {
+      const dados = getDadosFiltradosAgrupamento();
       let csvContent = "data:text/csv;charset=utf-8,";
       csvContent += "ID;Nome da Entidade;Operador;Controlador;Telefone;Progresso (%);Selo Atual\n"; 
       
-      Object.values(bancoDeDados).forEach(ent => {
+      dados.forEach(ent => {
           const nomeLimpo = ent.nome.replace(/;/g, ",").replace(/"/g, "");
           const ctrlLimpo = (ent.controlador || "").replace(/;/g, ",");
           const row = `${ent.id};"${nomeLimpo}";${ent.operador};"${ctrlLimpo}";${ent.telefone || ""};${ent.perc};${ent.selo}`;
@@ -731,11 +800,26 @@ function App() {
       const encodedUri = encodeURI(csvContent);
       const link = document.createElement("a");
       link.setAttribute("href", encodedUri);
-      link.setAttribute("download", `relatorio_atricon_${new Date().toISOString().slice(0,10)}.csv`);
+      link.setAttribute("download", `relatorio_${relTipo}_atricon_${new Date().toISOString().slice(0,10)}.csv`);
       document.body.appendChild(link);
       link.click();
       link.remove();
       setMenuAberto(false);
+  };
+
+  const gerarRelatorioGerencialPDF = () => {
+      const dados = getDadosFiltradosAgrupamento();
+      setDadosRelatorioAgrupado(dados);
+      setMenuAberto(false);
+      
+      setTimeout(() => {
+          setTelaAtiva('relatorio_agrupado');
+          window.scrollTo(0,0);
+          
+          setTimeout(() => { 
+              window.print(); 
+          }, 500);
+      }, 400);
   };
 
   const baixarModeloCSV = () => {
@@ -921,8 +1005,7 @@ function App() {
   const entidadesAvaliadas = Object.values(bancoDeDados).filter(e => e.perc > 0).length;
 
   const imprimirPDF = () => {
-      document.getElementById('btnFecharModalRelatorio').click();
-      setTimeout(() => { window.print(); }, 300);
+      setTimeout(() => { window.print(); }, 400);
   };
 
   const finalizarAvaliacao = async () => {
@@ -1052,31 +1135,33 @@ function App() {
 
             <button 
               className="btn btn-light text-start fw-bold p-3 border shadow-sm d-flex justify-content-between align-items-center mt-2" 
-              onClick={() => setSubmenuDadosAberto(!submenuDadosAberto)}
+              onClick={() => setSubmenuRelatoriosAberto(!submenuRelatoriosAberto)}
             >
-              <span><i className="bi bi-database-down me-2 text-success"></i> Dados e Backup</span>
-              <i className={`bi bi-chevron-${submenuDadosAberto ? 'up' : 'down'} text-muted`}></i>
+              <span><i className="bi bi-file-earmark-bar-graph me-2 text-success"></i> Relatórios e Backup</span>
+              <i className={`bi bi-chevron-${submenuRelatoriosAberto ? 'up' : 'down'} text-muted`}></i>
             </button>
 
-            {submenuDadosAberto && (
+            {submenuRelatoriosAberto && (
               <div className="d-flex flex-column gap-2 ms-3 border-start ps-2">
+                <button className="btn btn-light text-start fw-bold p-2 shadow-sm text-primary" data-bs-toggle="modal" data-bs-target="#modalRelatoriosGerenciais">
+                  <i className="bi bi-funnel me-2"></i> Relatório por agrupamento
+                </button>
+                
+                <hr className="my-2 text-muted" />
+                
                 <button className="btn btn-light text-start fw-bold p-2 shadow-sm text-success" onClick={exportarJSON}>
-                  <i className="bi bi-download me-2"></i> Exportar (JSON)
+                  <i className="bi bi-download me-2"></i> Exportar Dados (JSON)
                 </button>
                 <button className="btn btn-light text-start fw-bold p-2 shadow-sm text-success" onClick={() => document.getElementById('importarJsonInput').click()}>
-                  <i className="bi bi-upload me-2"></i> Importar (JSON)
+                  <i className="bi bi-upload me-2"></i> Importar Dados (JSON)
                 </button>
                 <input type="file" id="importarJsonInput" accept=".json" style={{ display: 'none' }} onChange={importarJSON} />
 
-                <button className="btn btn-light text-start fw-bold p-2 shadow-sm text-primary mt-2" onClick={exportarCSV}>
-                  <i className="bi bi-file-earmark-excel me-2"></i> Exportar (CSV)
-                </button>
-                <button className="btn btn-light text-start fw-bold p-2 shadow-sm text-primary" onClick={() => document.getElementById('importarCsvInput').click()}>
-                  <i className="bi bi-file-earmark-arrow-up me-2"></i> Importar (CSV)
+                <button className="btn btn-light text-start fw-bold p-2 shadow-sm text-secondary" onClick={() => document.getElementById('importarCsvInput').click()}>
+                  <i className="bi bi-file-earmark-arrow-up me-2"></i> Importar do Excel (CSV)
                 </button>
                 <input type="file" id="importarCsvInput" accept=".csv" style={{ display: 'none' }} onChange={importarCSV} />
                 
-                <hr className="my-2 text-muted" />
                 <button className="btn btn-light text-start fw-bold p-2 shadow-sm text-info" onClick={baixarModeloCSV}>
                   <i className="bi bi-file-earmark-spreadsheet me-2"></i> Baixar Modelo (CSV)
                 </button>
@@ -1109,10 +1194,10 @@ function App() {
         <i className="bi bi-box-arrow-right fs-5"></i>
       </button>
 
-      <div onClick={rolarParaTopo} className={`btn-floating-top ${showTopBtn ? 'visible' : ''} ${telaAtiva === 'avaliacao' ? 'empurrado' : ''} d-print-none`}>
+      <div onClick={rolarParaTopo} className={`btn-floating-top ${showTopBtn ? 'visible' : ''} ${telaAtiva === 'avaliacao' || telaAtiva === 'relatorio_agrupado' ? 'empurrado' : ''} d-print-none`}>
         <i className="bi bi-rocket-fill"></i>
       </div>
-      <div onClick={rolarParaFundo} className={`btn-floating-bottom ${showBottomBtn ? 'visible' : ''} ${telaAtiva === 'avaliacao' ? 'empurrado' : ''} d-print-none`}>
+      <div onClick={rolarParaFundo} className={`btn-floating-bottom ${showBottomBtn ? 'visible' : ''} ${telaAtiva === 'avaliacao' || telaAtiva === 'relatorio_agrupado' ? 'empurrado' : ''} d-print-none`}>
         <i className="bi bi-arrow-down-square-fill"></i>
       </div>
       {telaAtiva === 'avaliacao' && (
@@ -1352,7 +1437,7 @@ function App() {
           </div>
         )}
 
-        {/* === TELA 3: AVALIAÇÃO DETALHADA === */}
+        {/* === TELA 3: AVALIAÇÃO DETALHADA (TELA) === */}
         {telaAtiva === 'avaliacao' && entidadeEditando && (
           <div className="fade-screen show">
             <div className="d-flex justify-content-between align-items-center mb-4">
@@ -1385,7 +1470,6 @@ function App() {
                   </div>
                 </div>
                 
-                {/* --- AVISO DE MARGEM DE ERRO NA TELA --- */}
                 <div className="alert alert-warning py-2 m-0 small d-flex align-items-center justify-content-center text-start border-0 shadow-sm" style={{ borderRadius: '10px' }}>
                     <i className="bi bi-exclamation-triangle-fill me-2 fs-5"></i>
                     <span><strong>Aviso:</strong> Por se tratar de uma simulação (metodologia Atricon), o resultado final pode apresentar variação de até <strong>±1,5%</strong>.</span>
@@ -1451,7 +1535,7 @@ function App() {
               })}
             </div>
 
-            <div className="mt-5 mb-4 text-center d-print-none">
+            <div className="mt-5 mb-4 text-center">
                 <button onClick={finalizarAvaliacao} className="btn btn-success btn-lg fw-bold shadow border-0 px-5 rounded-pill" style={{ padding: '15px 30px', fontSize: '1.1rem' }}>
                     <i className="bi bi-check-circle-fill me-2"></i> Confirmar e Salvar Avaliação
                 </button>
@@ -1460,6 +1544,68 @@ function App() {
           </div>
         )}
 
+        {/* === TELA 4: RELATÓRIO AGRUPADO EM PDF (VISUALIZAÇÃO NA TELA) === */}
+        {telaAtiva === 'relatorio_agrupado' && (
+          <div className="fade-screen show pb-5">
+            <div className="mb-4 d-flex justify-content-between align-items-center d-print-none">
+              <button onClick={() => { setTelaAtiva('lista'); window.scrollTo(0,0); }} className="btn btn-light border shadow-sm fw-bold">
+                <i className="bi bi-arrow-left me-2"></i> Voltar para o Painel
+              </button>
+              <button onClick={() => window.print()} className="btn btn-danger shadow-sm fw-bold">
+                <i className="bi bi-printer-fill me-2"></i> Imprimir Relatório
+              </button>
+            </div>
+
+            <div className="card shadow-sm border-0 dark-card-target">
+              <div className="card-body p-4 p-md-5">
+                <div className="text-center mb-4 border-bottom pb-3">
+                  <h3 className="fw-bold m-0 text-primary">Relatório de Agrupamento</h3>
+                  <h5 className="text-muted">Simulador de Transparência - Atricon 2026</h5>
+                  <div className="mt-3 d-flex justify-content-center gap-4 text-muted small">
+                      <span><b>Data:</b> {new Date().toLocaleDateString('pt-BR')}</span>
+                      <span><b>Filtro Aplicado:</b> {relTipo === 'todos' ? 'Todos os Registros' : `${relTipo.toUpperCase()} - ${relValor.toUpperCase()}`}</span>
+                  </div>
+                </div>
+
+                <div className="table-responsive">
+                  <table className="table table-bordered table-sm align-middle text-center" style={{ fontSize: '0.85rem' }}>
+                    <thead className="table-light">
+                      <tr>
+                        <th className="text-start">Entidade</th>
+                        <th>Operador</th>
+                        <th>Controlador</th>
+                        <th>Telefone</th>
+                        <th>Selo Projetado</th>
+                        <th>Nota (%)</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {dadosRelatorioAgrupado.map(ent => (
+                        <tr key={ent.id}>
+                          <td className="text-start fw-bold text-wrap" style={{ maxWidth: '200px' }}>{ent.nome}</td>
+                          <td>{ent.operador}</td>
+                          <td className="text-wrap" style={{ maxWidth: '150px' }}>{ent.controlador || '---'}</td>
+                          <td>{ent.telefone || '---'}</td>
+                          <td>
+                              <span className={`badge selo-${normalizarTexto(ent.selo)} w-100`}>{ent.selo}</span>
+                          </td>
+                          <td className="fw-bold">{ent.perc}%</td>
+                        </tr>
+                      ))}
+                      {dadosRelatorioAgrupado.length === 0 && (
+                        <tr>
+                          <td colSpan="6" className="text-center py-4 text-muted">Nenhum registro encontrado para o filtro selecionado.</td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* FOOTER Padrão (Não aparece no print) */}
         <footer className="mt-4 text-center text-muted small border-top pt-3 mb-2">
           <span><b>{entidadesAvaliadas}</b> avaliadas de {totalNoBanco} entidades</span> <br/>
           <span>© 2026 TD2 - Simulador de Transparência Atricon</span>
@@ -1467,109 +1613,255 @@ function App() {
       </main>
 
       {/* ===================================================================
-          A MÁGICA: LAYOUT INVISÍVEL PARA IMPRESSÃO DO PDF
+          A MÁGICA: LAYOUTS EXCLUSIVOS PARA O PDF (QUE SÓ APARECEM NA IMPRESSÃO)
+          FORA DA TAG <MAIN> PARA NÃO SEREM ESCONDIDOS
           =================================================================== */}
-      {telaAtiva === 'avaliacao' && entidadeEditando && (
-        <div className="d-none d-print-block" style={{ width: '100%', backgroundColor: 'white', color: 'black' }}>
-            <div className="text-center mb-4" style={{ borderBottom: '2px solid #000', paddingBottom: '10px' }}>
-                
-                {bancoDeDados[entidadeEditando].logo && (
-                    <img src={bancoDeDados[entidadeEditando].logo} alt="Logo" style={{ maxHeight: '100px', marginBottom: '15px' }} />
-                )}
+      
+      <div className="d-none d-print-block w-100 bg-white text-dark">
+        {/* IMPRESSÃO: PDF DA ENTIDADE INDIVIDUAL */}
+        {telaAtiva === 'avaliacao' && entidadeEditando && (
+            <div>
+                <div className="text-center mb-4" style={{ borderBottom: '2px solid #000', paddingBottom: '10px' }}>
+                    
+                    {bancoDeDados[entidadeEditando].logo && (
+                        <img src={bancoDeDados[entidadeEditando].logo} alt="Logo" style={{ maxHeight: '100px', marginBottom: '15px' }} />
+                    )}
 
-                <h3 className="fw-bold m-0">{bancoDeDados[entidadeEditando].nome}</h3>
-                <h5 className="text-muted">Relatório de Simulação - PNTP Atricon</h5>
-                <div className="mt-3 d-flex justify-content-around">
-                    <span><b>Data:</b> {new Date().toLocaleDateString('pt-BR')}</span>
-                    <span><b>Controlador:</b> {bancoDeDados[entidadeEditando].controlador || 'Não informado'}</span>
-                </div>
-            </div>
-
-            <div className="mb-4 p-3 bg-light rounded text-center" style={{ border: '1px solid #ccc' }}>
-                <h5 className="m-0">
-                    Selo Projetado: <b>{bancoDeDados[entidadeEditando].selo}</b> <br/>
-                    Aderência aos Critérios: <b>{bancoDeDados[entidadeEditando].perc}%</b>
-                </h5>
-                
-                {/* --- AVISO DE MARGEM DE ERRO NO PDF --- */}
-                <p className="mt-2 mb-0 small text-danger fw-bold">
-                    * Nota de Simulação: A pontuação pode variar em até ±1,5% em relação à avaliação oficial.
-                </p>
-            </div>
-
-            <h5 className="fw-bold mb-3">Critérios Avaliados ({filtroRelatorio === 'todos' ? 'Todos' : filtroRelatorio === 'atendendo' ? 'Atendidos' : 'Pendentes'})</h5>
-
-            {GRUPOS_CRITERIOS.map((grupo, idx) => {
-                const ehCamara = normalizarTexto(bancoDeDados[entidadeEditando].nome).includes('camara');
-                const num = parseInt(grupo.titulo);
-                if (ehCamara && [16, 17, 18, 19].includes(num)) return null;
-                if (!ehCamara && num === 20) return null;
-
-                const itensFiltrados = grupo.itens.filter(item => {
-                    const atende = verificaSeAtende(item, bancoDeDados[entidadeEditando].marcados);
-                    if (filtroRelatorio === 'atendendo') return atende;
-                    if (filtroRelatorio === 'nao_atendendo') return !atende;
-                    return true;
-                });
-
-                if (itensFiltrados.length === 0) return null;
-
-                return (
-                    <div key={idx} className="print-avoid-break mb-4">
-                        <div className="p-2 fw-bold text-white bg-dark mb-2" style={{ backgroundColor: '#000 !important', WebkitPrintColorAdjust: 'exact', printColorAdjust: 'exact' }}>
-                            {grupo.titulo}
-                        </div>
-                        <table className="table table-sm table-bordered">
-                            <thead>
-                                <tr className="bg-light">
-                                    <th style={{ width: '8%' }}>ID</th>
-                                    <th>Critério</th>
-                                    <th style={{ width: '15%' }}>Tipo</th>
-                                    <th className="text-center" style={{ width: '15%' }}>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {itensFiltrados.map(item => {
-                                    const atende = verificaSeAtende(item, bancoDeDados[entidadeEditando].marcados);
-                                    return (
-                                        <tr key={item.id}>
-                                            <td><b>{item.id}</b></td>
-                                            <td>{item.nome}</td>
-                                            <td className="text-capitalize">{item.classificacao}</td>
-                                            <td className="text-center fw-bold" style={{ color: atende ? 'green' : 'red' }}>
-                                                {atende ? 'Atende ✓' : 'Não Atende ✗'}
-                                            </td>
-                                        </tr>
-                                    );
-                                })}
-                            </tbody>
-                        </table>
+                    <h3 className="fw-bold m-0 text-dark">{bancoDeDados[entidadeEditando].nome}</h3>
+                    <h5 className="text-secondary">Relatório de Simulação - PNTP Atricon</h5>
+                    <div className="mt-3 d-flex justify-content-around text-dark">
+                        <span><b>Data:</b> {new Date().toLocaleDateString('pt-BR')}</span>
+                        <span><b>Controlador:</b> {bancoDeDados[entidadeEditando].controlador || 'Não informado'}</span>
                     </div>
-                );
-            })}
-
-            <div className="mt-5 pt-5 text-center" style={{ pageBreakInside: 'avoid' }}>
-                <div className="d-flex justify-content-center mb-2">
-                    <div style={{ width: '250px', borderTop: '1px solid #000' }}></div>
                 </div>
-                <p className="fw-bold mb-4">{bancoDeDados[entidadeEditando].operador} (Operador Responsável)</p>
-                
-                <p className="text-muted small mb-0">
-                    Gerado pelo <b>Simulador de Avaliação Atricon 2026 - TD2</b>
-                </p>
-                <p className="text-muted small">
-                    Data de emissão: {new Date().toLocaleDateString('pt-BR')} às {new Date().toLocaleTimeString('pt-BR')}
-                </p>
-            </div>
 
-        </div>
-      )}
+                <div className="mb-4 p-3 bg-light rounded text-center" style={{ border: '1px solid #ccc' }}>
+                    <h5 className="m-0 text-dark">
+                        Selo Projetado: <b>{bancoDeDados[entidadeEditando].selo}</b> <br/>
+                        Aderência aos Critérios: <b>{bancoDeDados[entidadeEditando].perc}%</b>
+                    </h5>
+                    
+                    <p className="mt-2 mb-0 small text-danger fw-bold">
+                        * Nota de Simulação: A pontuação pode variar em até ±1,5% em relação à avaliação oficial.
+                    </p>
+                </div>
+
+                <h5 className="fw-bold mb-3 text-dark">Critérios Avaliados ({filtroRelatorio === 'todos' ? 'Todos' : filtroRelatorio === 'atendendo' ? 'Atendidos' : 'Pendentes'})</h5>
+
+                {GRUPOS_CRITERIOS.map((grupo, idx) => {
+                    const ehCamara = normalizarTexto(bancoDeDados[entidadeEditando].nome).includes('camara');
+                    const num = parseInt(grupo.titulo);
+                    if (ehCamara && [16, 17, 18, 19].includes(num)) return null;
+                    if (!ehCamara && num === 20) return null;
+
+                    const itensFiltrados = grupo.itens.filter(item => {
+                        const atende = verificaSeAtende(item, bancoDeDados[entidadeEditando].marcados);
+                        if (filtroRelatorio === 'atendendo') return atende;
+                        if (filtroRelatorio === 'nao_atendendo') return !atende;
+                        return true;
+                    });
+
+                    if (itensFiltrados.length === 0) return null;
+
+                    return (
+                        <div key={idx} className="print-avoid-break mb-4">
+                            <div className="p-2 fw-bold text-white bg-dark mb-2" style={{ backgroundColor: '#000 !important', WebkitPrintColorAdjust: 'exact', printColorAdjust: 'exact' }}>
+                                {grupo.titulo}
+                            </div>
+                            <table className="table table-sm table-bordered">
+                                <thead>
+                                    <tr className="bg-light">
+                                        <th style={{ width: '8%' }} className="text-dark">ID</th>
+                                        <th className="text-dark">Critério</th>
+                                        <th style={{ width: '15%' }} className="text-dark">Tipo</th>
+                                        <th className="text-center text-dark" style={{ width: '15%' }}>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {itensFiltrados.map(item => {
+                                        const atende = verificaSeAtende(item, bancoDeDados[entidadeEditando].marcados);
+                                        return (
+                                            <tr key={item.id}>
+                                                <td className="text-dark"><b>{item.id}</b></td>
+                                                <td className="text-dark">{item.nome}</td>
+                                                <td className="text-capitalize text-dark">{item.classificacao}</td>
+                                                <td className="text-center fw-bold" style={{ color: atende ? 'green' : 'red' }}>
+                                                    {atende ? 'Atende ✓' : 'Não Atende ✗'}
+                                                </td>
+                                            </tr>
+                                        );
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
+                    );
+                })}
+
+                <div className="mt-5 pt-5 text-center text-dark" style={{ pageBreakInside: 'avoid' }}>
+                    <div className="d-flex justify-content-center mb-2">
+                        <div style={{ width: '250px', borderTop: '1px solid #000' }}></div>
+                    </div>
+                    <p className="fw-bold mb-4">{bancoDeDados[entidadeEditando].operador} (Operador Responsável)</p>
+                    
+                    <p className="text-secondary small mb-0">
+                        Gerado pelo <b>Simulador de Avaliação Atricon 2026 - TD2</b>
+                    </p>
+                    <p className="text-secondary small">
+                        Data de emissão: {new Date().toLocaleDateString('pt-BR')} às {new Date().toLocaleTimeString('pt-BR')}
+                    </p>
+                </div>
+            </div>
+        )}
+
+        {/* IMPRESSÃO: PDF DO RELATÓRIO AGRUPADO */}
+        {telaAtiva === 'relatorio_agrupado' && (
+            <div>
+                <div className="text-center mb-4 border-bottom pb-3">
+                    <h3 className="fw-bold m-0 text-dark">Relatório de Agrupamento - PNTP Atricon</h3>
+                    <div className="mt-3 d-flex justify-content-around text-dark">
+                        <span><b>Data:</b> {new Date().toLocaleDateString('pt-BR')}</span>
+                        <span><b>Filtro Aplicado:</b> {relTipo === 'todos' ? 'Todos os Registros' : `${relTipo.toUpperCase()} - ${relValor.toUpperCase()}`}</span>
+                    </div>
+                </div>
+
+                <table className="table table-bordered table-sm align-middle text-center" style={{ fontSize: '0.85rem' }}>
+                    <thead className="table-light">
+                        <tr>
+                        <th className="text-start text-dark">Entidade</th>
+                        <th className="text-dark">Operador</th>
+                        <th className="text-dark">Controlador</th>
+                        <th className="text-dark">Telefone</th>
+                        <th className="text-dark">Selo Projetado</th>
+                        <th className="text-dark">Nota (%)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {dadosRelatorioAgrupado.map(ent => (
+                        <tr key={ent.id}>
+                            <td className="text-start fw-bold text-dark">{ent.nome}</td>
+                            <td className="text-dark">{ent.operador}</td>
+                            <td className="text-dark">{ent.controlador || '---'}</td>
+                            <td className="text-dark">{ent.telefone || '---'}</td>
+                            <td className="text-dark fw-bold">{ent.selo}</td>
+                            <td className="fw-bold text-dark">{ent.perc}%</td>
+                        </tr>
+                        ))}
+                        {dadosRelatorioAgrupado.length === 0 && (
+                        <tr>
+                            <td colSpan="6" className="text-center py-4 text-muted">Nenhum registro encontrado.</td>
+                        </tr>
+                        )}
+                    </tbody>
+                </table>
+
+                <div className="mt-5 text-center text-dark" style={{ pageBreakInside: 'avoid' }}>
+                    <p className="text-secondary small mb-0">
+                        Gerado pelo <b>Simulador de Avaliação Atricon 2026 - TD2</b>
+                    </p>
+                    <p className="text-secondary small">
+                        Data de emissão: {new Date().toLocaleDateString('pt-BR')} às {new Date().toLocaleTimeString('pt-BR')}
+                    </p>
+                </div>
+            </div>
+        )}
+      </div>
 
       {/* ===================================================================
           MODAIS DO SISTEMA (ESCONDIDOS NA IMPRESSÃO)
           =================================================================== */}
       
-      {/* 0. MODAL GERAÇÃO DE RELATÓRIO PDF */}
+      {/* 0. MODAL DE RELATÓRIO POR AGRUPAMENTO (PDF E CSV) */}
+      <div className="modal fade d-print-none" id="modalRelatoriosGerenciais" tabIndex="-1" aria-hidden="true">
+        <div className="modal-dialog modal-dialog-centered">
+          <div className="modal-content border-0 shadow-lg">
+            <div className="modal-header bg-success text-white border-0">
+              <h5 className="modal-title fw-bold"><i className="bi bi-funnel-fill me-2"></i> Relatório por agrupamento</h5>
+              <button type="button" className="btn-close btn-close-white" data-bs-dismiss="modal" id="btnFecharModalRelatoriosGerenciais"></button>
+            </div>
+            <div className="modal-body p-4">
+                <p className="text-muted small mb-4">Escolha os filtros abaixo para gerar um relatório em PDF ou planillha Excel (CSV) contendo apenas os dados desejados.</p>
+                
+                <div className="mb-3">
+                    <label className="form-label fw-bold">Tipo de Relatório</label>
+                    <select className="form-select" value={relTipo} onChange={(e) => setRelTipo(e.target.value)}>
+                        <option value="todos">Todos os Registros</option>
+                        <option value="operador">Por Operador</option>
+                        <option value="selo">Por Selo Projetado</option>
+                        <option value="controlador">Por Situação do Controlador</option>
+                        <option value="poder">Por Poder (Executivo/Legislativo)</option>
+                    </select>
+                </div>
+
+                {relTipo === 'operador' && (
+                    <div className="mb-3">
+                        <label className="form-label fw-bold">Selecione o Operador</label>
+                        <select className="form-select" value={relValor} onChange={(e) => setRelValor(e.target.value)}>
+                            <option value="todos">Todos</option>
+                            <option value="CLEYDIR">CLEYDIR</option>
+                            <option value="DAVI">DAVI</option>
+                            <option value="FELIPE">FELIPE</option>
+                            <option value="JOÃO">JOÃO</option>
+                            <option value="KAIKE">KAIKE</option>
+                            <option value="KAIRON">KAIRON</option>
+                        </select>
+                    </div>
+                )}
+
+                {relTipo === 'selo' && (
+                    <div className="mb-3">
+                        <label className="form-label fw-bold">Selecione o Selo</label>
+                        <select className="form-select" value={relValor} onChange={(e) => setRelValor(e.target.value)}>
+                            <option value="todos">Todos</option>
+                            <option value="DIAMANTE">DIAMANTE</option>
+                            <option value="OURO">OURO</option>
+                            <option value="PRATA">PRATA</option>
+                            <option value="ELEVADO">ELEVADO</option>
+                            <option value="INTERMEDIARIO">INTERMEDIARIO</option>
+                            <option value="BASICO">BÁSICO</option>
+                            <option value="INICIAL">INICIAL</option>
+                            <option value="INEXISTENTE">INEXISTENTE</option>
+                        </select>
+                    </div>
+                )}
+
+                {relTipo === 'controlador' && (
+                    <div className="mb-3">
+                        <label className="form-label fw-bold">Situação</label>
+                        <select className="form-select" value={relValor} onChange={(e) => setRelValor(e.target.value)}>
+                            <option value="todos">Todos</option>
+                            <option value="com">Com Controlador Cadastrado</option>
+                            <option value="sem">Sem Controlador Cadastrado</option>
+                        </select>
+                    </div>
+                )}
+
+                {relTipo === 'poder' && (
+                    <div className="mb-3">
+                        <label className="form-label fw-bold">Poder / Esfera</label>
+                        <select className="form-select" value={relValor} onChange={(e) => setRelValor(e.target.value)}>
+                            <option value="todos">Todos</option>
+                            <option value="executivo">Executivo (Prefeituras)</option>
+                            <option value="legislativo">Legislativo (Câmaras)</option>
+                        </select>
+                    </div>
+                )}
+            </div>
+            <div className="modal-footer border-0 pt-0 d-flex flex-wrap justify-content-between">
+              <button type="button" className="btn btn-light shadow-sm mb-2" data-bs-dismiss="modal">Cancelar</button>
+              <div className="d-flex gap-2 mb-2">
+                  <button type="button" className="btn btn-danger shadow-sm fw-bold" data-bs-dismiss="modal" onClick={gerarRelatorioGerencialPDF}>
+                      <i className="bi bi-file-earmark-pdf me-1"></i> Gerar PDF
+                  </button>
+                  <button type="button" className="btn btn-success shadow-sm fw-bold" data-bs-dismiss="modal" onClick={gerarRelatorioGerencialCSV}>
+                      <i className="bi bi-file-earmark-excel me-1"></i> Baixar CSV
+                  </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 0.5 MODAL GERAÇÃO DE RELATÓRIO PDF (POR ENTIDADE) */}
       <div className="modal fade d-print-none" id="modalRelatorio" tabIndex="-1" aria-hidden="true">
         <div className="modal-dialog modal-dialog-centered">
           <div className="modal-content border-0 shadow-lg">
@@ -1593,7 +1885,7 @@ function App() {
             </div>
             <div className="modal-footer border-0 pt-0">
               <button type="button" className="btn btn-light shadow-sm" data-bs-dismiss="modal">Cancelar</button>
-              <button type="button" className="btn btn-danger shadow-sm fw-bold" onClick={imprimirPDF}>Gerar / Imprimir</button>
+              <button type="button" className="btn btn-danger shadow-sm fw-bold" data-bs-dismiss="modal" onClick={imprimirPDF}>Gerar / Imprimir</button>
             </div>
           </div>
         </div>
