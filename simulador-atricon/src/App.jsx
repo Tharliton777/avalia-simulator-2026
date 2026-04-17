@@ -185,7 +185,7 @@ const GRUPOS_CRITERIOS = [
             { id: "16.1", nome: "Divulga as desonerações tributárias concedidas?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
             { id: "16.2", nome: "Divulga os valores da renúncia fiscal prevista e realizada?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
             { id: "16.3", nome: "Identifica os beneficiários das desonerações tributárias?", classificacao: "recomendada", exige: ['d', 'a', 's', 'g', 'f'] },
-            { id: "16.4", nome: "Divulga informações sobre projects de incentivo à cultura e esportes?", classificacao: "recomendada", exige: ['d', 'a', 's', 'g', 'f'] }
+            { id: "16.4", nome: "Divulga informações sobre projetos de incentivo à cultura e esportes?", classificacao: "recomendada", exige: ['d', 'a', 's', 'g', 'f'] }
         ]
     },
     {
