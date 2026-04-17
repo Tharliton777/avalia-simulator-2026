@@ -5,227 +5,227 @@ import { auth, db } from './firebase';
 import './index.css';
 
 // ============================================================================
-// 1. DADOS ORIGINAIS
+// 1. DADOS ORIGINAIS COM EXIGÊNCIAS ATUALIZADAS (D, A, S, G, F)
 // ============================================================================
 const GRUPOS_CRITERIOS = [
     {
         titulo: "1. Informações Prioritárias", pesoDimensao: 2,
         itens: [
-            { id: "1.1", nome: "Possui sítio oficial próprio na internet?", classificacao: "essencial", exige: ['g'] },
-            { id: "1.2", nome: "Possui portal da transparência próprio ou compartilhado na internet?", classificacao: "essencial", exige: ['g'] },
-            { id: "1.3", nome: "O acesso ao portal transparência está visível na capa do site?", classificacao: "obrigatoria", exige: ['g'] },
-            { id: "1.4", nome: "O site e o portal de transparência contêm ferramenta de pesquisa de conteúdo que permita o acesso à informação?", classificacao: "obrigatoria", exige: ['g'] }
+            { id: "1.1", nome: "Possui sítio oficial próprio na internet?", classificacao: "essencial", exige: ['d'] },
+            { id: "1.2", nome: "Possui portal da transparência próprio ou compartilhado na internet?", classificacao: "essencial", exige: ['d'] },
+            { id: "1.3", nome: "O acesso ao portal transparência está visível na capa do site?", classificacao: "obrigatoria", exige: ['d'] },
+            { id: "1.4", nome: "O site e o portal de transparência contêm ferramenta de pesquisa de conteúdo que permita o acesso à informação?", classificacao: "obrigatoria", exige: ['d'] }
         ]
     },
     {
         titulo: "2. Informações Institucionais", pesoDimensao: 2,
         itens: [
-            { id: "2.1", nome: "Divulga a sua estrutura organizacional e a norma que a institui/altera?", classificacao: "obrigatoria", exige: ['g'] },
-            { id: "2.2", nome: "Divulga competências e/ou atribuições?", classificacao: "obrigatoria", exige: ['g'] },
-            { id: "2.3", nome: "Identifica o nome dos atuais responsáveis pela gestão do Poder/Órgão?", classificacao: "obrigatoria", exige: ['g'] },
-            { id: "2.4", nome: "Divulga os endereços e telefones atuais do Poder ou órgão e e-mails institucionais?", classificacao: "obrigatoria", exige: ['g'] },
-            { id: "2.5", nome: "Divulga o horário de atendimento?", classificacao: "obrigatoria", exige: ['g'] },
-            { id: "2.6", nome: "Divulga os atos normativos próprios?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
-            { id: "2.7", nome: "Divulga as perguntas e respostas mais frequentes relacionadas às atividades desenvolvidas?", classificacao: "obrigatoria", exige: ['g'] },
-            { id: "2.8", nome: "Participa em redes sociais e apresenta link de acesso ao seu perfil?", classificacao: "recomendada", exige: ['g'] },
-            { id: "2.9", nome: "Inclui botão do Radar da Transparência Pública no site ou portal?", classificacao: "recomendada", exige: ['g'] }
+            { id: "2.1", nome: "Divulga a sua estrutura organizacional e a norma que a institui/altera?", classificacao: "obrigatoria", exige: ['d'] },
+            { id: "2.2", nome: "Divulga competências e/ou atribuições?", classificacao: "obrigatoria", exige: ['d'] },
+            { id: "2.3", nome: "Identifica o nome dos atuais responsáveis pela gestão do Poder/Órgão?", classificacao: "obrigatoria", exige: ['d'] },
+            { id: "2.4", nome: "Divulga os endereços e telefones atuais do Poder ou órgão e e-mails institucionais?", classificacao: "obrigatoria", exige: ['d'] },
+            { id: "2.5", nome: "Divulga o horário de atendimento?", classificacao: "obrigatoria", exige: ['d'] },
+            { id: "2.6", nome: "Divulga os atos normativos próprios?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
+            { id: "2.7", nome: "Divulga as perguntas e respostas mais frequentes relacionadas às atividades desenvolvidas?", classificacao: "obrigatoria", exige: ['d'] },
+            { id: "2.8", nome: "Participa em redes sociais e apresenta link de acesso ao seu perfil?", classificacao: "recomendada", exige: ['d'] },
+            { id: "2.9", nome: "Inclui botão do Radar da Transparência Pública no site ou portal?", classificacao: "recomendada", exige: ['d'] }
         ]
     },
     {
         titulo: "3. Receitas", pesoDimensao: 4,
         itens: [
-            { id: "3.1", nome: "Divulga as receitas do Poder ou órgão, evidenciando sua previsão e realização?", classificacao: "essencial", exige: ['g', 's', 'a'] },
-            { id: "3.2", nome: "Divulga a classification orçamentária por natureza da receita?", classificacao: "essencial", exige: ['g', 's', 'a'] },
-            { id: "3.3", nome: "Divulga a lista dos inscritos em dívida ativa?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] }
+            { id: "3.1", nome: "Divulga as receitas do Poder ou órgão, evidenciando sua previsão e realização?", classificacao: "essencial", exige: ['d', 'a', 's', 'g', 'f'] },
+            { id: "3.2", nome: "Divulga a classification orçamentária por natureza da receita?", classificacao: "essencial", exige: ['d', 'a', 's', 'g', 'f'] },
+            { id: "3.3", nome: "Divulga a lista dos inscritos em dívida ativa?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] }
         ]
     },
     {
         titulo: "4. Despesas", pesoDimensao: 4,
         itens: [
-            { id: "4.1", nome: "Divulga o total das despesas empenhadas, liquidadas e pagas?", classificacao: "essencial", exige: ['g', 's', 'a'] },
-            { id: "4.2", nome: "Divulga as despesas por classification orçamentária?", classificacao: "essencial", exige: ['g', 's', 'a'] },
-            { id: "4.3", nome: "Possibilita a consulta de empenhos com detalhes do beneficiário, valor, objeto e licitação originária?", classificacao: "essencial", exige: ['g', 's', 'a'] },
-            { id: "4.4", nome: "Publica relação das despesas com aquisições de bens efetuadas pela instituição contendo: identificação do bem, preço unitário, quantidade, nome do fornecedor e valor total de cada aquisição?", classificacao: "recomendada", exige: ['g', 's', 'a'] },
-            { id: "4.5", nome: "Publica informações sobre despesas de patrocínio?", classificacao: "recomendada", exige: ['g', 's', 'a'] },
-            { id: "4.6", nome: "Publica informações detalhadas sobre a execution dos contratos de publicidade, com nomes dos fornecedores de completion de serviços especializados e veículos, bem como informações sobre os totais de valores pagos para cada tipo de serviço e meio de divulgação?", classificacao: "recomendada", exige: ['g', 's', 'a'] }
+            { id: "4.1", nome: "Divulga o total das despesas empenhadas, liquidadas e pagas?", classificacao: "essencial", exige: ['d', 'a', 's', 'g', 'f'] },
+            { id: "4.2", nome: "Divulga as despesas por classification orçamentária?", classificacao: "essencial", exige: ['d', 'a', 's', 'g', 'f'] },
+            { id: "4.3", nome: "Possibilita a consulta de empenhos com detalhes do beneficiário, valor, objeto e licitação originária?", classificacao: "essencial", exige: ['d', 'a', 's', 'g', 'f'] },
+            { id: "4.4", nome: "Publica relação das despesas com aquisições de bens efetuadas pela instituição contendo: identificação do bem, preço unitário, quantidade, nome do fornecedor e valor total de cada aquisição?", classificacao: "recomendada", exige: ['d', 'a', 's', 'g', 'f'] },
+            { id: "4.5", nome: "Publica informações sobre despesas de patrocínio?", classificacao: "recomendada", exige: ['d', 'a', 's', 'g', 'f'] },
+            { id: "4.6", nome: "Publica informações detalhadas sobre a execution dos contratos de publicidade, com nomes dos fornecedores de completion de serviços especializados e veículos, bem como informações sobre os totais de valores pagos para cada tipo de serviço e meio de divulgação?", classificacao: "recomendada", exige: ['d', 'a', 's', 'g', 'f'] }
         ]
     },
     {
         titulo: "5. Convênios e Transferências", pesoDimensao: 1,
         itens: [
-            { id: "5.1", nome: "Divulga as transferências recebidas (convênios/acordos)?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
-            { id: "5.2", nome: "Divulga as transferências realizadas (convênios/acordos)?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
-            { id: "5.3", nome: "Divulga os acordos firmados que não envolvam transferência de recursos financeiros?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] }
+            { id: "5.1", nome: "Divulga as transferências recebidas (convênios/acordos)?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
+            { id: "5.2", nome: "Divulga as transferências realizadas (convênios/acordos)?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
+            { id: "5.3", nome: "Divulga os acordos firmados que não envolvam transferência de recursos financeiros?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] }
         ]
     },
     {
         titulo: "6. Recursos Humanos", pesoDimensao: 3,
         itens: [
-            { id: "6.1", nome: "Divulga a relação nominal dos servidores/autoridades/membros, seus cargos, lotações e horários?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
-            { id: "6.2", nome: "Divulga a remuneração nominal de cada servidor/autoridade/Membro?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
-            { id: "6.3", nome: "Divulga a tabela com o padrão remuneratório dos cargos e funções?", classificacao: "obrigatoria", exige: ['g', 's'] },
-            { id: "6.4", nome: "Divulga a lista de seus estagiários (nome, datas de contratação e término)?", classificacao: "recomendada", exige: ['g', 's', 'a'] },
-            { id: "6.5", nome: "Publica lista dos terceirizados (nome, função e empresa empregadora)?", classificacao: "recomendada", exige: ['g', 's', 'a'] },
-            { id: "6.6", nome: "Divulga a íntegra dos editais de concursos e seleções públicas?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
-            { id: "6.7", nome: "Divulga informações sobre os demais atos dos concursos públicos e processos seletivos do Poder ou órgão, contendo no mínimo a lista de aprovados com as classificações e as nomeações?", classificacao: "obrigatoria", exige: ['g', 's'] }
+            { id: "6.1", nome: "Divulga a relação nominal dos servidores/autoridades/membros, seus cargos, lotações e horários?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
+            { id: "6.2", nome: "Divulga a remuneração nominal de cada servidor/autoridade/Membro?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
+            { id: "6.3", nome: "Divulga a tabela com o padrão remuneratório dos cargos e funções?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
+            { id: "6.4", nome: "Divulga a lista de seus estagiários (nome, datas de contratação e término)?", classificacao: "recomendada", exige: ['d', 'a', 's', 'g', 'f'] },
+            { id: "6.5", nome: "Publica lista dos terceirizados (nome, função e empresa empregadora)?", classificacao: "recomendada", exige: ['d', 'a', 's', 'g', 'f'] },
+            { id: "6.6", nome: "Divulga a íntegra dos editais de concursos e seleções públicas?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
+            { id: "6.7", nome: "Divulga informações sobre os demais atos dos concursos públicos e processos seletivos do Poder ou órgão, contendo no mínimo a lista de aprovados com as classificações e as nomeações?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] }
         ]
     },
     {
         titulo: "7. Diárias", pesoDimensao: 1,
         itens: [
-            { id: "7.1", nome: "Divulga nome, cargo, valor, período, motivo e destino do afastamento?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
-            { id: "7.2", nome: "Divulga tabela com os valores das diárias?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] }
+            { id: "7.1", nome: "Divulga nome, cargo, valor, período, motivo e destino do afastamento?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
+            { id: "7.2", nome: "Divulga tabela com os valores das diárias?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] }
         ]
     },
     {
         titulo: "8. Licitações", pesoDimensao: 3,
         itens: [
-            { id: "8.1", nome: "Divulga a relação das licitações (número, modalidade, objeto, data, valor e situação)?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
-            { id: "8.2", nome: "Divulga a íntegra dos editais de licitação?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
-            { id: "8.3", nome: "Divulga a íntegra dos demais documentos das fases interna e externa?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
-            { id: "8.4", nome: "Divulga a íntegra dos principais documentos dos processes de dispensa e inexigibilidade?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
-            { id: "8.5", nome: "Divulga a íntegra das Atas de Adesão – SRP?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
-            { id: "8.6", nome: "Divulga o plano de contratações anual?", classificacao: "recomendada", exige: ['g', 's'] },
-            { id: "8.7", nome: "Divulga a relação dos licitantes e/ou contratados sancionados?", classificacao: "recomendada", exige: ['g', 's', 'a'] },
-            { id: "8.8", nome: "Divulga regulamento interno de licitações e contratos?", classificacao: "obrigatoria", exige: ['g'] }
+            { id: "8.1", nome: "Divulga a relação das licitações (número, modalidade, objeto, data, valor e situação)?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
+            { id: "8.2", nome: "Divulga a íntegra dos editais de licitação?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
+            { id: "8.3", nome: "Divulga a íntegra dos demais documentos das fases interna e externa?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
+            { id: "8.4", nome: "Divulga a íntegra dos principais documentos dos processes de dispensa e inexigibilidade?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
+            { id: "8.5", nome: "Divulga a íntegra das Atas de Adesão – SRP?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
+            { id: "8.6", nome: "Divulga o plano de contratações anual?", classificacao: "recomendada", exige: ['d', 'a', 's', 'g', 'f'] },
+            { id: "8.7", nome: "Divulga a relação dos licitantes e/ou contratados sancionados?", classificacao: "recomendada", exige: ['d', 'a', 's', 'g', 'f'] },
+            { id: "8.8", nome: "Divulga regulamento interno de licitações e contratos?", classificacao: "obrigatoria", exige: ['d', 'a'] }
         ]
     },
     {
         titulo: "9. Contratos", pesoDimensao: 3,
         itens: [
-            { id: "9.1", nome: "Divulga a relação dos contratos celebrados com resumo e aditivos?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
-            { id: "9.2", nome: "Divulga o inteiro teor dos contratos e aditivos?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
-            { id: "9.3", nome: "Divulga a relação/lista dos fiscais de cada contrato?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
-            { id: "9.4", nome: "Divulga a ordem cronológica de seus pagamentos?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] }
+            { id: "9.1", nome: "Divulga a relação dos contratos celebrados com resumo e aditivos?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
+            { id: "9.2", nome: "Divulga o inteiro teor dos contratos e aditivos?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
+            { id: "9.3", nome: "Divulga a relação/lista dos fiscais de cada contrato?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
+            { id: "9.4", nome: "Divulga a ordem cronológica de seus pagamentos?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] }
         ]
     },
     {
         titulo: "10. Obras", pesoDimensao: 2,
         itens: [
-            { id: "10.1", nome: "Divulga informações sobre as obras (objeto, situation, datas, empresa e percentual)?", classificacao: "recomendada", exige: ['g', 's'] },
-            { id: "10.2", nome: "Divulga os quantitativos, preços unitários e totais contratados?", classificacao: "obrigatoria", exige: ['g', 's'] },
-            { id: "10.3", nome: "Divulga os quantitativos executados e preços efetivamente pagos?", classificacao: "obrigatoria", exige: ['g', 's'] },
-            { id: "10.4", nome: "Divulga a relação das obras paralisadas?", classificacao: "obrigatoria", exige: ['g', 's'] }
+            { id: "10.1", nome: "Divulga informações sobre as obras (objeto, situation, datas, empresa e percentual)?", classificacao: "recomendada", exige: ['d', 'a', 's', 'g', 'f'] },
+            { id: "10.2", nome: "Divulga os quantitativos, preços unitários e totais contratados?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
+            { id: "10.3", nome: "Divulga os quantitativos executados e preços efetivamente pagos?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
+            { id: "10.4", nome: "Divulga a relação das obras paralisadas?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] }
         ]
     },
     {
         titulo: "11. Planejamento e Prestação de contas", pesoDimensao: 4,
         itens: [
-            { id: "11.1", nome: "Publica a Prestação de Contas do Ano Anterior (Balanço Geral)?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
-            { id: "11.2", nome: "Divulga o Relatório de Gestão ou Atividades?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
-            { id: "11.3", nome: "Divulga a íntegra da decisão do julgamento das contas pelo TC?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
-            { id: "11.4", nome: "Divulga o resultado do julgamento das Contas do Executivo pelo Legislativo?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
-            { id: "11.5", nome: "Divulga o Relatório de Gestão Fiscal (RGF)?", classificacao: "essencial", exige: ['g', 's', 'a'] },
-            { id: "11.6", nome: "Divulga o Relatório Resumido da Execução Orçamentária (RREO)?", classificacao: "essencial", exige: ['g', 's', 'a'] },
-            { id: "11.7", nome: "Divulga o plano estratégico institucional?", classificacao: "recomendada", exige: ['g'] },
-            { id: "11.8", nome: "Divulga a Lei do Plano Plurianual (PPA) e anexos?", classificacao: "essencial", exige: ['g'] },
-            { id: "11.9", nome: "Divulga a Lei de Diretrizes Orçamentárias (LDO) e anexos?", classificacao: "essencial", exige: ['g'] },
-            { id: "11.10", nome: "Divulga a Lei Orçamentária (LOA) e anexos?", classificacao: "essencial", exige: ['g'] },
-            { id: "11.11", nome: "Divulga o Orçamento do Consórcio Público onde conste a estimativa da receita e a fixação da despesa para o exercício atual?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
-            { id: "11.12", nome: "Divulga as demonstrações financeiras trimestrais?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
-            { id: "11.13", nome: "Divulga as demonstrações financeiras (contábeis) acompanhadas dos pareceres do Conselho Fiscal e da auditoria independente?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
-            { id: "11.14", nome: "Pública o Orçamento de Investimentos da instituição que compõe a Lei Orçamentária Anual?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
-            { id: "11.15", nome: "Divulga as demonstrações contábeis auditadas em formato eletrônico editável?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
-            { id: "11.16", nome: "Divulga o relatório anual elaborado pelo Comitê de Auditoria Estatutário com informações sobre as atividades e os resultados e suas conclusões e recomendações?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
-            { id: "11.17", nome: "Divulga as atas das reuniões do Comitê de Auditoria Estatutário?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
-            { id: "11.18", nome: "Divulga as atas das reuniões do Comitê de Elegibilidade Estatutário ou Comitê de Pessoas, Elegibilidade, Sucessão e Remuneração a partir de 2022, na forma de sumário dos fatos ocorridos, inclusive das dissidências e protestos?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
-            { id: "11.19", nome: "Divulga anualmente relatório integrado ou de sustentabilidade?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] }
+            { id: "11.1", nome: "Publica a Prestação de Contas do Ano Anterior (Balanço Geral)?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
+            { id: "11.2", nome: "Divulga o Relatório de Gestão ou Atividades?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
+            { id: "11.3", nome: "Divulga a íntegra da decisão do julgamento das contas pelo TC?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
+            { id: "11.4", nome: "Divulga o resultado do julgamento das Contas do Executivo pelo Legislativo?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
+            { id: "11.5", nome: "Divulga o Relatório de Gestão Fiscal (RGF)?", classificacao: "essencial", exige: ['d', 'a', 's', 'g', 'f'] },
+            { id: "11.6", nome: "Divulga o Relatório Resumido da Execução Orçamentária (RREO)?", classificacao: "essencial", exige: ['d', 'a', 's', 'g', 'f'] },
+            { id: "11.7", nome: "Divulga o plano estratégico institucional?", classificacao: "recomendada", exige: ['d', 'a'] },
+            { id: "11.8", nome: "Divulga a Lei do Plano Plurianual (PPA) e anexos?", classificacao: "essencial", exige: ['d', 'a', 's', 'g', 'f'] },
+            { id: "11.9", nome: "Divulga a Lei de Diretrizes Orçamentárias (LDO) e anexos?", classificacao: "essencial", exige: ['d', 'a', 's', 'g', 'f'] },
+            { id: "11.10", nome: "Divulga a Lei Orçamentária (LOA) e anexos?", classificacao: "essencial", exige: ['d', 'a', 's', 'g', 'f'] },
+            { id: "11.11", nome: "Divulga o Orçamento do Consórcio Público onde conste a estimativa da receita e a fixação da despesa para o exercício atual?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
+            { id: "11.12", nome: "Divulga as demonstrações financeiras trimestrais?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
+            { id: "11.13", nome: "Divulga as demonstrações financeiras (contábeis) acompanhadas dos pareceres do Conselho Fiscal e da auditoria independente?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
+            { id: "11.14", nome: "Pública o Orçamento de Investimentos da instituição que compõe a Lei Orçamentária Anual?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
+            { id: "11.15", nome: "Divulga as demonstrações contábeis auditadas em formato eletrônico editável?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
+            { id: "11.16", nome: "Divulga o relatório anual elaborado pelo Comitê de Auditoria Estatutário com informações sobre as atividades e os resultados e suas conclusões e recomendações?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
+            { id: "11.17", nome: "Divulga as atas das reuniões do Comitê de Auditoria Estatutário?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
+            { id: "11.18", nome: "Divulga as atas das reuniões do Comitê de Elegibilidade Estatutário ou Comitê de Pessoas, Elegibilidade, Sucessão e Remuneração a partir de 2022, na forma de sumário dos fatos ocorridos, inclusive das dissidências e protestos?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
+            { id: "11.19", nome: "Divulga anualmente relatório integrado ou de sustentabilidade?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] }
         ]
     },
     {
         titulo: "12. Serviço de Informação ao Cidadão - SIC", pesoDimensao: 2,
         itens: [
-            { id: "12.1", nome: "Existe o SIC no site e indica a unidade/setor responsável?", classificacao: "obrigatoria", exige: ['g'] },
-            { id: "12.2", nome: "Indica endereço, telefone, e-mail e horário do SIC?", classificacao: "obrigatoria", exige: ['g'] },
-            { id: "12.3", nome: "Há possibilidade de envio de pedidos de forma eletrônica (e-SIC)?", classificacao: "obrigatoria", exige: ['g'] },
-            { id: "12.4", nome: "A solicitação por meio de e-SIC é simple?", classificacao: "obrigatoria", exige: ['g'] },
-            { id: "12.5", nome: "Divulga instrumento normativo local que regulamente a LAI?", classificacao: "obrigatoria", exige: ['g'] },
-            { id: "12.6", nome: "Divulga prazos de resposta e autoridades competentes?", classificacao: "recomendada", exige: ['g'] },
-            { id: "12.7", nome: "Divulga relatório anual estatístico?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
-            { id: "12.8", nome: "Divulga lista de documentos classificados em cada grau de sigilo?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
-            { id: "12.9", nome: "Divulga lista das informações desclassificadas nos últimos 12 meses?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] }
+            { id: "12.1", nome: "Existe o SIC no site e indica a unidade/setor responsável?", classificacao: "obrigatoria", exige: ['d'] },
+            { id: "12.2", nome: "Indica endereço, telefone, e-mail e horário do SIC?", classificacao: "obrigatoria", exige: ['d'] },
+            { id: "12.3", nome: "Há possibilidade de envio de pedidos de forma eletrônica (e-SIC)?", classificacao: "obrigatoria", exige: ['d'] },
+            { id: "12.4", nome: "A solicitação por meio de e-SIC é simple?", classificacao: "obrigatoria", exige: ['d'] },
+            { id: "12.5", nome: "Divulga instrumento normativo local que regulamente a LAI?", classificacao: "obrigatoria", exige: ['d'] },
+            { id: "12.6", nome: "Divulga prazos de resposta e autoridades competentes?", classificacao: "recomendada", exige: ['d'] },
+            { id: "12.7", nome: "Divulga relatório anual estatístico?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
+            { id: "12.8", nome: "Divulga lista de documentos classificados em cada grau de sigilo?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
+            { id: "12.9", nome: "Divulga lista das informações desclassificadas nos últimos 12 meses?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] }
         ]
     },
     {
         titulo: "13. Acessibilidade", pesoDimensao: 1,
         itens: [
-            { id: "13.1", nome: "O site e o portal contêm símbolo de acessibilidade em destaque?", classificacao: "obrigatoria", exige: ['g'] },
-            { id: "13.2", nome: "Contêm exibição do caminho de páginas (breadcrumb)?", classificacao: "obrigatoria", exige: ['g'] },
-            { id: "13.3", nome: "Contêm opção de alto contraste?", classificacao: "obrigatoria", exige: ['g'] },
-            { id: "13.4", nome: "Contêm ferramenta de redimensionamento de texto?", classificacao: "obrigatoria", exige: ['g'] },
-            { id: "13.5", nome: "Contêm mapa do site institucional?", classificacao: "recomendada", exige: ['g'] }
+            { id: "13.1", nome: "O site e o portal contêm símbolo de acessibilidade em destaque?", classificacao: "obrigatoria", exige: ['d'] },
+            { id: "13.2", nome: "Contêm exibição do caminho de páginas (breadcrumb)?", classificacao: "obrigatoria", exige: ['d'] },
+            { id: "13.3", nome: "Contêm opção de alto contraste?", classificacao: "obrigatoria", exige: ['d'] },
+            { id: "13.4", nome: "Contêm ferramenta de redimensionamento de texto?", classificacao: "obrigatoria", exige: ['d'] },
+            { id: "13.5", nome: "Contêm mapa do site institucional?", classificacao: "recomendada", exige: ['d'] }
         ]
     },
     {
         titulo: "14. Ouvidorias", pesoDimensao: 1,
         itens: [
-            { id: "14.1", nome: "Há informações sobre o atendimento presencial pela Ouvidoria?", classificacao: "obrigatoria", exige: ['g'] },
-            { id: "14.2", nome: "Há canal eletrônico de acesso/interação com a ouvidoria?", classificacao: "obrigatoria", exige: ['g'] },
-            { id: "14.3", nome: "Divulga Carta de Serviços ao Usuário?", classificacao: "obrigatoria", exige: ['g'] }
+            { id: "14.1", nome: "Há informações sobre o atendimento presencial pela Ouvidoria?", classificacao: "obrigatoria", exige: ['d'] },
+            { id: "14.2", nome: "Há canal eletrônico de acesso/interação com a ouvidoria?", classificacao: "obrigatoria", exige: ['d'] },
+            { id: "14.3", nome: "Divulga Carta de Serviços ao Usuário?", classificacao: "obrigatoria", exige: ['d'] }
         ]
     },
     {
         titulo: "15. Lei Geral de Proteção de Dados (LGPD) e Governo Digital", pesoDimensao: 1,
         itens: [
-            { id: "15.1", nome: "Identifica o encarregado pelo tratamento de dados pessoais?", classificacao: "obrigatoria", exige: ['g'] },
-            { id: "15.2", nome: "Publica a sua Política de Privacidade e Proteção de Dados?", classificacao: "recomendada", exige: ['g'] },
-            { id: "15.3", nome: "Possibilita o acesso a serviços públicos por meio digital?", classificacao: "obrigatoria", exige: ['g'] },
-            { id: "15.4", nome: "Possibilita o acesso automatizado em dados abertos?", classificacao: "obrigatoria", exige: ['g'] },
-            { id: "15.5", nome: "Regulamenta a Lei do Governo Digital?", classificacao: "recomendada", exige: ['g'] },
-            { id: "15.6", nome: "Realiza e divulga resultados de pesquisas de satisfação?", classificacao: "obrigatoria", exige: ['g'] }
+            { id: "15.1", nome: "Identifica o encarregado pelo tratamento de dados pessoais?", classificacao: "obrigatoria", exige: ['d'] },
+            { id: "15.2", nome: "Publica a sua Política de Privacidade e Proteção de Dados?", classificacao: "recomendada", exige: ['d'] },
+            { id: "15.3", nome: "Possibilita o acesso a serviços públicos por meio digital?", classificacao: "obrigatoria", exige: ['d'] },
+            { id: "15.4", nome: "Possibilita o acesso automatizado em dados abertos?", classificacao: "obrigatoria", exige: ['d'] },
+            { id: "15.5", nome: "Regulamenta a Lei do Governo Digital?", classificacao: "recomendada", exige: ['d'] },
+            { id: "15.6", nome: "Realiza e divulga resultados de pesquisas de satisfação?", classificacao: "obrigatoria", exige: ['d'] }
         ]
     },
     {
         titulo: "16. Renúncias de Receitas", pesoDimensao: 1,
         itens: [
-            { id: "16.1", nome: "Divulga as desonerações tributárias concedidas?", classificacao: "obrigatoria", exige: ['g'] },
-            { id: "16.2", nome: "Divulga os valores da renúncia fiscal prevista e realizada?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
-            { id: "16.3", nome: "Identifica os beneficiários das desonerações tributárias?", classificacao: "recomendada", exige: ['g', 's', 'a'] },
-            { id: "16.4", nome: "Divulga informações sobre projects de incentivo à cultura e esportes?", classificacao: "recomendada", exige: ['g', 's', 'a'] }
+            { id: "16.1", nome: "Divulga as desonerações tributárias concedidas?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
+            { id: "16.2", nome: "Divulga os valores da renúncia fiscal prevista e realizada?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
+            { id: "16.3", nome: "Identifica os beneficiários das desonerações tributárias?", classificacao: "recomendada", exige: ['d', 'a', 's', 'g', 'f'] },
+            { id: "16.4", nome: "Divulga informações sobre projects de incentivo à cultura e esportes?", classificacao: "recomendada", exige: ['d', 'a', 's', 'g', 'f'] }
         ]
     },
     {
         titulo: "17. Emendas Parlamentares", pesoDimensao: 1,
         itens: [
-            { id: "17.1", nome: "Identifica as emendas parlamentares federais recebidas?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
-            { id: "17.2", nome: "Identifica as emendas parlamentares estaduais e municipais?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
-            { id: "17.3", nome: "Demonstra a execução orçamentária e financeira oriunda das emendas parlamentares recebidas e próprias?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] }
+            { id: "17.1", nome: "Identifica as emendas parlamentares federais recebidas?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
+            { id: "17.2", nome: "Identifica as emendas parlamentares estaduais e municipais?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
+            { id: "17.3", nome: "Demonstra a execução orçamentária e financeira oriunda das emendas parlamentares recebidas e próprias?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] }
         ]
     },
     {
         titulo: "18. Saúde", pesoDimensao: 1,
         itens: [
-            { id: "18.1", nome: "Divulga o plano de saúde, a programação anual e o relatório de gestão?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
-            { id: "18.2", nome: "Divulga informações relacionadas aos serviços de saúde?", classificacao: "obrigatoria", exige: ['g', 's'] },
-            { id: "18.3", nome: "Divulga a lista de espera de regulação para acesso às consultas?", classificacao: "recomendada", exige: ['g'] },
-            { id: "18.4", nome: "Divulga lista dos medicamentos do SUS e como obtê-los?", classificacao: "recomendada", exige: ['g', 's'] },
-            { id: "18.5", nome: "Divulga os estoques de medicamentos das farmácias públicas?", classificacao: "obrigatoria", exige: ['g', 's'] },
-            { id: "18.6", nome: "Divulga informações atualizadas sobre a composição e o funcionamento do Conselho de Saúde?", classificacao: "recomendada", exige: ['g'] }
+            { id: "18.1", nome: "Divulga o plano de saúde, a programação anual e o relatório de gestão?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
+            { id: "18.2", nome: "Divulga informações relacionadas aos serviços de saúde?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
+            { id: "18.3", nome: "Divulga a lista de espera de regulação para acesso às consultas?", classificacao: "recomendada", exige: ['d', 'a', 's', 'g', 'f'] },
+            { id: "18.4", nome: "Divulga lista dos medicamentos do SUS e como obtê-los?", classificacao: "recomendada", exige: ['d', 'a', 's', 'g', 'f'] },
+            { id: "18.5", nome: "Divulga os estoques de medicamentos das farmácias públicas?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
+            { id: "18.6", nome: "Divulga informações atualizadas sobre a composição e o funcionamento do Conselho de Saúde?", classificacao: "recomendada", exige: ['d', 'a', 's', 'g', 'f'] }
         ]
     },
     {
         titulo: "19. Educação e Assistência Social", pesoDimensao: 1,
         itens: [
-            { id: "19.1", nome: "Divulga o plano de educação e o respectivo relatório de resultados?", classificacao: "recomendada", exige: ['g', 's', 'a'] },
-            { id: "19.2", nome: "Divulga a lista de espera em creches públicas?", classificacao: "obrigatoria", exige: ['g', 's'] },
-            { id: "19.3", nome: "Divulga informações atualizadas sobre a composição e o funcionamento do Conselho do Fundeb?", classificacao: "obrigatoria", exige: ['g'] },
-            { id: "19.4", nome: "Divulga informações atualizadas sobre a composição e o funcionamento do Conselho de Assistência Social?", classificacao: "recomendada", exige: ['g'] }
+            { id: "19.1", nome: "Divulga o plano de educação e o respectivo relatório de resultados?", classificacao: "recomendada", exige: ['d', 'a', 's', 'g', 'f'] },
+            { id: "19.2", nome: "Divulga a lista de espera em creches públicas?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
+            { id: "19.3", nome: "Divulga informações atualizadas sobre a composição e o funcionamento do Conselho do Fundeb?", classificacao: "obrigatoria", exige: ['d'] },
+            { id: "19.4", nome: "Divulga informações atualizadas sobre a composição e o funcionamento do Conselho de Assistência Social?", classificacao: "recomendada", exige: ['d'] }
         ]
     },
     {
         titulo: "20. Atividades Finalísticas - Poder Legislativo", pesoDimensao: 3,
         itens: [
-            { id: "20.1", nome: "Divulga a composição da Casa, com a biografia dos parlamentares?", classificacao: "obrigatoria", exige: ['g'] },
-            { id: "20.2", nome: "Divulga as leis e atos infralegais produzidos?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
-            { id: "20.3", nome: "Divulga projects de leis e as respectivas tramitações?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
-            { id: "20.4", nome: "Divulga a pauta das sessões do Plenário?", classificacao: "obrigatoria", exige: ['g', 's'] },
-            { id: "20.5", nome: "Divulga a pauta das Comissões?", classificacao: "obrigatoria", exige: ['g', 's'] },
-            { id: "20.6", nome: "Divulga as atas das sessões e lista de presença?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
-            { id: "20.7", nome: "Divulga lista sobre as votações nominais?", classificacao: "recomendada", exige: ['g', 's', 'a'] },
-            { id: "20.8", nome: "Divulga o ato que aprecia as Contas do Chefe do Executivo?", classificacao: "obrigatoria", exige: ['g', 's', 'a'] },
-            { id: "20.9", nome: "Há transmissão de sessões ou outras formas de participation popular?", classificacao: "recomendada", exige: ['g'] },
-            { id: "20.10", nome: "Divulga valores relativos às cotas para exercício da atividade parlamentar?", classificacao: "recomendada", exige: ['g', 's', 'a'] },
-            { id: "20.11", nome: "Divulga dados sobre as atividades legislativas dos parlamentares?", classificacao: "recomendada", exige: ['g', 's', 'a'] }
+            { id: "20.1", nome: "Divulga a composição da Casa, com a biografia dos parlamentares?", classificacao: "obrigatoria", exige: ['d'] },
+            { id: "20.2", nome: "Divulga as leis e atos infralegais produzidos?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
+            { id: "20.3", nome: "Divulga projects de leis e as respectivas tramitações?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
+            { id: "20.4", nome: "Divulga a pauta das sessões do Plenário?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
+            { id: "20.5", nome: "Divulga a pauta das Comissões?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
+            { id: "20.6", nome: "Divulga as atas das sessões e lista de presença?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
+            { id: "20.7", nome: "Divulga lista sobre as votações nominais?", classificacao: "recomendada", exige: ['d', 'a', 's', 'g', 'f'] },
+            { id: "20.8", nome: "Divulga o ato que aprecia as Contas do Chefe do Executivo?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
+            { id: "20.9", nome: "Há transmissão de sessões ou outras formas de participation popular?", classificacao: "recomendada", exige: ['d'] },
+            { id: "20.10", nome: "Divulga valores relativos às cotas para exercício da atividade parlamentar?", classificacao: "recomendada", exige: ['d', 'a', 's', 'g', 'f'] },
+            { id: "20.11", nome: "Divulga dados sobre as atividades legislativas dos parlamentares?", classificacao: "recomendada", exige: ['d', 'a', 's', 'g', 'f'] }
         ]
     }
 ];
@@ -459,14 +459,22 @@ function normalizarTexto(texto) {
     return texto.toString().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
 }
 
+// 100% FIEL À METODOLOGIA ATRICON
 function verificaSeAtende(item, marcados) {
-    const s = marcados[item.id] || {g:false, s:false, a:false};
-    const exige = item.exige || ['g', 's', 'a'];
-    let atende = true;
-    if (exige.includes('g') && !s.g) atende = false;
-    if (exige.includes('s') && !s.s) atende = false;
-    if (exige.includes('a') && !s.a) atende = false;
-    return atende;
+    const s = marcados[item.id] || {d:false, a:false, s:false, g:false, f:false};
+    const exige = item.exige || ['d', 'a', 's', 'g', 'f'];
+    
+    if (exige.includes('d') && !s.d) return "nao_atende";
+    
+    let marcadosCount = 0;
+    exige.forEach(req => {
+        if (s[req]) marcadosCount++;
+    });
+
+    if (marcadosCount === 0) return "nao_atende";
+    if (marcadosCount === exige.length) return "atende";
+    
+    return "parcial";
 }
 
 function App() {
@@ -521,6 +529,20 @@ function App() {
                 if (docSnap.exists()) {
                     const dadosAtuais = docSnap.data();
                     let precisaAtualizar = false;
+
+                    // Migração segura dos dados antigos (troca 'g' por 'd')
+                    Object.values(dadosAtuais).forEach(entidade => {
+                        if (entidade.marcados) {
+                            Object.keys(entidade.marcados).forEach(k => {
+                                let m = entidade.marcados[k];
+                                if (m.g !== undefined && m.d === undefined) {
+                                    m.d = m.g; 
+                                    m.g = false; 
+                                    precisaAtualizar = true;
+                                }
+                            });
+                        }
+                    });
 
                     DATA_ENTIDADES.forEach(item => {
                         const id = "ENT_" + item.n.replace(/\s/g, "_");
@@ -916,41 +938,106 @@ function App() {
       document.getElementById('btnFecharModalExcluir').click();
   };
 
+  // =========================================================================================
+  // MOTOR DE CÁLCULO ATRICON 2025/2026 OFICIAL
+  // =========================================================================================
   const recalcularSelo = (entidade) => {
-      let pontosTotais = 0, pontosObtidos = 0, faltaEssencial = false;
+      let pontosTotais = 0;
+      let pontosObtidos = 0;
+      let essenciaisTotais = 0;
+      let essenciaisObtidos = 0;
+
       const ehCamara = normalizarTexto(entidade.nome).includes('camara');
+
       GRUPOS_CRITERIOS.forEach(g => {
           const num = parseInt(g.titulo);
           if (ehCamara && [16, 17, 18, 19].includes(num)) return;
           if (!ehCamara && num === 20) return;
-          let pesoDim = g.pesoDimensao || 1; 
+          
           g.itens.forEach(i => {
-              let pesoCrit = i.classificacao === 'essencial' ? 2 : (i.classificacao === 'obrigatoria' ? 1.5 : 1);
-              let pontosDesteCriterio = pesoDim * pesoCrit;
-              pontosTotais += pontosDesteCriterio;
-              const s = entidade.marcados[i.id] || {g:false, s:false, a:false};
-              const exige = i.exige || ['g', 's', 'a'];
-              let atende = true;
-              if (exige.includes('g') && !s.g) atende = false;
-              if (exige.includes('s') && !s.s) atende = false;
-              if (exige.includes('a') && !s.a) atende = false;
-              if (atende) pontosObtidos += pontosDesteCriterio;
-              else if (i.classificacao === 'essencial') faltaEssencial = true; 
+              let pesoCrit = i.classificacao === 'essencial' ? 3 : (i.classificacao === 'obrigatoria' ? 2 : 1);
+              pontosTotais += pesoCrit;
+
+              if (i.classificacao === 'essencial') {
+                  essenciaisTotais += pesoCrit;
+              }
+
+              const s = entidade.marcados[i.id] || {d:false, a:false, s:false, g:false, f:false};
+              const exige = i.exige || ['d', 'a', 's', 'g', 'f'];
+
+              if (exige.includes('d') && !s.d) {
+                  // 0
+              } else {
+                  let marcadosCount = 0;
+                  exige.forEach(req => {
+                      if (s[req]) marcadosCount++;
+                  });
+
+                  let proporcao = marcadosCount / exige.length;
+                  let pontosItem = pesoCrit * proporcao;
+
+                  pontosObtidos += pontosItem;
+
+                  if (i.classificacao === 'essencial') {
+                      essenciaisObtidos += pontosItem;
+                  }
+              }
           });
       });
+
       const perc = pontosTotais > 0 ? Math.round((pontosObtidos / pontosTotais) * 100) : 0;
-      let selo = perc >= 95 ? (faltaEssencial ? "ELEVADO" : "DIAMANTE") : 
-                 perc >= 85 ? (faltaEssencial ? "ELEVADO" : "OURO") : 
-                 perc >= 75 ? (faltaEssencial ? "ELEVADO" : "PRATA") : 
-                 perc >= 50 ? "INTERMEDIARIO" : perc >= 30 ? "BASICO" : perc > 0 ? "INICIAL" : "INEXISTENTE";
+      const percEssenciais = essenciaisTotais > 0 ? (essenciaisObtidos / essenciaisTotais) : 0;
+      const atendeEssenciais = percEssenciais === 1;
+
+      let selo = "INEXISTENTE";
+
+      if (perc >= 95) {
+          selo = atendeEssenciais ? "DIAMANTE" : "ELEVADO";
+      } else if (perc >= 85) {
+          selo = atendeEssenciais ? "OURO" : "ELEVADO";
+      } else if (perc >= 75) {
+          selo = atendeEssenciais ? "PRATA" : "ELEVADO";
+      } else if (perc >= 50) {
+          selo = "INTERMEDIARIO";
+      } else if (perc >= 30) {
+          selo = "BASICO";
+      } else if (perc > 0) {
+          selo = "INICIAL";
+      }
+
       return { perc, selo };
+  };
+
+  // Cálculo individual do Grupo (Para a barra visual do Grupo)
+  const calcularPercGrupo = (grupo, entidade) => {
+      let pontosTotaisGrupo = 0;
+      let pontosObtidosGrupo = 0;
+
+      grupo.itens.forEach(i => {
+          let pesoCrit = i.classificacao === 'essencial' ? 3 : (i.classificacao === 'obrigatoria' ? 2 : 1);
+          pontosTotaisGrupo += pesoCrit;
+
+          const st = entidade.marcados[i.id] || { d: false, a: false, s: false, g: false, f: false };
+          const exige = i.exige || ['d', 'a', 's', 'g', 'f'];
+
+          if (!(exige.includes('d') && !st.d)) {
+              let marcadosCount = 0;
+              exige.forEach(req => {
+                  if (st[req]) marcadosCount++;
+              });
+              let proporcao = marcadosCount / exige.length;
+              pontosObtidosGrupo += (pesoCrit * proporcao);
+          }
+      });
+
+      return pontosTotaisGrupo > 0 ? ((pontosObtidosGrupo / pontosTotaisGrupo) * 100).toFixed(1) : 0;
   };
 
   const handleToggleCheck = (idItem, tipo) => {
       setBancoDeDados(prevDb => {
           let newDb = JSON.parse(JSON.stringify(prevDb));
           let ent = newDb[entidadeEditando];
-          if (!ent.marcados[idItem]) ent.marcados[idItem] = { g: false, s: false, a: false };
+          if (!ent.marcados[idItem]) ent.marcados[idItem] = { d: false, a: false, s: false, g: false, f: false };
           ent.marcados[idItem][tipo] = !ent.marcados[idItem][tipo];
           const resultado = recalcularSelo(ent);
           ent.perc = resultado.perc;
@@ -965,14 +1052,12 @@ function App() {
           let ent = newDb[entidadeEditando];
           const grupo = GRUPOS_CRITERIOS.find(g => g.titulo === tituloGrupo);
           grupo.itens.forEach(item => {
-              if (!ent.marcados[item.id]) ent.marcados[item.id] = { g: false, s: false, a: false };
+              if (!ent.marcados[item.id]) ent.marcados[item.id] = { d: false, a: false, s: false, g: false, f: false };
               if (marcar) {
-                  const exige = item.exige || ['g', 's', 'a'];
-                  if (exige.includes('g')) ent.marcados[item.id].g = true;
-                  if (exige.includes('s')) ent.marcados[item.id].s = true;
-                  if (exige.includes('a')) ent.marcados[item.id].a = true;
+                  const exige = item.exige || ['d', 'a', 's', 'g', 'f'];
+                  exige.forEach(req => ent.marcados[item.id][req] = true);
               } else {
-                  ent.marcados[item.id] = { g: false, s: false, a: false };
+                  ent.marcados[item.id] = { d: false, a: false, s: false, g: false, f: false };
               }
           });
           const resultado = recalcularSelo(ent);
@@ -1485,45 +1570,62 @@ function App() {
                   if (!ehCamara && num === 20) return null;
                   const collapseId = `collapse_grupo_${index}`;
 
+                  const percGrupo = calcularPercGrupo(grupo, bancoDeDados[entidadeEditando]);
+
                   return (
                     <div key={index}>
-                      <div className="grupo-header d-flex flex-column flex-md-row justify-content-between align-items-md-center mt-4" style={{ padding: '12px 16px' }}>
-                          <span style={{ cursor: 'pointer', userSelect: 'none' }} data-bs-toggle="collapse" data-bs-target={`#${collapseId}`} className="text-white fw-bold mb-3 mb-md-0">
-                              <i className="bi bi-caret-down-fill me-1 opacity-75"></i> {grupo.titulo}
-                          </span>
-                          <div className="d-flex justify-content-between align-items-center w-100" style={{ maxWidth: '400px' }}>
-                              <div className="d-flex gap-2">
-                                  <button onClick={() => handleMarcarGrupo(grupo.titulo, true)} className="btn btn-sm btn-primary px-2 py-1 shadow-sm" style={{ fontSize: '0.75rem' }}>Marcar Tudo</button>
-                                  <button onClick={() => handleMarcarGrupo(grupo.titulo, false)} className="btn btn-sm btn-secondary px-2 py-1 shadow-sm" style={{ fontSize: '0.75rem' }}>Desmarcar</button>
+                      <div className="grupo-header mt-4" style={{ padding: '12px 16px' }}>
+                          <div className="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center">
+                              
+                              <div style={{ cursor: 'pointer', userSelect: 'none', flexGrow: 1 }} data-bs-toggle="collapse" data-bs-target={`#${collapseId}`} className="mb-3 mb-lg-0 pe-lg-3">
+                                  <div className="text-white fw-bold d-flex align-items-center">
+                                      <i className="bi bi-caret-down-fill me-2 opacity-75"></i> 
+                                      {grupo.titulo}
+                                      <span className="badge bg-light text-dark ms-3 border border-secondary">{percGrupo}%</span>
+                                  </div>
+                                  <div className="progress mt-2" style={{ height: '6px', backgroundColor: 'rgba(255,255,255,0.2)', maxWidth: '400px' }}>
+                                      <div className="progress-bar bg-warning" style={{ width: `${percGrupo}%` }}></div>
+                                  </div>
                               </div>
-                              <div className="d-flex" style={{ width: '120px', flexShrink: 0 }}>
-                                  <div style={{ width: '40px', textAlign: 'center' }} className="fw-bold text-white">D</div>
-                                  <div style={{ width: '40px', textAlign: 'center' }} className="fw-bold text-white">A</div>
-                                  <div style={{ width: '40px', textAlign: 'center' }} className="fw-bold text-white">S</div>
+                              
+                              <div className="d-flex justify-content-between align-items-center" style={{ width: '100%', maxWidth: '480px', flexShrink: 0 }}>
+                                  <div className="d-flex gap-2">
+                                      <button onClick={() => handleMarcarGrupo(grupo.titulo, true)} className="btn btn-sm btn-primary px-2 py-1 shadow-sm" style={{ fontSize: '0.75rem' }}>Marcar Tudo</button>
+                                      <button onClick={() => handleMarcarGrupo(grupo.titulo, false)} className="btn btn-sm btn-secondary px-2 py-1 shadow-sm" style={{ fontSize: '0.75rem' }}>Desmarcar</button>
+                                  </div>
+                                  <div className="d-flex" style={{ width: '200px', flexShrink: 0 }}>
+                                      <div style={{ width: '40px', textAlign: 'center' }} className="fw-bold text-white">D</div>
+                                      <div style={{ width: '40px', textAlign: 'center' }} className="fw-bold text-white">A</div>
+                                      <div style={{ width: '40px', textAlign: 'center' }} className="fw-bold text-white">S</div>
+                                      <div style={{ width: '40px', textAlign: 'center' }} className="fw-bold text-white">G</div>
+                                      <div style={{ width: '40px', textAlign: 'center' }} className="fw-bold text-white">F</div>
+                                  </div>
                               </div>
                           </div>
                       </div>
-                      <div className="collapse show" id={collapseId}>
+                      <div className="collapse" id={collapseId}>
                           <ul className="list-group mb-3">
                             {grupo.itens.map(item => {
-                                const st = bancoDeDados[entidadeEditando].marcados[item.id] || { g: false, s: false, a: false };
-                                const exige = item.exige || ['g', 's', 'a'];
+                                const st = bancoDeDados[entidadeEditando].marcados[item.id] || { d: false, a: false, s: false, g: false, f: false };
+                                const exige = item.exige || ['d', 'a', 's', 'g', 'f'];
                                 return (
                                   <li key={item.id} className="list-group-item d-flex align-items-center dark-card-target" style={{ padding: '12px 16px' }}>
                                       <div className="flex-grow-1 pe-3" style={{ fontSize: '0.9rem' }}>
                                           <small className="text-muted fw-bold">{item.id}</small> {item.classificacao === 'essencial' && <b className="text-danger">*</b>} 
                                           <br/><span className="d-block mt-1">{item.nome}</span>
                                       </div>
-                                      <div className="d-flex" style={{ width: '120px', flexShrink: 0 }}>
-                                          <div className="d-flex justify-content-center align-items-center" style={{ width: '40px' }}>
-                                            <input type="checkbox" checked={st.g} onChange={() => handleToggleCheck(item.id, 'g')} className="form-check-input m-0 border-secondary" style={{ cursor: 'pointer', width: '1.2rem', height: '1.2rem', visibility: exige.includes('g') ? 'visible' : 'hidden' }} />
-                                          </div>
-                                          <div className="d-flex justify-content-center align-items-center" style={{ width: '40px' }}>
-                                            <input type="checkbox" checked={st.s} onChange={() => handleToggleCheck(item.id, 's')} className="form-check-input m-0 border-secondary" style={{ cursor: 'pointer', width: '1.2rem', height: '1.2rem', visibility: exige.includes('s') ? 'visible' : 'hidden' }} />
-                                          </div>
-                                          <div className="d-flex justify-content-center align-items-center" style={{ width: '40px' }}>
-                                            <input type="checkbox" checked={st.a} onChange={() => handleToggleCheck(item.id, 'a')} className="form-check-input m-0 border-secondary" style={{ cursor: 'pointer', width: '1.2rem', height: '1.2rem', visibility: exige.includes('a') ? 'visible' : 'hidden' }} />
-                                          </div>
+                                      <div className="d-flex" style={{ width: '200px', flexShrink: 0 }}>
+                                          {['d', 'a', 's', 'g', 'f'].map(letra => (
+                                              <div key={letra} className="d-flex justify-content-center align-items-center" style={{ width: '40px' }}>
+                                                <input 
+                                                    type="checkbox" 
+                                                    checked={st[letra]} 
+                                                    onChange={() => handleToggleCheck(item.id, letra)} 
+                                                    className="form-check-input m-0 border-secondary" 
+                                                    style={{ cursor: 'pointer', width: '1.2rem', height: '1.2rem', visibility: exige.includes(letra) ? 'visible' : 'hidden' }} 
+                                                />
+                                              </div>
+                                          ))}
                                       </div>
                                   </li>
                                 )
@@ -1559,8 +1661,9 @@ function App() {
             <div className="card shadow-sm border-0 dark-card-target">
               <div className="card-body p-4 p-md-5">
                 <div className="text-center mb-4 border-bottom pb-3">
-                  <h3 className="fw-bold m-0 text-primary">Relatório de Agrupamento</h3>
-                  <h5 className="text-muted">Simulador de Transparência - Atricon 2026</h5>
+                  <h3 className="fw-bold m-0 text-primary d-print-none">Relatório de Agrupamento</h3>
+                  <h3 className="fw-bold m-0 d-none d-print-block">Relatório de Agrupamento - PNTP Atricon</h3>
+                  <h5 className="text-muted d-print-none">Simulador de Transparência - Atricon 2026</h5>
                   <div className="mt-3 d-flex justify-content-center gap-4 text-muted small">
                       <span><b>Data:</b> {new Date().toLocaleDateString('pt-BR')}</span>
                       <span><b>Filtro Aplicado:</b> {relTipo === 'todos' ? 'Todos os Registros' : `${relTipo.toUpperCase()} - ${relValor.toUpperCase()}`}</span>
@@ -1587,7 +1690,8 @@ function App() {
                           <td className="text-wrap" style={{ maxWidth: '150px' }}>{ent.controlador || '---'}</td>
                           <td>{ent.telefone || '---'}</td>
                           <td>
-                              <span className={`badge selo-${normalizarTexto(ent.selo)} w-100`}>{ent.selo}</span>
+                              <span className={`badge selo-${normalizarTexto(ent.selo)} w-100 d-print-none`}>{ent.selo}</span>
+                              <span className="d-none d-print-block fw-bold">{ent.selo}</span>
                           </td>
                           <td className="fw-bold">{ent.perc}%</td>
                         </tr>
@@ -1600,33 +1704,43 @@ function App() {
                     </tbody>
                   </table>
                 </div>
+
+                <div className="mt-5 pt-3 text-center" style={{ pageBreakInside: 'avoid' }}>
+                    <p className="text-muted small mb-0">
+                        Gerado automaticamente pelo <b>Simulador de Avaliação Atricon 2026 - TD2</b>
+                    </p>
+                    <p className="text-muted small d-none d-print-block">
+                        Data de emissão: {new Date().toLocaleDateString('pt-BR')} às {new Date().toLocaleTimeString('pt-BR')}
+                    </p>
+                </div>
+
               </div>
             </div>
           </div>
         )}
 
-        {/* FOOTER Padrão (Não aparece no print) */}
-        <footer className="mt-4 text-center text-muted small border-top pt-3 mb-2">
-          <span><b>{entidadesAvaliadas}</b> avaliadas de {totalNoBanco} entidades</span> <br/>
-          <span>© 2026 TD2 - Simulador de Transparência Atricon</span>
-        </footer>
+        {/* FOOTER Padrão escondido no PDF Agrupado */}
+        {telaAtiva !== 'relatorio_agrupado' && (
+          <footer className="mt-4 text-center text-muted small border-top pt-3 mb-2">
+            <span><b>{entidadesAvaliadas}</b> avaliadas de {totalNoBanco} entidades</span> <br/>
+            <span>© 2026 TD2 - Simulador de Transparência Atricon</span>
+          </footer>
+        )}
       </main>
 
       {/* ===================================================================
-          A MÁGICA: LAYOUTS EXCLUSIVOS PARA O PDF (QUE SÓ APARECEM NA IMPRESSÃO)
-          FORA DA TAG <MAIN> PARA NÃO SEREM ESCONDIDOS
+          A MÁGICA: LAYOUTS EXCLUSIVOS PARA O PDF (FORA DA MAIN)
           =================================================================== */}
       
       <div className="d-none d-print-block w-100 bg-white text-dark">
+        
         {/* IMPRESSÃO: PDF DA ENTIDADE INDIVIDUAL */}
         {telaAtiva === 'avaliacao' && entidadeEditando && (
             <div>
                 <div className="text-center mb-4" style={{ borderBottom: '2px solid #000', paddingBottom: '10px' }}>
-                    
                     {bancoDeDados[entidadeEditando].logo && (
                         <img src={bancoDeDados[entidadeEditando].logo} alt="Logo" style={{ maxHeight: '100px', marginBottom: '15px' }} />
                     )}
-
                     <h3 className="fw-bold m-0 text-dark">{bancoDeDados[entidadeEditando].nome}</h3>
                     <h5 className="text-secondary">Relatório de Simulação - PNTP Atricon</h5>
                     <div className="mt-3 d-flex justify-content-around text-dark">
@@ -1640,7 +1754,6 @@ function App() {
                         Selo Projetado: <b>{bancoDeDados[entidadeEditando].selo}</b> <br/>
                         Aderência aos Critérios: <b>{bancoDeDados[entidadeEditando].perc}%</b>
                     </h5>
-                    
                     <p className="mt-2 mb-0 small text-danger fw-bold">
                         * Nota de Simulação: A pontuação pode variar em até ±1,5% em relação à avaliação oficial.
                     </p>
@@ -1655,18 +1768,21 @@ function App() {
                     if (!ehCamara && num === 20) return null;
 
                     const itensFiltrados = grupo.itens.filter(item => {
-                        const atende = verificaSeAtende(item, bancoDeDados[entidadeEditando].marcados);
-                        if (filtroRelatorio === 'atendendo') return atende;
-                        if (filtroRelatorio === 'nao_atendendo') return !atende;
+                        const statusStr = verificaSeAtende(item, bancoDeDados[entidadeEditando].marcados);
+                        if (filtroRelatorio === 'atendendo') return statusStr === 'atende';
+                        if (filtroRelatorio === 'nao_atendendo') return statusStr === 'nao_atende' || statusStr === 'parcial';
                         return true;
                     });
 
                     if (itensFiltrados.length === 0) return null;
 
+                    const percGrupo = calcularPercGrupo(grupo, bancoDeDados[entidadeEditando]);
+
                     return (
                         <div key={idx} className="print-avoid-break mb-4">
-                            <div className="p-2 fw-bold text-white bg-dark mb-2" style={{ backgroundColor: '#000 !important', WebkitPrintColorAdjust: 'exact', printColorAdjust: 'exact' }}>
-                                {grupo.titulo}
+                            <div className="p-2 fw-bold text-white bg-dark mb-2 d-flex justify-content-between align-items-center" style={{ backgroundColor: '#000 !important', WebkitPrintColorAdjust: 'exact', printColorAdjust: 'exact' }}>
+                                <span>{grupo.titulo}</span>
+                                <span className="badge bg-light text-dark">{percGrupo}%</span>
                             </div>
                             <table className="table table-sm table-bordered">
                                 <thead>
@@ -1679,14 +1795,19 @@ function App() {
                                 </thead>
                                 <tbody>
                                     {itensFiltrados.map(item => {
-                                        const atende = verificaSeAtende(item, bancoDeDados[entidadeEditando].marcados);
+                                        const statusStr = verificaSeAtende(item, bancoDeDados[entidadeEditando].marcados);
+                                        let cor = 'red';
+                                        let texto = 'Não Atende ✗';
+                                        if (statusStr === 'atende') { cor = 'green'; texto = 'Atende ✓'; }
+                                        else if (statusStr === 'parcial') { cor = '#d39e00'; texto = 'Parcial ⚠'; }
+
                                         return (
                                             <tr key={item.id}>
                                                 <td className="text-dark"><b>{item.id}</b></td>
                                                 <td className="text-dark">{item.nome}</td>
                                                 <td className="text-capitalize text-dark">{item.classificacao}</td>
-                                                <td className="text-center fw-bold" style={{ color: atende ? 'green' : 'red' }}>
-                                                    {atende ? 'Atende ✓' : 'Não Atende ✗'}
+                                                <td className="text-center fw-bold" style={{ color: cor }}>
+                                                    {texto}
                                                 </td>
                                             </tr>
                                         );
@@ -1702,13 +1823,8 @@ function App() {
                         <div style={{ width: '250px', borderTop: '1px solid #000' }}></div>
                     </div>
                     <p className="fw-bold mb-4">{bancoDeDados[entidadeEditando].operador} (Operador Responsável)</p>
-                    
-                    <p className="text-secondary small mb-0">
-                        Gerado pelo <b>Simulador de Avaliação Atricon 2026 - TD2</b>
-                    </p>
-                    <p className="text-secondary small">
-                        Data de emissão: {new Date().toLocaleDateString('pt-BR')} às {new Date().toLocaleTimeString('pt-BR')}
-                    </p>
+                    <p className="text-secondary small mb-0">Gerado pelo <b>Simulador de Avaliação Atricon 2026 - TD2</b></p>
+                    <p className="text-secondary small">Data de emissão: {new Date().toLocaleDateString('pt-BR')} às {new Date().toLocaleTimeString('pt-BR')}</p>
                 </div>
             </div>
         )}
@@ -1913,6 +2029,14 @@ function App() {
                 <li className="list-group-item border-0 d-flex align-items-center px-0">
                   <span className="badge bg-primary me-3" style={{ width: '30px' }}>S</span>
                   <span><b>Série Histórica:</b> Contém dados de anos anteriores?</span>
+                </li>
+                <li className="list-group-item border-0 d-flex align-items-center px-0">
+                  <span className="badge bg-primary me-3" style={{ width: '30px' }}>G</span>
+                  <span><b>Gravação de Relatórios:</b> Permite salvar em formatos abertos?</span>
+                </li>
+                <li className="list-group-item border-0 d-flex align-items-center px-0">
+                  <span className="badge bg-primary me-3" style={{ width: '30px' }}>F</span>
+                  <span><b>Filtros de Pesquisa:</b> Possui filtros detalhados de busca?</span>
                 </li>
               </ul>
               <div className="alert alert-warning border-0 small">
