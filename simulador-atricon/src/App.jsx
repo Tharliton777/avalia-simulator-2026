@@ -2,7 +2,11 @@ import { useState, useEffect } from 'react';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
 import { doc, setDoc, getDoc } from "firebase/firestore"; 
 import { auth, db } from './firebase'; 
+import * as pdfjsLib from 'pdfjs-dist';
 import './index.css';
+
+// Configuração segura do Worker do PDF.js para React/Vite
+pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
 
 // ============================================================================
 // 1. DADOS ORIGINAIS COM EXIGÊNCIAS ATUALIZADAS (D, A, S, G, F)
@@ -459,7 +463,6 @@ function normalizarTexto(texto) {
     return texto.toString().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
 }
 
-// 100% FIEL À METODOLOGIA ATRICON
 function verificaSeAtende(item, marcados) {
     const s = marcados[item.id] || {d:false, a:false, s:false, g:false, f:false};
     const exige = item.exige || ['d', 'a', 's', 'g', 'f'];
@@ -499,6 +502,14 @@ function App() {
 
   const [filtroRelatorio, setFiltroRelatorio] = useState('todos');
 
+  // Estados dos Modais Dinâmicos
+  const [msgModal, setMsgModal] = useState({ titulo: "", texto: "", tipo: "" });
+
+  // Estados da Ilusão de IA (Labor Illusion) com transições suaves
+  const [processandoPDF, setProcessandoPDF] = useState(false);
+  const [animacaoSaidaIA, setAnimacaoSaidaIA] = useState(false);
+  const [textoProcessamento, setTextoProcessamento] = useState("Iniciando leitura...");
+
   // Estados do Modal Gerencial de Relatórios
   const [relTipo, setRelTipo] = useState('todos');
   const [relValor, setRelValor] = useState('todos');
@@ -530,7 +541,6 @@ function App() {
                     const dadosAtuais = docSnap.data();
                     let precisaAtualizar = false;
 
-                    // Migração segura dos dados antigos (troca 'g' por 'd')
                     Object.values(dadosAtuais).forEach(entidade => {
                         if (entidade.marcados) {
                             Object.keys(entidade.marcados).forEach(k => {
@@ -580,7 +590,7 @@ function App() {
                 setDadosCarregadosDaNuvem(true);
             } catch(e) {
                 console.error("Erro ao carregar do Firestore:", e);
-                alert("Erro ao conectar com a nuvem. Verifique sua conexão.");
+                exibirModal("Erro", "Erro ao conectar com a nuvem. Verifique sua conexão.", "erro");
             }
         } else {
             setUsuarioLogado(false);
@@ -653,6 +663,13 @@ function App() {
   const rolarParaTopo = () => window.scrollTo({ top: 0, behavior: 'smooth' });
   const rolarParaFundo = () => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
 
+  // Função utilitária para chamar modais de forma elegante
+  const exibirModal = (titulo, texto, tipo = "info") => {
+      setMsgModal({ titulo, texto, tipo });
+      const btn = document.getElementById('btnTriggerMsgModal');
+      if (btn) btn.click();
+  };
+
   const abrirTabela = (tipo) => {
       setTipoTabela(tipo);
       setTelaAtiva('tabela');
@@ -692,7 +709,7 @@ function App() {
       try {
           if (modoCadastro) {
               await createUserWithEmailAndPassword(auth, loginUser, loginSenha);
-              alert("Conta criada com sucesso! Redirecionando...");
+              exibirModal("Sucesso", "Conta criada com sucesso! Redirecionando...", "sucesso");
           } else {
               await signInWithEmailAndPassword(auth, loginUser, loginSenha);
           }
@@ -735,9 +752,9 @@ function App() {
           try {
               const parsed = JSON.parse(e.target.result);
               setBancoDeDados(parsed);
-              alert("Backup restaurado e salvo na nuvem com sucesso! 🎉");
+              exibirModal("Restauração Concluída", "Backup restaurado e salvo na nuvem com sucesso! 🎉", "sucesso");
           } catch (err) {
-              alert("Erro: O arquivo selecionado não é JSON válido.");
+              exibirModal("Erro", "O arquivo selecionado não é um JSON válido.", "erro");
           }
           event.target.value = null; 
       };
@@ -780,15 +797,146 @@ function App() {
                   }
               }
               setBancoDeDados(newDb);
-              alert("Dados do CSV importados para a nuvem com sucesso! 📊");
+              exibirModal("Importação Concluída", "Dados do CSV importados para a nuvem com sucesso! 📊", "sucesso");
           } catch (err) {
-              alert("Erro ao ler o arquivo CSV. Verifique a formatação.");
+              exibirModal("Erro de Leitura", "Erro ao ler o arquivo CSV. Verifique a formatação.", "erro");
           }
           event.target.value = null;
       };
       reader.readAsText(file);
       setMenuAberto(false);
   };
+
+  // =========================================================================================
+  // LEITOR DE PDF DE CRÍTICAS COM EFEITO DE IA E TRANSIÇÕES SUAVES
+  // =========================================================================================
+  const processarPDFCriticas = (event) => {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      // 1. Inicia a tela de "Carregamento Elegante"
+      setAnimacaoSaidaIA(false);
+      setProcessandoPDF(true);
+      setTextoProcessamento("Lendo documento original...");
+
+      // Mensagens dinâmicas que vão mudar
+      const frases = [
+          "Lendo documento original...",
+          "Identificando Padrões da Atricon...",
+          "Processando critérios com IA...",
+          "Aplicando notas parciais...",
+          "Finalizando avaliação..."
+      ];
+      
+      let step = 0;
+      const interval = setInterval(() => {
+          step++;
+          if(step < frases.length) setTextoProcessamento(frases[step]);
+      }, 800);
+
+      // 2. Lê o PDF nos bastidores
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+          try {
+              const typedarray = new Uint8Array(e.target.result);
+              const pdf = await pdfjsLib.getDocument(typedarray).promise;
+              let fullText = "";
+
+              for (let i = 1; i <= pdf.numPages; i++) {
+                  const page = await pdf.getPage(i);
+                  const textContent = await page.getTextContent();
+                  const pageText = textContent.items.map(item => item.str).join(" ");
+                  fullText += pageText + " ";
+              }
+
+              let newDb = JSON.parse(JSON.stringify(bancoDeDados));
+              let ent = newDb[entidadeEditando];
+
+              // "Presunção de Inocência": Marca 100% de acertos primeiro
+              GRUPOS_CRITERIOS.forEach(grupo => {
+                  grupo.itens.forEach(item => {
+                      let exige = item.exige || ['d', 'a', 's', 'g', 'f'];
+                      ent.marcados[item.id] = { d: false, a: false, s: false, g: false, f: false };
+                      exige.forEach(req => ent.marcados[item.id][req] = true);
+                  });
+              });
+
+              // Caçador de Punições
+              const blocks = fullText.split(/\b(\d{1,2}\.\d{1,2})\b\s*-/g);
+              
+              for (let i = 1; i < blocks.length; i += 2) {
+                  const criterioID = blocks[i].trim();
+                  const textoCritica = blocks[i + 1].toLowerCase();
+
+                  if (ent.marcados[criterioID]) {
+                      if (textoCritica.includes('não atende') || textoCritica.includes('nao atende') || textoCritica.includes('configurado como link')) {
+                          if (textoCritica.includes('disponibilidade')) ent.marcados[criterioID].d = false;
+                          if (textoCritica.includes('atualidade')) ent.marcados[criterioID].a = false;
+                          if (textoCritica.includes('série histórica') || textoCritica.includes('serie historica')) ent.marcados[criterioID].s = false;
+                          if (textoCritica.includes('gravação de relatórios') || textoCritica.includes('gravacao de relatorios')) ent.marcados[criterioID].g = false;
+                          if (textoCritica.includes('filtros de pesquisa') || textoCritica.includes('filtro de pesquisa')) ent.marcados[criterioID].f = false;
+                      }
+                  }
+              }
+
+              const resultado = recalcularSelo(ent);
+              ent.perc = resultado.perc;
+              ent.selo = resultado.selo;
+
+              // 3. O delay para a UX, seguido pela saída suave (Fade Out)
+              setTimeout(() => {
+                  clearInterval(interval);
+                  setBancoDeDados(newDb);
+                  
+                  // Dispara a animação de saída
+                  setAnimacaoSaidaIA(true);
+                  
+                  // Aguarda a animação acabar para desmontar o modal da tela
+                  setTimeout(() => {
+                      setProcessandoPDF(false);
+                      setAnimacaoSaidaIA(false);
+                      exibirModal("Mágica Realizada!", "O PDF foi lido com sucesso e a avaliação da entidade foi autopreenchida com base nas críticas. 🤖✅", "sucesso");
+                  }, 400); // 400ms = tempo da transição css
+                  
+              }, 4000);
+              
+          } catch (error) {
+              console.error(error);
+              clearInterval(interval);
+              setAnimacaoSaidaIA(true);
+              setTimeout(() => {
+                  setProcessandoPDF(false);
+                  setAnimacaoSaidaIA(false);
+                  exibirModal("Atenção", "Ops! Ocorreu um erro ao tentar ler o PDF. Certifique-se de que o arquivo não está corrompido e se trata do relatório correto.", "erro");
+              }, 400);
+          }
+          event.target.value = null; 
+      };
+      reader.readAsArrayBuffer(file);
+  };
+
+  // =========================================================================================
+  // BOTÃO PARA LIMPAR/ZERAR AVALIAÇÃO ATUAL
+  // =========================================================================================
+  const executarLimpezaDeAvaliacao = () => {
+      setBancoDeDados(prevDb => {
+          let newDb = JSON.parse(JSON.stringify(prevDb));
+          let ent = newDb[entidadeEditando];
+          
+          GRUPOS_CRITERIOS.forEach(grupo => {
+              grupo.itens.forEach(item => {
+                  ent.marcados[item.id] = { d: false, a: false, s: false, g: false, f: false };
+              });
+          });
+          
+          const resultado = recalcularSelo(ent);
+          ent.perc = resultado.perc;
+          ent.selo = resultado.selo;
+          return newDb;
+      });
+      document.getElementById('btnFecharModalLimpeza').click();
+  };
+
 
   const getDadosFiltradosAgrupamento = () => {
       let dados = Object.values(bancoDeDados);
@@ -864,7 +1012,7 @@ function App() {
       const file = e.target.files[0];
       if (file) {
           if (file.size > 500 * 1024) {
-              alert("A imagem é muito grande! Escolha um brasão de até 500KB para não sobrecarregar o sistema.");
+              exibirModal("Atenção", "A imagem é muito grande! Escolha um brasão de até 500KB para não sobrecarregar o sistema.", "erro");
               e.target.value = null;
               return;
           }
@@ -878,7 +1026,7 @@ function App() {
       const file = e.target.files[0];
       if (file) {
           if (file.size > 500 * 1024) {
-              alert("A imagem é muito grande! Escolha um brasão de até 500KB para não sobrecarregar o sistema.");
+              exibirModal("Atenção", "A imagem é muito grande! Escolha um brasão de até 500KB para não sobrecarregar o sistema.", "erro");
               e.target.value = null;
               return;
           }
@@ -890,9 +1038,9 @@ function App() {
 
   const executarCadastroModal = () => {
       const nomeOriginal = novoNome.trim().toUpperCase();
-      if (!nomeOriginal || !novoOperador) { alert("Preencha os campos obrigatórios."); return; }
+      if (!nomeOriginal || !novoOperador) { exibirModal("Aviso", "Preencha os campos obrigatórios.", "erro"); return; }
       const jaExiste = Object.values(bancoDeDados).some(ent => normalizarTexto(ent.nome).replace(/\s/g, "") === normalizarTexto(nomeOriginal).replace(/\s/g, ""));
-      if (jaExiste) { alert("⚠️ Esta entidade já está cadastrada!"); return; }
+      if (jaExiste) { exibirModal("Atenção", "Esta entidade já está cadastrada!", "erro"); return; }
       
       const id = "ENT_" + Date.now(); 
       setBancoDeDados(prevDb => {
@@ -915,10 +1063,10 @@ function App() {
 
   const salvarEdicao = () => {
       const nomeFinal = editNome.trim().toUpperCase();
-      if (!nomeFinal) { alert("O nome da entidade não pode ficar vazio!"); return; }
+      if (!nomeFinal) { exibirModal("Aviso", "O nome da entidade não pode ficar vazio!", "erro"); return; }
       if (nomeFinal !== bancoDeDados[idEdicao].nome) {
           const jaExiste = Object.values(bancoDeDados).some(ent => normalizarTexto(ent.nome).replace(/\s/g, "") === normalizarTexto(nomeFinal).replace(/\s/g, ""));
-          if (jaExiste) { alert("⚠️ Já existe outra entidade cadastrada com este nome!"); return; }
+          if (jaExiste) { exibirModal("Atenção", "Já existe outra entidade cadastrada com este nome!", "erro"); return; }
       }
       setBancoDeDados(prevDb => {
           const newDb = { ...prevDb };
@@ -938,9 +1086,6 @@ function App() {
       document.getElementById('btnFecharModalExcluir').click();
   };
 
-  // =========================================================================================
-  // MOTOR DE CÁLCULO ATRICON 2025/2026 OFICIAL
-  // =========================================================================================
   const recalcularSelo = (entidade) => {
       let pontosTotais = 0;
       let pontosObtidos = 0;
@@ -1008,7 +1153,6 @@ function App() {
       return { perc, selo };
   };
 
-  // Cálculo individual do Grupo (Para a barra visual do Grupo)
   const calcularPercGrupo = (grupo, entidade) => {
       let pontosTotaisGrupo = 0;
       let pontosObtidosGrupo = 0;
@@ -1096,13 +1240,13 @@ function App() {
   const finalizarAvaliacao = async () => {
       try {
           await setDoc(doc(db, "sistema", "bancoGeral"), bancoDeDados);
-          alert("Avaliação salva e sincronizada com sucesso! ✅");
+          exibirModal("Concluído", "Avaliação salva e sincronizada com a nuvem com sucesso! ✅", "sucesso");
           setTelaAtiva('lista');
           setEntidadeEditando(null);
           window.scrollTo(0,0);
       } catch (e) {
-          alert("Erro ao salvar a avaliação.");
           console.error(e);
+          exibirModal("Erro Crítico", "Erro ao tentar salvar a avaliação. Tente novamente.", "erro");
       }
   };
 
@@ -1178,6 +1322,62 @@ function App() {
 
   return (
     <>
+      <style>{`
+          @keyframes pulseRobot {
+              0% { transform: scale(1); filter: drop-shadow(0 0 0 rgba(13, 202, 240, 0)); }
+              50% { transform: scale(1.1); filter: drop-shadow(0 0 20px rgba(13, 202, 240, 0.8)); }
+              100% { transform: scale(1); filter: drop-shadow(0 0 0 rgba(13, 202, 240, 0)); }
+          }
+          @keyframes fadeInBlur {
+              from { opacity: 0; backdrop-filter: blur(0px); }
+              to { opacity: 1; backdrop-filter: blur(8px); }
+          }
+          @keyframes fadeOutBlur {
+              from { opacity: 1; backdrop-filter: blur(8px); }
+              to { opacity: 0; backdrop-filter: blur(0px); }
+          }
+          @keyframes scaleUp {
+              from { transform: scale(0.85); opacity: 0; }
+              to { transform: scale(1); opacity: 1; }
+          }
+          @keyframes scaleDown {
+              from { transform: scale(1); opacity: 1; }
+              to { transform: scale(0.85); opacity: 0; }
+          }
+          .modal-ai-enter { animation: fadeInBlur 0.4s ease-out forwards; }
+          .modal-ai-exit { animation: fadeOutBlur 0.4s ease-in forwards; }
+          .modal-ai-box-enter { animation: scaleUp 0.4s ease-out forwards; }
+          .modal-ai-box-exit { animation: scaleDown 0.4s ease-in forwards; }
+      `}</style>
+
+      {/* OVERLAY DE PROCESSAMENTO COM IA (LABOUR ILLUSION ELEGANTE) */}
+      {processandoPDF && (
+          <div 
+              className={`d-flex align-items-center justify-content-center position-fixed w-100 h-100 ${animacaoSaidaIA ? 'modal-ai-exit' : 'modal-ai-enter'}`} 
+              style={{ top: 0, left: 0, zIndex: 9999, backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
+          >
+              <div 
+                  className={`card border-0 shadow-lg ${animacaoSaidaIA ? 'modal-ai-box-exit' : 'modal-ai-box-enter'}`} 
+                  style={{ backgroundColor: '#1e1e1e', borderRadius: '24px', padding: '45px', width: '90%', maxWidth: '420px' }}
+              >
+                  <div className="text-info text-center mb-4" style={{ animation: 'pulseRobot 1.5s infinite' }}>
+                      <i className="bi bi-robot" style={{ fontSize: '4.5rem' }}></i>
+                  </div>
+                  
+                  <h5 className="fw-bold text-white text-center mb-2" style={{ letterSpacing: '0.5px' }}>
+                      {textoProcessamento}
+                  </h5>
+                  
+                  <div className="progress mt-4 rounded-pill mx-auto" style={{ width: '100%', height: '6px', backgroundColor: 'rgba(255,255,255,0.1)' }}>
+                      <div className="progress-bar progress-bar-striped progress-bar-animated bg-info rounded-pill" style={{ width: '100%' }}></div>
+                  </div>
+              </div>
+          </div>
+      )}
+
+      {/* Gatilho invisível para o Modal de Mensagens */}
+      <button id="btnTriggerMsgModal" data-bs-toggle="modal" data-bs-target="#modalMensagem" style={{ display: 'none' }}></button>
+
       <button onClick={() => setMenuAberto(true)} className="btn-menu-lateral border-0 shadow-sm d-print-none">
         <i className="bi bi-list fs-4"></i>
       </button>
@@ -1525,14 +1725,24 @@ function App() {
         {/* === TELA 3: AVALIAÇÃO DETALHADA (TELA) === */}
         {telaAtiva === 'avaliacao' && entidadeEditando && (
           <div className="fade-screen show">
-            <div className="d-flex justify-content-between align-items-center mb-4">
+            <div className="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
               <button onClick={() => { setTelaAtiva('lista'); setEntidadeEditando(null); window.scrollTo(0,0); }} className="btn btn-light border shadow-sm fw-bold">
                 <i className="bi bi-arrow-left me-2"></i> Voltar
               </button>
               
-              <button className="btn btn-outline-danger shadow-sm fw-bold" data-bs-toggle="modal" data-bs-target="#modalRelatorio">
-                <i className="bi bi-file-earmark-pdf-fill me-2"></i> Gerar PDF
-              </button>
+              <div className="d-flex flex-wrap gap-2 justify-content-end">
+                  <button className="btn btn-warning shadow-sm fw-bold text-dark" data-bs-toggle="modal" data-bs-target="#modalConfirmarLimpeza">
+                      <i className="bi bi-arrow-counterclockwise me-2"></i> Refazer Avaliação
+                  </button>
+                  <button className="btn btn-info shadow-sm fw-bold text-white" onClick={() => document.getElementById('importarPdfInput').click()}>
+                      <i className="bi bi-magic me-2"></i> Autopreencher
+                  </button>
+                  <input type="file" id="importarPdfInput" accept="application/pdf" style={{ display: 'none' }} onChange={processarPDFCriticas} />
+
+                  <button className="btn btn-outline-danger shadow-sm fw-bold bg-white" data-bs-toggle="modal" data-bs-target="#modalRelatorio">
+                    <i className="bi bi-file-earmark-pdf-fill me-2"></i> Gerar PDF
+                  </button>
+              </div>
             </div>
 
             <div className="card shadow-sm border-0 mb-4 dark-card-target">
@@ -1885,6 +2095,43 @@ function App() {
       {/* ===================================================================
           MODAIS DO SISTEMA (ESCONDIDOS NA IMPRESSÃO)
           =================================================================== */}
+
+      {/* MODAL GLOBAL DE MENSAGENS (SUCESSO/ERRO) */}
+      <div className="modal fade d-print-none" id="modalMensagem" tabIndex="-1" aria-hidden="true">
+        <div className="modal-dialog modal-dialog-centered modal-sm">
+          <div className="modal-content border-0 shadow-lg">
+            <div className="modal-body p-4 text-center">
+              <div className={`mb-3 ${msgModal.tipo === 'erro' ? 'text-danger' : 'text-success'}`}>
+                <i className={`bi ${msgModal.tipo === 'erro' ? 'bi-x-circle-fill' : 'bi-check-circle-fill'}`} style={{ fontSize: '3rem' }}></i>
+              </div>
+              <h5 className="fw-bold mb-3">{msgModal.titulo}</h5>
+              <p className="text-muted small mb-4">{msgModal.texto}</p>
+              <button type="button" className="btn btn-light fw-bold px-4 w-100" data-bs-dismiss="modal">Entendi</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* MODAL DE CONFIRMAR LIMPEZA DE AVALIAÇÃO */}
+      <div className="modal fade d-print-none" id="modalConfirmarLimpeza" tabIndex="-1" aria-hidden="true">
+        <div className="modal-dialog modal-dialog-centered modal-sm">
+          <div className="modal-content border-0 shadow-lg">
+            <div className="modal-body p-4 text-center">
+              <div className="text-warning mb-3">
+                <i className="bi bi-exclamation-triangle-fill" style={{ fontSize: '3rem' }}></i>
+              </div>
+              <h5 className="fw-bold mb-3">Refazer Avaliação?</h5>
+              <p className="text-muted small mb-4">
+                Você tem certeza que deseja <b>limpar completamente</b> a avaliação desta entidade? Todas as marcações serão apagadas. Essa ação não pode ser desfeita.
+              </p>
+              <div className="d-flex justify-content-center gap-2">
+                <button type="button" className="btn btn-light fw-bold px-4" data-bs-dismiss="modal" id="btnFecharModalLimpeza">Cancelar</button>
+                <button type="button" className="btn btn-warning fw-bold px-4" onClick={executarLimpezaDeAvaliacao}>Sim, limpar tudo!</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       
       {/* 0. MODAL DE RELATÓRIO POR AGRUPAMENTO (PDF E CSV) */}
       <div className="modal fade d-print-none" id="modalRelatoriosGerenciais" tabIndex="-1" aria-hidden="true">
