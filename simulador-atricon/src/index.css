@@ -247,6 +247,29 @@ footer {
 [data-bs-theme="dark"] .input-group-text i { color: #adb5bd !important; }
 
 /* ==========================================
+   EFEITOS HOVER DOS BOTÕES DE AÇÃO
+   ========================================== */
+.btn-hover-destaque {
+    transition: all 0.2s ease-in-out !important;
+}
+.btn-hover-destaque:hover {
+    filter: brightness(0.85) saturate(1.2);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15) !important;
+}
+
+.btn-hover-pdf {
+    background-color: var(--bg-card) !important; /* Pega a cor natural do card (Claro ou Escuro) */
+    transition: all 0.2s ease-in-out !important;
+}
+.btn-hover-pdf:hover {
+    background-color: #dc3545 !important; /* Vermelho padrão do Danger */
+    color: white !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(220, 53, 69, 0.3) !important;
+}
+
+/* ==========================================
    MÁGICA DA IMPRESSÃO (PDF BLINDADO E MARGENS)
    ========================================== */
 

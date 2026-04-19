@@ -1767,7 +1767,7 @@ function App() {
                 
                 <div className="alert alert-warning py-2 m-0 small d-flex align-items-center justify-content-center text-start border-0 shadow-sm" style={{ borderRadius: '10px' }}>
                     <i className="bi bi-exclamation-triangle-fill me-2 fs-5"></i>
-                    <span><strong>Aviso:</strong> Por se tratar de uma simulação (metodologia Atricon), o resultado final pode apresentar variação de até <strong>±1,5%</strong>.</span>
+                    <span><strong>Aviso:</strong> Simulação com motor de cálculo de alta precisão. Variações mínimas (até <strong>±0,5%</strong>) podem ocorrer por arredondamentos do sistema oficial.</span>
                 </div>
               </div>
             </div>
