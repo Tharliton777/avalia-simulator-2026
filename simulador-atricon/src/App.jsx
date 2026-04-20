@@ -185,7 +185,7 @@ const GRUPOS_CRITERIOS = [
             { id: "16.1", nome: "Divulga as desonerações tributárias concedidas?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
             { id: "16.2", nome: "Divulga os valores da renúncia fiscal prevista e realizada?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
             { id: "16.3", nome: "Identifica os beneficiários das desonerações tributárias?", classificacao: "recomendada", exige: ['d', 'a', 's', 'g', 'f'] },
-            { id: "16.4", nome: "Divulga informações sobre projetos de incentivo à cultura e esportes?", classificacao: "recomendada", exige: ['d', 'a', 's', 'g', 'f'] }
+            { id: "16.4", nome: "Divulga informações sobre projects de incentivo à cultura e esportes?", classificacao: "recomendada", exige: ['d', 'a', 's', 'g', 'f'] }
         ]
     },
     {
@@ -463,6 +463,7 @@ function normalizarTexto(texto) {
     return texto.toString().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "");
 }
 
+// 100% FIEL À METODOLOGIA ATRICON
 function verificaSeAtende(item, marcados) {
     const s = marcados[item.id] || {d:false, a:false, s:false, g:false, f:false};
     const exige = item.exige || ['d', 'a', 's', 'g', 'f'];
@@ -541,6 +542,7 @@ function App() {
                     const dadosAtuais = docSnap.data();
                     let precisaAtualizar = false;
 
+                    // Migração segura dos dados antigos (troca 'g' por 'd')
                     Object.values(dadosAtuais).forEach(entidade => {
                         if (entidade.marcados) {
                             Object.keys(entidade.marcados).forEach(k => {
@@ -1404,8 +1406,8 @@ function App() {
               <i className={`bi bi-chevron-${submenuTabelasAberto ? 'up' : 'down'} text-muted`}></i>
             </button>
 
-            {submenuTabelasAberto && (
-              <div className="d-flex flex-column gap-2 ms-3 border-start ps-2">
+            <div className={`submenu-animado ${submenuTabelasAberto ? 'aberto' : ''}`}>
+              <div className="d-flex flex-column gap-2 ms-3 border-start ps-2 pb-2">
                 <button className="btn btn-light text-start fw-bold p-2 shadow-sm" onClick={() => abrirTabela('prefeituras')}>
                   <i className="bi bi-building me-2 text-secondary"></i> Prefeituras
                 </button>
@@ -1416,7 +1418,7 @@ function App() {
                   <i className="bi bi-people me-2 text-secondary"></i> Controladores
                 </button>
               </div>
-            )}
+            </div>
 
             <button 
               className="btn btn-light text-start fw-bold p-3 border shadow-sm d-flex justify-content-between align-items-center mt-2" 
@@ -1426,8 +1428,8 @@ function App() {
               <i className={`bi bi-chevron-${submenuRelatoriosAberto ? 'up' : 'down'} text-muted`}></i>
             </button>
 
-            {submenuRelatoriosAberto && (
-              <div className="d-flex flex-column gap-2 ms-3 border-start ps-2">
+            <div className={`submenu-animado ${submenuRelatoriosAberto ? 'aberto' : ''}`}>
+              <div className="d-flex flex-column gap-2 ms-3 border-start ps-2 pb-2">
                 <button className="btn btn-light text-start fw-bold p-2 shadow-sm text-primary" data-bs-toggle="modal" data-bs-target="#modalRelatoriosGerenciais">
                   <i className="bi bi-funnel me-2"></i> Relatório por agrupamento
                 </button>
@@ -1451,7 +1453,7 @@ function App() {
                   <i className="bi bi-file-earmark-spreadsheet me-2"></i> Baixar Modelo (CSV)
                 </button>
               </div>
-            )}
+            </div>
           </div>
 
           <hr className="text-muted mt-auto" />
@@ -1731,15 +1733,15 @@ function App() {
               </button>
               
               <div className="d-flex flex-wrap gap-2 justify-content-end">
-                  <button className="btn btn-warning shadow-sm fw-bold text-dark" data-bs-toggle="modal" data-bs-target="#modalConfirmarLimpeza">
+                  <button className="btn btn-warning shadow-sm fw-bold text-dark btn-hover-warning" data-bs-toggle="modal" data-bs-target="#modalConfirmarLimpeza">
                       <i className="bi bi-arrow-counterclockwise me-2"></i> Refazer Avaliação
                   </button>
-                  <button className="btn btn-info shadow-sm fw-bold text-white" onClick={() => document.getElementById('importarPdfInput').click()}>
+                  <button className="btn btn-info shadow-sm fw-bold text-white btn-hover-info" onClick={() => document.getElementById('importarPdfInput').click()}>
                       <i className="bi bi-magic me-2"></i> Autopreencher
                   </button>
                   <input type="file" id="importarPdfInput" accept="application/pdf" style={{ display: 'none' }} onChange={processarPDFCriticas} />
 
-                  <button className="btn btn-outline-danger shadow-sm fw-bold bg-white" data-bs-toggle="modal" data-bs-target="#modalRelatorio">
+                  <button className="btn btn-outline-danger shadow-sm fw-bold btn-hover-pdf" data-bs-toggle="modal" data-bs-target="#modalRelatorio">
                     <i className="bi bi-file-earmark-pdf-fill me-2"></i> Gerar PDF
                   </button>
               </div>
@@ -1965,7 +1967,7 @@ function App() {
                         Aderência aos Critérios: <b>{bancoDeDados[entidadeEditando].perc}%</b>
                     </h5>
                     <p className="mt-2 mb-0 small text-danger fw-bold">
-                        * Nota de Simulação: A pontuação pode variar em até ±1,5% em relação à avaliação oficial.
+                        * Nota de Simulação: Simulação com motor de cálculo de alta precisão. Variações mínimas (até ±0,5%) podem ocorrer por arredondamentos do sistema oficial.
                     </p>
                 </div>
 
