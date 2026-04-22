@@ -84,7 +84,7 @@ const GRUPOS_CRITERIOS = [
     {
         titulo: "8. Licitações", pesoDimensao: 3,
         itens: [
-            { id: "8.1", nome: "Divulga a relação das licitações (número, modalidade, objeto, data, valor e situação)?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
+            { id: "8.1", nome: "Divulga a relação das licitações (número, modalidade, objeto, data, valor e situation)?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
             { id: "8.2", nome: "Divulga a íntegra dos editais de licitação?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
             { id: "8.3", nome: "Divulga a íntegra dos demais documentos das fases interna e externa?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
             { id: "8.4", nome: "Divulga a íntegra dos principais documentos dos processes de dispensa e inexigibilidade?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
@@ -1609,7 +1609,7 @@ function App() {
         {/* === TELA 2: TABELAS DE LISTAGEM === */}
         {telaAtiva === 'tabela' && (
           <div className="fade-screen show">
-            <button onClick={() => { setTelaAtiva('lista'); window.scrollTo(0,0); }} className="btn btn-light border shadow-sm mb-4 fw-bold">
+            <button onClick={() => { setTelaAtiva('lista'); window.scrollTo(0,0); }} className="btn btn-light border shadow-sm mb-4 fw-bold btn-hover-destaque">
               <i className="bi bi-arrow-left me-2"></i> Voltar para Cards
             </button>
 
@@ -1728,7 +1728,7 @@ function App() {
         {telaAtiva === 'avaliacao' && entidadeEditando && (
           <div className="fade-screen show">
             <div className="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
-              <button onClick={() => { setTelaAtiva('lista'); setEntidadeEditando(null); window.scrollTo(0,0); }} className="btn btn-light border shadow-sm fw-bold">
+              <button onClick={() => { setTelaAtiva('lista'); setEntidadeEditando(null); window.scrollTo(0,0); }} className="btn btn-light border shadow-sm fw-bold btn-hover-destaque">
                 <i className="bi bi-arrow-left me-2"></i> Voltar
               </button>
               
@@ -1862,7 +1862,7 @@ function App() {
         {telaAtiva === 'relatorio_agrupado' && (
           <div className="fade-screen show pb-5">
             <div className="mb-4 d-flex justify-content-between align-items-center d-print-none">
-              <button onClick={() => { setTelaAtiva('lista'); window.scrollTo(0,0); }} className="btn btn-light border shadow-sm fw-bold">
+              <button onClick={() => { setTelaAtiva('lista'); window.scrollTo(0,0); }} className="btn btn-light border shadow-sm fw-bold btn-hover-destaque">
                 <i className="bi bi-arrow-left me-2"></i> Voltar para o Painel
               </button>
               <button onClick={() => window.print()} className="btn btn-danger shadow-sm fw-bold">
@@ -1971,7 +1971,7 @@ function App() {
                     </p>
                 </div>
 
-                <h5 className="fw-bold mb-3 text-dark">Critérios Avaliados ({filtroRelatorio === 'todos' ? 'Todos' : filtroRelatorio === 'atendendo' ? 'Atendidos' : 'Pendentes'})</h5>
+                <h5 className="fw-bold mb-3 text-dark text-center">Critérios Avaliados ({filtroRelatorio === 'todos' ? 'Todos' : filtroRelatorio === 'atendendo' ? 'Atendidos' : 'Pendentes'})</h5>
 
                 {GRUPOS_CRITERIOS.map((grupo, idx) => {
                     const ehCamara = normalizarTexto(bancoDeDados[entidadeEditando].nome).includes('camara');
@@ -1996,13 +1996,13 @@ function App() {
                                 <span>{grupo.titulo}</span>
                                 <span className="badge bg-light text-dark">{percGrupo}%</span>
                             </div>
-                            <table className="table table-sm table-bordered">
+                            <table className="table table-sm table-bordered" style={{ tableLayout: 'fixed', width: '100%', wordWrap: 'break-word' }}>
                                 <thead>
                                     <tr className="bg-light">
-                                        <th style={{ width: '8%' }} className="text-dark">ID</th>
-                                        <th className="text-dark">Critério</th>
-                                        <th style={{ width: '15%' }} className="text-dark">Tipo</th>
-                                        <th className="text-center text-dark" style={{ width: '15%' }}>Status</th>
+                                        <th style={{ width: '10%' }} className="text-dark text-center align-middle">ID</th>
+                                        <th style={{ width: '60%' }} className="text-dark text-start align-middle">Critério</th>
+                                        <th style={{ width: '15%' }} className="text-dark text-center align-middle">Tipo</th>
+                                        <th style={{ width: '15%' }} className="text-center text-dark align-middle">Status</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -2015,10 +2015,10 @@ function App() {
 
                                         return (
                                             <tr key={item.id}>
-                                                <td className="text-dark"><b>{item.id}</b></td>
-                                                <td className="text-dark">{item.nome}</td>
-                                                <td className="text-capitalize text-dark">{item.classificacao}</td>
-                                                <td className="text-center fw-bold" style={{ color: cor }}>
+                                                <td className="text-dark text-center align-middle"><b>{item.id}</b></td>
+                                                <td className="text-dark align-middle">{item.nome}</td>
+                                                <td className="text-capitalize text-dark text-center align-middle">{item.classificacao}</td>
+                                                <td className="text-center fw-bold align-middle" style={{ color: cor }}>
                                                     {texto}
                                                 </td>
                                             </tr>
@@ -2052,15 +2052,15 @@ function App() {
                     </div>
                 </div>
 
-                <table className="table table-bordered table-sm align-middle text-center" style={{ fontSize: '0.85rem' }}>
+                <table className="table table-bordered table-sm align-middle text-center" style={{ fontSize: '0.85rem', tableLayout: 'fixed', width: '100%', wordWrap: 'break-word' }}>
                     <thead className="table-light">
                         <tr>
-                        <th className="text-start text-dark">Entidade</th>
-                        <th className="text-dark">Operador</th>
-                        <th className="text-dark">Controlador</th>
-                        <th className="text-dark">Telefone</th>
-                        <th className="text-dark">Selo Projetado</th>
-                        <th className="text-dark">Nota (%)</th>
+                        <th style={{ width: '30%' }} className="text-start text-dark">Entidade</th>
+                        <th style={{ width: '15%' }} className="text-dark">Operador</th>
+                        <th style={{ width: '20%' }} className="text-dark">Controlador</th>
+                        <th style={{ width: '15%' }} className="text-dark">Telefone</th>
+                        <th style={{ width: '10%' }} className="text-dark">Selo Projetado</th>
+                        <th style={{ width: '10%' }} className="text-dark">Nota (%)</th>
                         </tr>
                     </thead>
                     <tbody>

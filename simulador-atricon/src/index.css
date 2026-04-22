@@ -329,11 +329,15 @@ footer {
 }
 
 @media print {
-    html, body, #root {
+    /* BLINDAGEM MÁXIMA: Força o fundo da tela inteira a ficar branco e anula o modo escuro no print */
+    html, body, #root,
+    html[data-bs-theme="dark"], 
+    html[data-bs-theme="dark"] body {
         height: auto !important;
         min-height: auto !important;
         overflow: visible !important;
         background-color: #ffffff !important;
+        background: #ffffff !important; 
         color: #000000 !important;
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
@@ -341,7 +345,7 @@ footer {
         padding: 0 !important;
     }
     
-    [data-bs-theme="dark"] body, .dark-card-target {
+    [data-bs-theme="dark"] .dark-card-target {
         background-color: #ffffff !important;
         color: #000000 !important;
     }
@@ -350,12 +354,13 @@ footer {
         display: none !important;
     }
 
+    /* Removemos o padding que estava criando a borda grossa lateral e espremendo a tabela */
     .d-none.d-print-block {
         display: block !important;
         opacity: 1 !important;
         visibility: visible !important;
         box-sizing: border-box !important;
-        padding: 20px 40px !important; 
+        padding: 0 !important; 
         max-width: 100vw !important;
     }
 
@@ -374,7 +379,13 @@ footer {
         --bs-table-striped-bg: #ffffff !important;
     }
 
-    .print-avoid-break { page-break-inside: auto !important; }
+    /* Usa PADDING-TOP em vez de margin. Isso força o conteúdo para baixo, mesmo após a quebra de página! */
+    .print-avoid-break { 
+        page-break-inside: avoid !important; 
+        padding-top: 15px !important; 
+        margin-bottom: 10px !important;
+    }
+    
     table { page-break-inside: auto; margin-bottom: 25px !important; }
     tr { page-break-inside: avoid; page-break-after: auto; }
     thead { display: table-header-group; }
