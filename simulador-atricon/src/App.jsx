@@ -84,7 +84,7 @@ const GRUPOS_CRITERIOS = [
     {
         titulo: "8. Licitações", pesoDimensao: 3,
         itens: [
-            { id: "8.1", nome: "Divulga a relação das licitações (número, modalidade, objeto, data, valor e situation)?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
+            { id: "8.1", nome: "Divulga a relação das licitações (número, modalidade, objeto, data, valor e situação)?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
             { id: "8.2", nome: "Divulga a íntegra dos editais de licitação?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
             { id: "8.3", nome: "Divulga a íntegra dos demais documentos das fases interna e externa?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
             { id: "8.4", nome: "Divulga a íntegra dos principais documentos dos processes de dispensa e inexigibilidade?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
@@ -511,14 +511,12 @@ function App() {
   const [animacaoSaidaIA, setAnimacaoSaidaIA] = useState(false);
   const [textoProcessamento, setTextoProcessamento] = useState("Iniciando leitura...");
 
-  // Estados do Modal Gerencial de Relatórios
-  const [relTipo, setRelTipo] = useState('todos');
-  const [relValor, setRelValor] = useState('todos');
+  // Novos Estados do Relatório Gerencial (Filtros Combinados)
+  const [relOperador, setRelOperador] = useState('todos');
+  const [relSelo, setRelSelo] = useState('todos');
+  const [relPoder, setRelPoder] = useState('todos');
+  const [relControlador, setRelControlador] = useState('todos');
   const [dadosRelatorioAgrupado, setDadosRelatorioAgrupado] = useState([]);
-
-  useEffect(() => {
-      setRelValor('todos');
-  }, [relTipo]);
 
   useEffect(() => {
       if (temaEscuro) {
@@ -939,22 +937,38 @@ function App() {
       document.getElementById('btnFecharModalLimpeza').click();
   };
 
-
+  // =========================================================================================
+  // LÓGICA DE FILTRAGEM COMBINADA PARA RELATÓRIO GERENCIAL
+  // =========================================================================================
   const getDadosFiltradosAgrupamento = () => {
       let dados = Object.values(bancoDeDados);
-      if (relTipo === 'operador' && relValor !== 'todos') {
-          dados = dados.filter(e => e.operador === relValor);
-      } else if (relTipo === 'selo' && relValor !== 'todos') {
-          dados = dados.filter(e => e.selo === relValor);
-      } else if (relTipo === 'controlador' && relValor !== 'todos') {
-          if (relValor === 'com') dados = dados.filter(e => e.controlador && e.controlador.trim() !== "");
-          if (relValor === 'sem') dados = dados.filter(e => !e.controlador || e.controlador.trim() === "");
-      } else if (relTipo === 'poder' && relValor !== 'todos') {
-          if (relValor === 'executivo') dados = dados.filter(e => normalizarTexto(e.nome).includes('prefeitura'));
-          if (relValor === 'legislativo') dados = dados.filter(e => normalizarTexto(e.nome).includes('camara'));
+
+      if (relOperador !== 'todos') {
+          dados = dados.filter(e => e.operador === relOperador);
       }
+      if (relSelo !== 'todos') {
+          dados = dados.filter(e => e.selo === relSelo);
+      }
+      if (relControlador !== 'todos') {
+          if (relControlador === 'com') dados = dados.filter(e => e.controlador && e.controlador.trim() !== "");
+          if (relControlador === 'sem') dados = dados.filter(e => !e.controlador || e.controlador.trim() === "");
+      }
+      if (relPoder !== 'todos') {
+          if (relPoder === 'executivo') dados = dados.filter(e => normalizarTexto(e.nome).includes('prefeitura'));
+          if (relPoder === 'legislativo') dados = dados.filter(e => normalizarTexto(e.nome).includes('camara'));
+      }
+
       dados.sort((a,b) => a.nome.localeCompare(b.nome));
       return dados;
+  };
+
+  const getFiltrosAplicadosTexto = () => {
+      let aplicados = [];
+      if (relOperador !== 'todos') aplicados.push(`Operador: ${relOperador}`);
+      if (relSelo !== 'todos') aplicados.push(`Selo: ${relSelo}`);
+      if (relPoder !== 'todos') aplicados.push(`Poder: ${relPoder === 'executivo' ? 'Executivo' : 'Legislativo'}`);
+      if (relControlador !== 'todos') aplicados.push(`Controlador: ${relControlador === 'com' ? 'Com' : 'Sem'}`);
+      return aplicados.length > 0 ? aplicados.join(' | ') : 'Todos os Registros';
   };
 
   const gerarRelatorioGerencialCSV = () => {
@@ -972,7 +986,7 @@ function App() {
       const encodedUri = encodeURI(csvContent);
       const link = document.createElement("a");
       link.setAttribute("href", encodedUri);
-      link.setAttribute("download", `relatorio_${relTipo}_atricon_${new Date().toISOString().slice(0,10)}.csv`);
+      link.setAttribute("download", `relatorio_agrupado_atricon_${new Date().toISOString().slice(0,10)}.csv`);
       document.body.appendChild(link);
       link.click();
       link.remove();
@@ -1878,7 +1892,7 @@ function App() {
                   <h5 className="text-muted d-print-none">Simulador de Transparência - Atricon 2026</h5>
                   <div className="mt-3 d-flex justify-content-center gap-4 text-muted small">
                       <span><b>Data:</b> {new Date().toLocaleDateString('pt-BR')}</span>
-                      <span><b>Filtro Aplicado:</b> {relTipo === 'todos' ? 'Todos os Registros' : `${relTipo.toUpperCase()} - ${relValor.toUpperCase()}`}</span>
+                      <span><b>Filtros Aplicados:</b> {getFiltrosAplicadosTexto()}</span>
                   </div>
                 </div>
 
@@ -1910,7 +1924,7 @@ function App() {
                       ))}
                       {dadosRelatorioAgrupado.length === 0 && (
                         <tr>
-                          <td colSpan="6" className="text-center py-4 text-muted">Nenhum registro encontrado para o filtro selecionado.</td>
+                          <td colSpan="6" className="text-center py-4 text-muted">Nenhum registro encontrado para os filtros selecionados.</td>
                         </tr>
                       )}
                     </tbody>
@@ -2048,7 +2062,7 @@ function App() {
                     <h3 className="fw-bold m-0 text-dark">Relatório de Agrupamento - PNTP Atricon</h3>
                     <div className="mt-3 d-flex justify-content-around text-dark">
                         <span><b>Data:</b> {new Date().toLocaleDateString('pt-BR')}</span>
-                        <span><b>Filtro Aplicado:</b> {relTipo === 'todos' ? 'Todos os Registros' : `${relTipo.toUpperCase()} - ${relValor.toUpperCase()}`}</span>
+                        <span><b>Filtros Aplicados:</b> {getFiltrosAplicadosTexto()}</span>
                     </div>
                 </div>
 
@@ -2137,30 +2151,19 @@ function App() {
       
       {/* 0. MODAL DE RELATÓRIO POR AGRUPAMENTO (PDF E CSV) */}
       <div className="modal fade d-print-none" id="modalRelatoriosGerenciais" tabIndex="-1" aria-hidden="true">
-        <div className="modal-dialog modal-dialog-centered">
+        <div className="modal-dialog modal-dialog-centered modal-lg">
           <div className="modal-content border-0 shadow-lg">
             <div className="modal-header bg-success text-white border-0">
               <h5 className="modal-title fw-bold"><i className="bi bi-funnel-fill me-2"></i> Relatório por agrupamento</h5>
               <button type="button" className="btn-close btn-close-white" data-bs-dismiss="modal" id="btnFecharModalRelatoriosGerenciais"></button>
             </div>
             <div className="modal-body p-4">
-                <p className="text-muted small mb-4">Escolha os filtros abaixo para gerar um relatório em PDF ou planillha Excel (CSV) contendo apenas os dados desejados.</p>
+                <p className="text-muted small mb-4">Combine os filtros abaixo para gerar um relatório em PDF ou planilha Excel (CSV) específico.</p>
                 
-                <div className="mb-3">
-                    <label className="form-label fw-bold">Tipo de Relatório</label>
-                    <select className="form-select" value={relTipo} onChange={(e) => setRelTipo(e.target.value)}>
-                        <option value="todos">Todos os Registros</option>
-                        <option value="operador">Por Operador</option>
-                        <option value="selo">Por Selo Projetado</option>
-                        <option value="controlador">Por Situação do Controlador</option>
-                        <option value="poder">Por Poder (Executivo/Legislativo)</option>
-                    </select>
-                </div>
-
-                {relTipo === 'operador' && (
-                    <div className="mb-3">
-                        <label className="form-label fw-bold">Selecione o Operador</label>
-                        <select className="form-select" value={relValor} onChange={(e) => setRelValor(e.target.value)}>
+                <div className="row g-3">
+                    <div className="col-md-6">
+                        <label className="form-label fw-bold">Operador</label>
+                        <select className="form-select" value={relOperador} onChange={(e) => setRelOperador(e.target.value)}>
                             <option value="todos">Todos</option>
                             <option value="CLEYDIR">CLEYDIR</option>
                             <option value="DAVI">DAVI</option>
@@ -2170,12 +2173,10 @@ function App() {
                             <option value="KAIRON">KAIRON</option>
                         </select>
                     </div>
-                )}
 
-                {relTipo === 'selo' && (
-                    <div className="mb-3">
-                        <label className="form-label fw-bold">Selecione o Selo</label>
-                        <select className="form-select" value={relValor} onChange={(e) => setRelValor(e.target.value)}>
+                    <div className="col-md-6">
+                        <label className="form-label fw-bold">Selo Projetado</label>
+                        <select className="form-select" value={relSelo} onChange={(e) => setRelSelo(e.target.value)}>
                             <option value="todos">Todos</option>
                             <option value="DIAMANTE">DIAMANTE</option>
                             <option value="OURO">OURO</option>
@@ -2187,29 +2188,25 @@ function App() {
                             <option value="INEXISTENTE">INEXISTENTE</option>
                         </select>
                     </div>
-                )}
 
-                {relTipo === 'controlador' && (
-                    <div className="mb-3">
-                        <label className="form-label fw-bold">Situação</label>
-                        <select className="form-select" value={relValor} onChange={(e) => setRelValor(e.target.value)}>
-                            <option value="todos">Todos</option>
-                            <option value="com">Com Controlador Cadastrado</option>
-                            <option value="sem">Sem Controlador Cadastrado</option>
-                        </select>
-                    </div>
-                )}
-
-                {relTipo === 'poder' && (
-                    <div className="mb-3">
+                    <div className="col-md-6">
                         <label className="form-label fw-bold">Poder / Esfera</label>
-                        <select className="form-select" value={relValor} onChange={(e) => setRelValor(e.target.value)}>
+                        <select className="form-select" value={relPoder} onChange={(e) => setRelPoder(e.target.value)}>
                             <option value="todos">Todos</option>
                             <option value="executivo">Executivo (Prefeituras)</option>
                             <option value="legislativo">Legislativo (Câmaras)</option>
                         </select>
                     </div>
-                )}
+
+                    <div className="col-md-6">
+                        <label className="form-label fw-bold">Controlador</label>
+                        <select className="form-select" value={relControlador} onChange={(e) => setRelControlador(e.target.value)}>
+                            <option value="todos">Todos</option>
+                            <option value="com">Com Controlador Cadastrado</option>
+                            <option value="sem">Sem Controlador Cadastrado</option>
+                        </select>
+                    </div>
+                </div>
             </div>
             <div className="modal-footer border-0 pt-0 d-flex flex-wrap justify-content-between">
               <button type="button" className="btn btn-light shadow-sm mb-2" data-bs-dismiss="modal">Cancelar</button>
