@@ -852,12 +852,18 @@ function App() {
               let newDb = JSON.parse(JSON.stringify(bancoDeDados));
               let ent = newDb[entidadeEditando];
 
-              // "Presunção de Inocência": Marca 100% de acertos primeiro
+              // "Presunção de Inocência": Marca 100% APENAS nos critérios antigos
               GRUPOS_CRITERIOS.forEach(grupo => {
                   grupo.itens.forEach(item => {
                       let exige = item.exige || ['d', 'a', 's', 'g', 'f'];
+                      
+                      // Zera o item por padrão
                       ent.marcados[item.id] = { d: false, a: false, s: false, g: false, f: false };
-                      exige.forEach(req => ent.marcados[item.id][req] = true);
+                      
+                      // Se NÃO for um item novo de 2026, ele ganha o 100% de inocência
+                      if (!item.novo2026) {
+                          exige.forEach(req => ent.marcados[item.id][req] = true);
+                      }
                   });
               });
 
@@ -974,12 +980,11 @@ function App() {
   const gerarRelatorioGerencialCSV = () => {
       const dados = getDadosFiltradosAgrupamento();
       let csvContent = "data:text/csv;charset=utf-8,";
-      csvContent += "ID;Nome da Entidade;Operador;Controlador;Telefone;Progresso (%);Selo Atual\n"; 
+      csvContent += "ID;Nome da Entidade;Operador;Selo Atual;Progresso (%)\n"; 
       
       dados.forEach(ent => {
           const nomeLimpo = ent.nome.replace(/;/g, ",").replace(/"/g, "");
-          const ctrlLimpo = (ent.controlador || "").replace(/;/g, ",");
-          const row = `${ent.id};"${nomeLimpo}";${ent.operador};"${ctrlLimpo}";${ent.telefone || ""};${ent.perc};${ent.selo}`;
+          const row = `${ent.id};"${nomeLimpo}";${ent.operador};${ent.selo};${ent.perc}`;
           csvContent += row + "\n";
       });
       
@@ -1897,34 +1902,30 @@ function App() {
                 </div>
 
                 <div className="table-responsive">
-                  <table className="table table-bordered table-sm align-middle text-center" style={{ fontSize: '0.85rem' }}>
+                  <table className="table table-bordered align-middle text-center" style={{ fontSize: '0.85rem' }}>
                     <thead className="table-light">
                       <tr>
-                        <th className="text-start">Entidade</th>
-                        <th>Operador</th>
-                        <th>Controlador</th>
-                        <th>Telefone</th>
-                        <th>Selo Projetado</th>
-                        <th>Nota (%)</th>
+                        <th className="text-start py-3">Entidade</th>
+                        <th className="py-3">Operador</th>
+                        <th className="py-3">Selo Projetado</th>
+                        <th className="py-3">Nota (%)</th>
                       </tr>
                     </thead>
                     <tbody>
                       {dadosRelatorioAgrupado.map(ent => (
                         <tr key={ent.id}>
-                          <td className="text-start fw-bold text-wrap" style={{ maxWidth: '200px' }}>{ent.nome}</td>
-                          <td>{ent.operador}</td>
-                          <td className="text-wrap" style={{ maxWidth: '150px' }}>{ent.controlador || '---'}</td>
-                          <td>{ent.telefone || '---'}</td>
-                          <td>
+                          <td className="text-start fw-bold text-wrap py-3">{ent.nome}</td>
+                          <td className="py-3">{ent.operador}</td>
+                          <td className="py-3">
                               <span className={`badge selo-${normalizarTexto(ent.selo)} w-100 d-print-none`}>{ent.selo}</span>
                               <span className="d-none d-print-block fw-bold">{ent.selo}</span>
                           </td>
-                          <td className="fw-bold">{ent.perc}%</td>
+                          <td className="fw-bold py-3">{ent.perc}%</td>
                         </tr>
                       ))}
                       {dadosRelatorioAgrupado.length === 0 && (
                         <tr>
-                          <td colSpan="6" className="text-center py-4 text-muted">Nenhum registro encontrado para os filtros selecionados.</td>
+                          <td colSpan="4" className="text-center py-4 text-muted">Nenhum registro encontrado para os filtros selecionados.</td>
                         </tr>
                       )}
                     </tbody>
@@ -2066,31 +2067,27 @@ function App() {
                     </div>
                 </div>
 
-                <table className="table table-bordered table-sm align-middle text-center" style={{ fontSize: '0.85rem', tableLayout: 'fixed', width: '100%', wordWrap: 'break-word' }}>
+                <table className="table table-bordered align-middle text-center" style={{ fontSize: '0.85rem', tableLayout: 'fixed', width: '100%', wordWrap: 'break-word' }}>
                     <thead className="table-light">
                         <tr>
-                        <th style={{ width: '30%' }} className="text-start text-dark">Entidade</th>
-                        <th style={{ width: '15%' }} className="text-dark">Operador</th>
-                        <th style={{ width: '20%' }} className="text-dark">Controlador</th>
-                        <th style={{ width: '15%' }} className="text-dark">Telefone</th>
-                        <th style={{ width: '10%' }} className="text-dark">Selo Projetado</th>
-                        <th style={{ width: '10%' }} className="text-dark">Nota (%)</th>
+                        <th style={{ width: '50%' }} className="text-start text-dark py-3">Entidade</th>
+                        <th style={{ width: '20%' }} className="text-dark py-3">Operador</th>
+                        <th style={{ width: '15%' }} className="text-dark py-3">Selo Projetado</th>
+                        <th style={{ width: '15%' }} className="text-dark py-3">Nota (%)</th>
                         </tr>
                     </thead>
                     <tbody>
                         {dadosRelatorioAgrupado.map(ent => (
                         <tr key={ent.id}>
-                            <td className="text-start fw-bold text-dark">{ent.nome}</td>
-                            <td className="text-dark">{ent.operador}</td>
-                            <td className="text-dark">{ent.controlador || '---'}</td>
-                            <td className="text-dark">{ent.telefone || '---'}</td>
-                            <td className="text-dark fw-bold">{ent.selo}</td>
-                            <td className="fw-bold text-dark">{ent.perc}%</td>
+                            <td className="text-start fw-bold text-dark py-3">{ent.nome}</td>
+                            <td className="text-dark py-3">{ent.operador}</td>
+                            <td className="text-dark fw-bold py-3">{ent.selo}</td>
+                            <td className="fw-bold text-dark py-3">{ent.perc}%</td>
                         </tr>
                         ))}
                         {dadosRelatorioAgrupado.length === 0 && (
                         <tr>
-                            <td colSpan="6" className="text-center py-4 text-muted">Nenhum registro encontrado.</td>
+                            <td colSpan="4" className="text-center py-4 text-muted">Nenhum registro encontrado.</td>
                         </tr>
                         )}
                     </tbody>
@@ -2195,15 +2192,6 @@ function App() {
                             <option value="todos">Todos</option>
                             <option value="executivo">Executivo (Prefeituras)</option>
                             <option value="legislativo">Legislativo (Câmaras)</option>
-                        </select>
-                    </div>
-
-                    <div className="col-md-6">
-                        <label className="form-label fw-bold">Controlador</label>
-                        <select className="form-select" value={relControlador} onChange={(e) => setRelControlador(e.target.value)}>
-                            <option value="todos">Todos</option>
-                            <option value="com">Com Controlador Cadastrado</option>
-                            <option value="sem">Sem Controlador Cadastrado</option>
                         </select>
                     </div>
                 </div>
