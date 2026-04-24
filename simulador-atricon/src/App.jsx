@@ -9,7 +9,7 @@ import './index.css';
 pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
 
 // ============================================================================
-// 1. DADOS ORIGINAIS COM EXIGÊNCIAS ATUALIZADAS (D, A, S, G, F)
+// 1. DADOS ORIGINAIS COM EXIGÊNCIAS ATUALIZADAS E TRAVA DE NOVOS ITENS 2026
 // ============================================================================
 const GRUPOS_CRITERIOS = [
     {
@@ -191,8 +191,8 @@ const GRUPOS_CRITERIOS = [
     {
         titulo: "17. Emendas Parlamentares", pesoDimensao: 1,
         itens: [
-            { id: "17.1", nome: "Identifica as emendas parlamentares federais recebidas?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'], novo2026: true },
-            { id: "17.2", nome: "Identifica as emendas parlamentares estaduais e municipais?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'], novo2026: true },
+            { id: "17.1", nome: "Identifica as emendas parlamentares federais recebidas?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
+            { id: "17.2", nome: "Identifica as emendas parlamentares estaduais e municipais?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
             { id: "17.3", nome: "Demonstra a execução orçamentária e financeira oriunda das emendas parlamentares recebidas e próprias?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'], novo2026: true }
         ]
     },
@@ -875,13 +875,14 @@ function App() {
                   const textoCritica = blocks[i + 1].toLowerCase();
 
                   if (ent.marcados[criterioID]) {
-                      if (textoCritica.includes('não atende') || textoCritica.includes('nao atende') || textoCritica.includes('configurado como link')) {
-                          if (textoCritica.includes('disponibilidade')) ent.marcados[criterioID].d = false;
-                          if (textoCritica.includes('atualidade')) ent.marcados[criterioID].a = false;
-                          if (textoCritica.includes('série histórica') || textoCritica.includes('serie historica')) ent.marcados[criterioID].s = false;
-                          if (textoCritica.includes('gravação de relatórios') || textoCritica.includes('gravacao de relatorios')) ent.marcados[criterioID].g = false;
-                          if (textoCritica.includes('filtros de pesquisa') || textoCritica.includes('filtro de pesquisa')) ent.marcados[criterioID].f = false;
-                      }
+                      // Se o critério caiu no relatório de críticas do sistema, ele falhou em algo.
+                      // O sistema emissor às vezes não usa "não atende", mas sim "não informado" ou apenas lista a dimensão.
+                      // Portanto, se o bloco cita a dimensão, ela está reprovada.
+                      if (textoCritica.includes('disponibilidade')) ent.marcados[criterioID].d = false;
+                      if (textoCritica.includes('atualidade')) ent.marcados[criterioID].a = false;
+                      if (textoCritica.includes('série') || textoCritica.includes('serie')) ent.marcados[criterioID].s = false;
+                      if (textoCritica.includes('gravação') || textoCritica.includes('gravacao')) ent.marcados[criterioID].g = false;
+                      if (textoCritica.includes('filtro')) ent.marcados[criterioID].f = false;
                   }
               }
 
@@ -1902,7 +1903,7 @@ function App() {
                 </div>
 
                 <div className="table-responsive">
-                  <table className="table table-bordered table-sm align-middle text-center" style={{ fontSize: '0.85rem' }}>
+                  <table className="table table-bordered align-middle text-center" style={{ fontSize: '0.85rem' }}>
                     <thead className="table-light">
                       <tr>
                         <th className="text-start py-3">Entidade</th>
