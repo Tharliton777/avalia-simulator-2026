@@ -672,6 +672,7 @@ function App() {
 
   const abrirTabela = (tipo) => {
       setTipoTabela(tipo);
+      setFiltroPoder('todos'); // Reseta o filtro de poder ao abrir a tabela
       setTelaAtiva('tabela');
       setMenuAberto(false);
       window.scrollTo(0,0);
@@ -689,10 +690,18 @@ function App() {
 
       const termoNorm = normalizarTexto(termoBusca);
       arr = arr.filter(e => {
-          const passaTexto = normalizarTexto(e.nome).includes(termoNorm) || (e.controlador && normalizarTexto(e.controlador).includes(termoNorm));
+          const nomeNorm = normalizarTexto(e.nome);
+          const passaTexto = nomeNorm.includes(termoNorm) || (e.controlador && normalizarTexto(e.controlador).includes(termoNorm));
           const passaOperador = (filtroOperador === 'todos') || (e.operador === filtroOperador);
           const passaSelo = (filtroSelo === 'todos') || (e.selo === filtroSelo);
-          return passaTexto && passaOperador && passaSelo;
+          
+          let passaPoder = true;
+          if (tipoTabela === 'controladores') {
+              if (filtroPoder === 'prefeitura') passaPoder = nomeNorm.includes('prefeitura');
+              if (filtroPoder === 'camara') passaPoder = nomeNorm.includes('camara');
+          }
+
+          return passaTexto && passaOperador && passaSelo && passaPoder;
       });
 
       if (tipoTabela === 'controladores') {
@@ -1655,6 +1664,7 @@ function App() {
                     <option value="KAIKE">KAIKE</option>
                     <option value="KAIRON">KAIRON</option>
                   </select>
+                  
                   {tipoTabela !== 'controladores' && (
                     <select className="form-select" value={filtroSelo} onChange={(e) => setFiltroSelo(e.target.value)}>
                       <option value="todos">🎖️ Todos Selos</option>
@@ -1666,6 +1676,14 @@ function App() {
                       <option value="BASICO">BÁSICO</option>
                       <option value="INICIAL">INICIAL</option>
                       <option value="INEXISTENTE">INEXISTENTE</option>
+                    </select>
+                  )}
+
+                  {tipoTabela === 'controladores' && (
+                    <select className="form-select" value={filtroPoder} onChange={(e) => setFiltroPoder(e.target.value)}>
+                      <option value="todos">🏛️ Todos os Poderes</option>
+                      <option value="prefeitura">Executivo (Prefeituras)</option>
+                      <option value="camara">Legislativo (Câmaras)</option>
                     </select>
                   )}
                 </div>
