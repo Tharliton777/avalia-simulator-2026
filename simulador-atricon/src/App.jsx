@@ -126,8 +126,8 @@ const GRUPOS_CRITERIOS = [
             { id: "11.9", nome: "Divulga a Lei de Diretrizes Orçamentárias (LDO) e anexos?", classificacao: "essencial", exige: ['d', 'a', 's', 'g', 'f'] },
             { id: "11.10", nome: "Divulga a Lei Orçamentária (LOA) e anexos?", classificacao: "essencial", exige: ['d', 'a', 's', 'g', 'f'] },
             { id: "11.11", nome: "Divulga o Orçamento do Consórcio Público onde conste a estimativa da receita e a fixação da despesa para o exercício atual?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'], novo2026: true },
-            { id: "11.12", nome: "Divulga as demonstrações financeiras trimestrais?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'], novo2026: true },
-            { id: "11.13", nome: "Divulga as demonstrações financeiras (contábeis) acompanhadas dos pareceres do Conselho Fiscal e da auditoria independente?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'], novo2026: true },
+            { id: "11.12", nome: "Divulga as demonstrações financeiras trimestrais?", classificacao: "recomendada", exige: ['d', 'a', 's', 'g', 'f'], novo2026: true },
+            { id: "11.13", nome: "Divulga as demonstrações financeiras (contábeis) acompanhadas dos pareceres do Conselho Fiscal e da auditoria independente?", classificacao: "recomendada", exige: ['d', 'a', 's', 'g', 'f'], novo2026: true },
             { id: "11.14", nome: "Pública o Orçamento de Investimentos da instituição que compõe a Lei Orçamentária Anual?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'], novo2026: true },
             { id: "11.15", nome: "Divulga as demonstrações contábeis auditadas em formato eletrônico editável?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'], novo2026: true },
             { id: "11.16", nome: "Divulga o relatório anual elaborado pelo Comitê de Auditoria Estatutário com informações sobre as atividades e os resultados e suas conclusões e recomendações?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'], novo2026: true },
@@ -910,7 +910,7 @@ function App() {
                       // Zera o item por padrão
                       ent.marcados[item.id] = { d: false, a: false, s: false, g: false, f: false };
                       
-                      // Se NÃO for um item novo (travado), ele ganha o 100% de inocência
+                      // Se NÃO for um item novo (travado por você), ele ganha o 100% de inocência
                       if (!item.novo2026) {
                           exige.forEach(req => ent.marcados[item.id][req] = true);
                       }
@@ -1936,8 +1936,13 @@ function App() {
                                 return (
                                   <li key={item.id} className="list-group-item d-flex align-items-center dark-card-target" style={{ padding: '12px 16px' }}>
                                       <div className="flex-grow-1 pe-3" style={{ fontSize: '0.9rem' }}>
-                                          <small className="text-muted fw-bold">{item.id}</small> {item.classificacao === 'essencial' && <b className="text-danger">*</b>} 
-                                          <br/><span className="d-block mt-1">{item.nome}</span>
+                                          <div className="d-flex align-items-center gap-2">
+                                              <small className="text-muted fw-bold">{item.id}</small>
+                                              <span className={`badge ${item.classificacao === 'essencial' ? 'bg-danger' : item.classificacao === 'obrigatoria' ? 'bg-warning text-dark' : 'bg-info text-dark'}`} style={{ fontSize: '0.65rem', padding: '0.25em 0.5em' }}>
+                                                  {item.classificacao.toUpperCase()}
+                                              </span>
+                                          </div>
+                                          <span className="d-block mt-1">{item.nome}</span>
                                       </div>
                                       <div className="d-flex" style={{ width: '200px', flexShrink: 0 }}>
                                           {['d', 'a', 's', 'g', 'f'].map(letra => (
