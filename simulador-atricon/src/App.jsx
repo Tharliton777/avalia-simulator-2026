@@ -9,7 +9,7 @@ import './index.css';
 pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
 
 // ============================================================================
-// 1. DADOS ORIGINAIS COM EXIGÊNCIAS ATUALIZADAS E TRAVA DE NOVOS ITENS 2026
+// 1. DADOS ORIGINAIS COM EXIGÊNCIAS ATUALIZADAS (APENAS PREFEITURAS E CÂMARAS)
 // ============================================================================
 const GRUPOS_CRITERIOS = [
     {
@@ -48,10 +48,7 @@ const GRUPOS_CRITERIOS = [
         itens: [
             { id: "4.1", nome: "Divulga o total das despesas empenhadas, liquidadas e pagas?", classificacao: "essencial", exige: ['d', 'a', 's', 'g', 'f'] },
             { id: "4.2", nome: "Divulga as despesas por classification orçamentária?", classificacao: "essencial", exige: ['d', 'a', 's', 'g', 'f'] },
-            { id: "4.3", nome: "Possibilita a consulta de empenhos com detalhes do beneficiário, valor, objeto e licitação originária?", classificacao: "essencial", exige: ['d', 'a', 's', 'g', 'f'] },
-            { id: "4.4", nome: "Publica relação das despesas com aquisições de bens efetuadas pela instituição contendo: identificação do bem, preço unitário, quantidade, nome do fornecedor e valor total de cada aquisição?", classificacao: "recomendada", exige: ['d', 'a', 's', 'g', 'f'], novo2026: true },
-            { id: "4.5", nome: "Publica informações sobre despesas de patrocínio?", classificacao: "recomendada", exige: ['d', 'a', 's', 'g', 'f'], novo2026: true },
-            { id: "4.6", nome: "Publica informações detalhadas sobre a execution dos contratos de publicidade, com nomes dos fornecedores de completion de serviços especializados e veículos, bem como informações sobre os totais de valores pagos para cada tipo de serviço e meio de divulgação?", classificacao: "recomendada", exige: ['d', 'a', 's', 'g', 'f'], novo2026: true }
+            { id: "4.3", nome: "Possibilita a consulta de empenhos com detalhes do beneficiário, valor, objeto e licitação originária?", classificacao: "essencial", exige: ['d', 'a', 's', 'g', 'f'] }
         ]
     },
     {
@@ -71,7 +68,7 @@ const GRUPOS_CRITERIOS = [
             { id: "6.4", nome: "Divulga a lista de seus estagiários (nome, datas de contratação e término)?", classificacao: "recomendada", exige: ['d', 'a', 's', 'g', 'f'] },
             { id: "6.5", nome: "Publica lista dos terceirizados (nome, função e empresa empregadora)?", classificacao: "recomendada", exige: ['d', 'a', 's', 'g', 'f'] },
             { id: "6.6", nome: "Divulga a íntegra dos editais de concursos e seleções públicas?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
-            { id: "6.7", nome: "Divulga informações sobre os demais atos dos concursos públicos e processos seletivos do Poder ou órgão, contendo no mínimo a lista de aprovados com as classificações e as nomeações?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'], novo2026: true }
+            { id: "6.7", nome: "Divulga informações sobre os demais atos dos concursos públicos e processos seletivos do Poder ou órgão, contendo no mínimo a lista de aprovados com as classificações e as nomeações?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] }
         ]
     },
     {
@@ -90,8 +87,7 @@ const GRUPOS_CRITERIOS = [
             { id: "8.4", nome: "Divulga a íntegra dos principais documentos dos processes de dispensa e inexigibilidade?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
             { id: "8.5", nome: "Divulga a íntegra das Atas de Adesão – SRP?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
             { id: "8.6", nome: "Divulga o plano de contratações anual?", classificacao: "recomendada", exige: ['d', 'a', 's', 'g', 'f'] },
-            { id: "8.7", nome: "Divulga a relação dos licitantes e/ou contratados sancionados?", classificacao: "recomendada", exige: ['d', 'a', 's', 'g', 'f'] },
-            { id: "8.8", nome: "Divulga regulamento interno de licitações e contratos?", classificacao: "obrigatoria", exige: ['d', 'a'], novo2026: true }
+            { id: "8.7", nome: "Divulga a relação dos licitantes e/ou contratados sancionados?", classificacao: "recomendada", exige: ['d', 'a', 's', 'g', 'f'] }
         ]
     },
     {
@@ -124,16 +120,7 @@ const GRUPOS_CRITERIOS = [
             { id: "11.7", nome: "Divulga o plano estratégico institucional?", classificacao: "recomendada", exige: ['d', 'a'] },
             { id: "11.8", nome: "Divulga a Lei do Plano Plurianual (PPA) e anexos?", classificacao: "essencial", exige: ['d', 'a', 's', 'g', 'f'] },
             { id: "11.9", nome: "Divulga a Lei de Diretrizes Orçamentárias (LDO) e anexos?", classificacao: "essencial", exige: ['d', 'a', 's', 'g', 'f'] },
-            { id: "11.10", nome: "Divulga a Lei Orçamentária (LOA) e anexos?", classificacao: "essencial", exige: ['d', 'a', 's', 'g', 'f'] },
-            { id: "11.11", nome: "Divulga o Orçamento do Consórcio Público onde conste a estimativa da receita e a fixação da despesa para o exercício atual?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'], novo2026: true },
-            { id: "11.12", nome: "Divulga as demonstrações financeiras trimestrais?", classificacao: "recomendada", exige: ['d', 'a', 's', 'g', 'f'], novo2026: true },
-            { id: "11.13", nome: "Divulga as demonstrações financeiras (contábeis) acompanhadas dos pareceres do Conselho Fiscal e da auditoria independente?", classificacao: "recomendada", exige: ['d', 'a', 's', 'g', 'f'], novo2026: true },
-            { id: "11.14", nome: "Pública o Orçamento de Investimentos da instituição que compõe a Lei Orçamentária Anual?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'], novo2026: true },
-            { id: "11.15", nome: "Divulga as demonstrações contábeis auditadas em formato eletrônico editável?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'], novo2026: true },
-            { id: "11.16", nome: "Divulga o relatório anual elaborado pelo Comitê de Auditoria Estatutário com informações sobre as atividades e os resultados e suas conclusões e recomendações?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'], novo2026: true },
-            { id: "11.17", nome: "Divulga as atas das reuniões do Comitê de Auditoria Estatutário?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'], novo2026: true },
-            { id: "11.18", nome: "Divulga as atas das reuniões do Comitê de Elegibilidade Estatutário ou Comitê de Pessoas, Elegibilidade, Sucessão e Remuneração a partir de 2022, na forma de sumário dos fatos ocorridos, inclusive das dissidências e protestos?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'], novo2026: true },
-            { id: "11.19", nome: "Divulga anualmente relatório integrado ou de sustentabilidade?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'], novo2026: true }
+            { id: "11.10", nome: "Divulga a Lei Orçamentária (LOA) e anexos?", classificacao: "essencial", exige: ['d', 'a', 's', 'g', 'f'] }
         ]
     },
     {
@@ -185,7 +172,7 @@ const GRUPOS_CRITERIOS = [
             { id: "16.1", nome: "Divulga as desonerações tributárias concedidas?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
             { id: "16.2", nome: "Divulga os valores da renúncia fiscal prevista e realizada?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
             { id: "16.3", nome: "Identifica os beneficiários das desonerações tributárias?", classificacao: "recomendada", exige: ['d', 'a', 's', 'g', 'f'] },
-            { id: "16.4", nome: "Divulga informações sobre projects de incentivo à cultura e esportes?", classificacao: "recomendada", exige: ['d', 'a', 's', 'g', 'f'] }
+            { id: "16.4", nome: "Divulga informações sobre projetos de incentivo à cultura e esportes?", classificacao: "recomendada", exige: ['d', 'a', 's', 'g', 'f'] }
         ]
     },
     {
@@ -193,7 +180,7 @@ const GRUPOS_CRITERIOS = [
         itens: [
             { id: "17.1", nome: "Identifica as emendas parlamentares federais recebidas?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
             { id: "17.2", nome: "Identifica as emendas parlamentares estaduais e municipais?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
-            { id: "17.3", nome: "Demonstra a execução orçamentária e financeira oriunda das emendas parlamentares recebidas e próprias?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'], novo2026: true }
+            { id: "17.3", nome: "Demonstra a execução orçamentária e financeira oriunda das emendas parlamentares recebidas e próprias?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] }
         ]
     },
     {
@@ -204,7 +191,7 @@ const GRUPOS_CRITERIOS = [
             { id: "18.3", nome: "Divulga a lista de espera de regulação para acesso às consultas?", classificacao: "recomendada", exige: ['d', 'a', 's', 'g', 'f'] },
             { id: "18.4", nome: "Divulga lista dos medicamentos do SUS e como obtê-los?", classificacao: "recomendada", exige: ['d', 'a', 's', 'g', 'f'] },
             { id: "18.5", nome: "Divulga os estoques de medicamentos das farmácias públicas?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
-            { id: "18.6", nome: "Divulga informações atualizadas sobre a composição e o funcionamento do Conselho de Saúde?", classificacao: "recomendada", exige: ['d', 'a', 's', 'g', 'f'], novo2026: true }
+            { id: "18.6", nome: "Divulga informações atualizadas sobre a composição e o funcionamento do Conselho de Saúde?", classificacao: "recomendada", exige: ['d', 'a', 's', 'g', 'f'] }
         ]
     },
     {
@@ -212,8 +199,8 @@ const GRUPOS_CRITERIOS = [
         itens: [
             { id: "19.1", nome: "Divulga o plano de educação e o respectivo relatório de resultados?", classificacao: "recomendada", exige: ['d', 'a', 's', 'g', 'f'] },
             { id: "19.2", nome: "Divulga a lista de espera em creches públicas?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
-            { id: "19.3", nome: "Divulga informações atualizadas sobre a composição e o funcionamento do Conselho do Fundeb?", classificacao: "obrigatoria", exige: ['d'], novo2026: true },
-            { id: "19.4", nome: "Divulga informações atualizadas sobre a composição e o funcionamento do Conselho de Assistência Social?", classificacao: "recomendada", exige: ['d'], novo2026: true }
+            { id: "19.3", nome: "Divulga informações atualizadas sobre a composição e o funcionamento do Conselho do Fundeb?", classificacao: "obrigatoria", exige: ['d'] },
+            { id: "19.4", nome: "Divulga informações atualizadas sobre a composição e o funcionamento do Conselho de Assistência Social?", classificacao: "recomendada", exige: ['d'] }
         ]
     },
     {
@@ -221,13 +208,13 @@ const GRUPOS_CRITERIOS = [
         itens: [
             { id: "20.1", nome: "Divulga a composição da Casa, com a biografia dos parlamentares?", classificacao: "obrigatoria", exige: ['d'] },
             { id: "20.2", nome: "Divulga as leis e atos infralegais produzidos?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
-            { id: "20.3", nome: "Divulga projects de leis e as respectivas tramitações?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
+            { id: "20.3", nome: "Divulga projetos de leis e as respectivas tramitações?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
             { id: "20.4", nome: "Divulga a pauta das sessões do Plenário?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
             { id: "20.5", nome: "Divulga a pauta das Comissões?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
             { id: "20.6", nome: "Divulga as atas das sessões e lista de presença?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
             { id: "20.7", nome: "Divulga lista sobre as votações nominais?", classificacao: "recomendada", exige: ['d', 'a', 's', 'g', 'f'] },
             { id: "20.8", nome: "Divulga o ato que aprecia as Contas do Chefe do Executivo?", classificacao: "obrigatoria", exige: ['d', 'a', 's', 'g', 'f'] },
-            { id: "20.9", nome: "Há transmissão de sessões ou outras formas de participation popular?", classificacao: "recomendada", exige: ['d'] },
+            { id: "20.9", nome: "Há transmissão de sessões ou outras formas de participação popular?", classificacao: "recomendada", exige: ['d'] },
             { id: "20.10", nome: "Divulga valores relativos às cotas para exercício da atividade parlamentar?", classificacao: "recomendada", exige: ['d', 'a', 's', 'g', 'f'] },
             { id: "20.11", nome: "Divulga dados sobre as atividades legislativas dos parlamentares?", classificacao: "recomendada", exige: ['d', 'a', 's', 'g', 'f'] }
         ]
@@ -910,7 +897,7 @@ function App() {
                       // Zera o item por padrão
                       ent.marcados[item.id] = { d: false, a: false, s: false, g: false, f: false };
                       
-                      // Se NÃO for um item novo (travado por você), ele ganha o 100% de inocência
+                      // Se NÃO for um item novo (travado), ele ganha o 100% de inocência
                       if (!item.novo2026) {
                           exige.forEach(req => ent.marcados[item.id][req] = true);
                       }
